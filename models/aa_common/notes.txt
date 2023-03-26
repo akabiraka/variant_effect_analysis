@@ -1,0 +1,5 @@
+source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/activate
+
+python models/aa_common/popu_freq_SNVs_conversion.py
+python models/aa_common/pathogenicity_SNVs_conversion.py
+pmd_SNVs_conversion.py

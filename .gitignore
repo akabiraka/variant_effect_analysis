@@ -131,4 +131,17 @@ dmypy.json
 #--------------------add the directories here to ignore---------------------
 data/*
 outputs/*
-outputs_prev/*
+models/tape_rao/outputs/*
+models/sequnet_dunham/outputs/*
+models/sequnet_dunham/freq_classifier*
+models/esm_rives/outputs/*
+
+models/dbnsfp/inputs/*
+models/dbnsfp/outputs/*
+
+models/bioembeddings_dallago/outputs/*
+
+models/aa_common/datasets_pathogenicity/*
+models/aa_common/datasets_pmd_analysis/*
+models/aa_common/datasets_population_freq/*
+models/aa_common/outputs/*
