@@ -1,0 +1,89 @@
+cd variant_effect_analysis
+source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/activate
+
+### dbNSFP4.3a (32G), released: February 18, 2022
+    Download: wget https://usf.box.com/shared/static/9r6iamhldji4c3vodwebh3947vgrvsng -P data/dbnsfp/
+    Readme: https://usf.app.box.com/s/6yi6huheisol3bhmld8bitcon1oi53pm
+    Java search program pdf: It is in the downloaded zip named search_dbNSFP43a.readme.pdf. An online copy for 4.1a can be found here https://zenodo.org/record/4323592#.Y_D-yIDMKMJ
+    Unzip:
+        mv data/dbnsfp/9r6iamhldji4c3vodwebh3947vgrvsng data/dbnsfp/dbNSFP4.3a.zip
+        unzip data/dbnsfp/dbNSFP4.3a.zip -d data/dbnsfp/dbNSFP43a/
+
+### Workflow:
+	python models/dbnsfp/data_preprocess.py
+	sbatch models/dbnsfp/hopper.sh
+
+### Run the program:
+    An example with 3 SNPs: java -cp data/dbnsfp/dbNSFP43a/ search_dbNSFP43a -i models/dbnsfp/inputs/sample_query_hg38.txt -o models/dbnsfp/outputs/sample_query_hg38.out -w 1-6,77-79,85-86,91-92,94-96,124-125
+
+    sbatch models/dbnsfp/hopper.sh    
+
+
+### For population frequency analysis, following three commands need to run.
+	python models/aa_common/chromosomal_SNV_conversion_for_population_freq.py
+	java -cp data/dbnsfp/dbNSFP43a/ search_dbNSFP43a -i models/aa_common/datasets_population_freq/chromosomal_SNVs_without_population_freq_small.txt -o models/dbnsfp/outputs/chromosomal_SNVs_preds.out -w 1-6,77-79,90-91
+	python models/dbnsfp/analysis_population_freq.py
+
+
+### The column indices (1-6,77-79,85-86,91-92,94-96,124-125) are from dbNSFP4.3a readme:
+1	chr: chromosome number
+2	pos(1-based): physical position on the chromosome as to hg38 (1-based coordinate).
+		For mitochondrial SNV, this position refers to the rCRS (GenBank: NC_012920). 
+3	ref: reference nucleotide allele (as on the + strand)
+4	alt: alternative nucleotide allele (as on the + strand)
+5	aaref: reference amino acid
+		"." if the variant is a splicing site SNP (2bp on each end of an intron)
+6	aaalt: alternative amino acid
+		"." if the variant is a splicing site SNP (2bp on each end of an intron)
+
+
+
+77	MetaRNN_score: Our recurrent neural network (RNN) based ensemble prediction score, which
+		incorporated 16 scores (SIFT, Polyphen2_HDIV, Polyphen2_HVAR, MutationAssessor, PROVEAN, 
+		VEST4, M-CAP, REVEL, MutPred, MVP, PrimateAI, DEOGEN2, CADD, fathmm-XF, Eigen and GenoCanyon), 
+		8 conservation scores (GERP, phyloP100way_vertebrate, phyloP30way_mammalian, 
+		phyloP17way_primate, phastCons100way_vertebrate, phastCons30way_mammalian, 
+		phastCons17way_primate and SiPhy), and allele frequency information from the 1000 Genomes 
+		Project (1000GP), ExAC, and gnomAD. Larger value means the SNV is more likely to be damaging. 
+		Scores range from 0 to 1.
+78	MetaRNN_rankscore: MetaRNN scores were ranked among all MetaRNN scores in dbNSFP. The rankscore
+		is the ratio of the rank of the score over the total number of MetaRNN scores in dbNSFP. 
+		The scores range from 0 to 1.
+79	MetaRNN_pred: Prediction of our MetaRNN based ensemble prediction score,"T(olerated)" or
+		"D(amaging)". The score cutoff between "D" and "T" is 0.5. The rankscore cutoff between 
+		"D" and "T" is 0.6149.
+
+
+85	MutPred_score: General MutPred score. Scores range from 0 to 1. The larger the score the more
+		likely the SNP has damaging effect.
+86	MutPred_rankscore: MutPred scores were ranked among all MutPred scores in dbNSFP. The rankscore is
+		the ratio of the rank of the score over the total number of MutPred scores in dbNSFP.
+
+
+90	MVP_score: A pathogenicity prediction score for missense variants using deep learning approach.
+		The range of MVP score is from 0 to 1. The larger the score, the more likely the variant is 
+		pathogenic. The authors suggest thresholds of 0.7 and 0.75 for separating damaging vs tolerant 
+		variants in constrained genes (ExAC pLI >=0.5) and non-constrained genes (ExAC pLI<0.5), respectively. 
+		Details see doi: http://dx.doi.org/10.1101/259390
+		Multiple entries are separated by ";", corresponding to Ensembl_transcriptid.
+91	MVP_rankscore: MVP scores were ranked among all MVP scores in dbNSFP. The rankscore is
+		the ratio of the rank of the score over the total number of MVP scores in dbNSFP. 
+
+
+94	PrimateAI_score: A pathogenicity prediction score for missense variants based on common variants of
+		non-human primate species using a deep neural network. The range of PrimateAI score is 0 to 1. 
+		The larger the score, the more likely the variant is pathogenic. The authors suggest a threshold
+		of 0.803 for separating damaging vs tolerant variants. 
+		Details see https://doi.org/10.1038/s41588-018-0167-z
+95	PrimateAI_rankscore: PrimateAI scores were ranked among all PrimateAI scores in dbNSFP. The rankscore is
+		the ratio of the rank of the score over the total number of PrimateAI scores in dbNSFP. 
+96	PrimateAI_pred: Prediction of PrimateAI score based on the authors' recommendation, "T(olerated)" or
+		"D(amaging)". The score cutoff between "D" and "T" is 0.803.
+
+
+124	DANN_score: DANN is a functional prediction score retrained based on the training data
+		of CADD using deep neural network. Scores range from 0 to 1. A larger number indicate 
+		a higher probability to be damaging. More information of this score can be found in
+		doi: 10.1093/bioinformatics/btu703. 
+125	DANN_rankscore: DANN scores were ranked among all DANN scores in dbNSFP. The rankscore is
+		the ratio of the rank of the score over the total number of DANN scores in dbNSFP.
