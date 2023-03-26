@@ -1,0 +1,29 @@
+---------------snap2--------------
+snap2 is run from https://rostlab.org/services/snap2web/. No other url is available.
+Input: fasta sequences
+
+--------------gMVP--------------
+Source link: https://github.com/ShenLab/gMVP/
+The source link does not provide any trained weights and does not give any instructions on how to run the model.
+
+gMVP scores for all possible missense variants in canonical transcripts on human hg38 which can be acessed through:
+	https://www.dropbox.com/s/nce1jhg3i7jw1hx/gMVP.2021-02-28.csv.gz?dl=0.
+
+chrom	pos	ref	alt	gene_symbol	gene_id	transcript_id	protein_position	ref_aa	alt_aa	ref_codon	alt_codon	context	gMVP	gMVP_rankscore
+1	69091	A	C	OR4F5	ENSG00000186092	ENST00000335137	1	M	L	Atg	Ctg	TAT	0.011945916339755	0.0325290149499176
+
+
+--------------ELASPIC2--------------
+Source code: https://gitlab.com/elaspic/elaspic2 
+Data: https://elaspic2.data.proteinsolver.org/ 
+Web: http://elaspic.kimlab.org/ 
+
+/scratch/akabir4/variant_effect_analysis/
+
+salloc --partition=all-LoPri --mem=16G
+conda activate /scratch/akabir4/venvs_for_variant_effect_analysis/argo_elaspic2_strokach_conda
+python -m elaspic2   --protein-structure elaspic2_strokach/1MFG.pdb   --protein-sequence GSMEIRVRVEKDPELGFSISGGVGGRGNPFRPDDDGIFVTRVQPEGPASKLLQPGDKIIQANGYSFINIEHGQAVSLLKTFQNTVELIIVREVSS   --ligand-sequence EYLGLDVPV   --mutations G1A.G1C
+
+salloc --partition=gpuq --gres=gpu:1 --mem=32G
+python -m elaspic2   --protein-structure elaspic2_strokach/1MFG.pdb   --protein-sequence GSMEIRVRVEKDPELGFSISGGVGGRGNPFRPDDDGIFVTRVQPEGPASKLLQPGDKIIQANGYSFINIEHGQAVSLLKTFQNTVELIIVREVSS   --ligand-sequence EYLGLDVPV   --mutations G1A.G1C --device cuda
+

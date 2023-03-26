@@ -1,0 +1,41 @@
+Project dir: /scratch/akabir4/variant_effect_analysis
+Venv dir: ~/venvs_for_variant_effect_analysis/hopper_mine
+
+module load python/3.8.6-generic-x86_64
+python -m venv hopper_variant_effect_analysis_mine
+source ~/venvs_for_variant_effect_analysis/hopper_mine/bin/activate
+conda deactivate
+
+
+cd /scratch/akabir4/variant_effect_analysis
+conda deactivate
+source ~/venvs_for_variant_effect_analysis/hopper_mine/bin/activate
+
+pip install --upgrade pip
+pip install pyfaidx
+pip install pandas
+pip install biopython
+pip install notebook
+pip install ratelimit
+pip install requests
+
+To remote work:
+Follow this link: https://code.visualstudio.com/docs/remote/ssh
+For selecting the proper virtual env:
+	1. Click the right-bottomv venv configuration button.
+	2. Enter venv python interpretor path. i.e ~/venvs_for_variant_effect_analysis/hopper_mine/bin/python
+	
+	
+	
+
+conda deactivate	
+module load python/3.8.6-generic-x86_64
+python -m venv hopper_variant_effect_analysis_mine
+source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/activate
+
+
+cd /projects/ashehu/akabir4/
+conda deactivate
+source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/activate
+
+	

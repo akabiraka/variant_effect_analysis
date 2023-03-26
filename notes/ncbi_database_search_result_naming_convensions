@@ -1,0 +1,10 @@
+ncbi_database_search_result_naming_convensions
+
+1. lowercase
+
+dbname_humanReadableQuery
+
+dbname, lowercase. clinvar, 
+humanReadableQuery, CamelCase. pathogenicMissenseVariantsFrom01012022To06022023 ("missense variant"[Molecular consequence]) AND ("2022"[Creation Date] : "3000"[Creation Date]) AND ("clinsig pathogenic"[Filter]) 
+
+clinvar_pathogenicMissenseVariantsFrom01012022To06022023

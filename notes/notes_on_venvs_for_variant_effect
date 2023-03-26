@@ -1,0 +1,263 @@
+cd /scratch/akabir4/
+mkdir venvs_for_variant_effect
+cd venvs_for_variant_effect/
+
+venv naming convension:
+
+[cluster-name]_[model-name]_[first-author-last-name]_[conda-or-pip]   
+cluster-name: argo, hopper
+model-name: as in the model-selection sheet, lowercase, no-underscore
+first-author-last-name: lowercase
+conda-or-pip: if conda, use conda else nothing
+
+i.e.: hopper_sequnet_dunham
+
+
+All venvs dir: /projects/ashehu/akabir4/venvs
+All projects dir: /projects/ashehu/akabir4/projects
+
+
+------------------------------------------------------------------hopper_variant_effect_analysis_mine------------------------------------------------------------------
+
+conda deactivate	
+module load python/3.8.6-generic-x86_64
+python -m venv hopper_variant_effect_analysis_mine
+source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/activate
+
+
+cd /projects/ashehu/akabir4/projects/variant_effect_analysis
+conda deactivate
+source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/activate
+
+
+pip install --upgrade pip
+pip install pyfaidx
+pip install pandas
+pip install biopython
+pip install notebook
+pip install ratelimit
+pip install requests
+pip install xmltodict
+pip install mpi4py
+
+To remote work:
+Follow this link: https://code.visualstudio.com/docs/remote/ssh
+For selecting the proper virtual env:
+	1. Click the right-bottomv venv configuration button.
+	2. Enter venv python interpretor path. i.e /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/python
+
+	
+
+
+------------------------------------------------------------------Seq-UNET------------------------------------------------------------------
+https://github.com/allydunham/sequence_unet
+Models can be seen and downloaded manually from https://www.ebi.ac.uk/biostudies/studies/S-BSST732
+
+installation
+module load python/3.8.6-generic-x86_64
+python -m venv hopper_sequnet_dunham
+source hopper_sequnet_dunham/bin/activate
+pip install --upgrade pip
+
+pip install git+https://github.com/allydunham/proteinnetpy
+pip install git+https://github.com/allydunham/sequence_unet
+
+test
+salloc --partition=normal --mem=32G
+conda deactivate
+source /scratch/akabir4/venvs_for_variant_effect_analysis/hopper_sequnet_dunham/bin/activate
+
+python
+>>>from sequence_unet import models
+ModuleNotFoundError: No module named 'sequence_unet'
+
+So sequence_unet is not properly installed by this command "pip install git+https://github.com/allydunham/sequence_unet".
+Install sequence_unet manually: 
+	git clone https://github.com/allydunham/sequence_unet.git
+	cd sequence_unet/
+	pip install .
+	
+After this, the following line worked in my machine but not in hopper. 
+
+Install sequence_unet manually: 
+	git clone https://github.com/allydunham/sequence_unet.git
+	cd sequence_unet/
+	pip install -e . 
+	
+This worked in hopper.
+
+An example:
+from pandas import concat
+from Bio import SeqIO
+from proteinnetpy.data import ProteinNetDataset
+
+from sequence_unet.models import load_trained_model
+from sequence_unet.predict import predict_sequence
+
+# load a model
+model = load_trained_model(model="freq_classifier", download=True)
+
+# Predict from a fasta file
+fasta = SeqIO.parse("path/to/fasta.fa", format="fasta")
+preds = concat([p for p in predict_sequence(model, sequences=fasta, wide=True)])
+
+------------------------------------------------------------------ELASPIC2------------------------------------------------------------------
+using conda-pack: (did not work)
+wget http://conda-envs.proteinsolver.org/elaspic2/elaspic2-latest.tar.gz
+mkdir hopper_elaspic2_strokach
+tar -xvzf elaspic2-latest.tar.gz -C hopper_elaspic2_strokach/
+source /scratch/akabir4/venvs_for_variant_effect_analysis/hopper_elaspic2_strokach/bin/activate
+conda-unpack
+
+
+using pip in hopper: hopper_elaspic2_strokach1: (did not work)
+pip install "torch==1.8.0"
+pip install -f https://pytorch-geometric.com/whl/torch-1.8.0+cu102.html --default-timeout=600 \
+    "transformers==3.3.1" \
+    "torch-scatter==2.0.6" \
+    "torch-sparse==0.6.9" \
+    "torch-cluster==1.5.9" \
+    "torch-spline-conv==1.2.1" \
+    "torch-geometric==1.6.1" \
+    "https://gitlab.com/kimlab/kmbio/-/archive/v2.1.0/kmbio-v2.1.0.zip" \
+    "https://gitlab.com/kimlab/kmtools/-/archive/v0.2.8/kmtools-v0.2.8.zip" \
+    "https://gitlab.com/ostrokach/proteinsolver/-/archive/v0.1.25/proteinsolver-v0.1.25.zip" \
+    "git+https://gitlab.com/elaspic/elaspic2.git"
+pip install numpy==1.23.5
+
+
+using pip in argo: argo_elaspic2_strokach: (did not work)
+pip install "torch==1.8.0"
+pip install -f https://pytorch-geometric.com/whl/torch-1.8.0+cu101.html --default-timeout=600 \
+    "transformers==3.3.1" \
+    "torch-scatter==2.0.6" \
+    "torch-sparse==0.6.9" \
+    "torch-cluster==1.5.9" \
+    "torch-spline-conv==1.2.1" \
+    "torch-geometric==1.6.1" \
+    "https://gitlab.com/kimlab/kmbio/-/archive/v2.1.0/kmbio-v2.1.0.zip" \
+    "https://gitlab.com/kimlab/kmtools/-/archive/v0.2.8/kmtools-v0.2.8.zip" \
+    "https://gitlab.com/ostrokach/proteinsolver/-/archive/v0.1.25/proteinsolver-v0.1.25.zip" \
+    "git+https://gitlab.com/elaspic/elaspic2.git"
+pip install numpy==1.23.5
+
+Error: ImportError: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.20' not found
+
+This worked:
+module load anaconda3/2020
+conda create -p argo_elaspic2_strokach_conda
+conda activate /scratch/akabir4/venvs_for_variant_effect_analysis/argo_elaspic2_strokach_conda
+
+conda install pip
+pip install "torch==1.8.0"  >>>> ERROR: Could not find a version that satisfies the requirement torch==1.8.0 (from versions: 1.11.0, 1.12.0, 1.12.1, 1.13.0, 1.13.1)
+conda install python=3.7  # downgrading, python=3.10 was installed by conda since I did not fix the python version to install.
+pip install "torch==1.8.0"  # now it worked
+pip install -f https://pytorch-geometric.com/whl/torch-1.8.0+cu101.html --default-timeout=600 \
+    "transformers==3.3.1" \
+    "torch-scatter==2.0.6" \
+    "torch-sparse==0.6.9" \
+    "torch-cluster==1.5.9" \
+    "torch-spline-conv==1.2.1" \
+    "torch-geometric==1.6.1" \
+    "https://gitlab.com/kimlab/kmbio/-/archive/v2.1.0/kmbio-v2.1.0.zip" \
+    "https://gitlab.com/kimlab/kmtools/-/archive/v0.2.8/kmtools-v0.2.8.zip" \
+    "https://gitlab.com/ostrokach/proteinsolver/-/archive/v0.1.25/proteinsolver-v0.1.25.zip" \
+    "git+https://gitlab.com/elaspic/elaspic2.git"
+
+# Following command is run successfully on Argo cpu.    
+python -m elaspic2   --protein-structure 1MFG.pdb   --protein-sequence GSMEIRVRVEKDPELGFSISGGVGGRGNPFRPDDDGIFVTRVQPEGPASKLLQPGDKIIQANGYSFINIEHGQAVSLLKTFQNTVELIIVREVSS   --ligand-sequence EYLGLDVPV   --mutations G1A.G1C
+
+Running on Argo GPU:
+conda activate /scratch/akabir4/venvs_for_variant_effect_analysis/argo_elaspic2_strokach_conda
+module load cuda/10.1
+
+python -m elaspic2   --protein-structure 1MFG.pdb   --protein-sequence GSMEIRVRVEKDPELGFSISGGVGGRGNPFRPDDDGIFVTRVQPEGPASKLLQPGDKIIQANGYSFINIEHGQAVSLLKTFQNTVELIIVREVSS   --ligand-sequence EYLGLDVPV   --mutations G1A.G1C 0
+
+Note: 0 indicates cuda:#
+
+
+
+------------------------------------------------------------------ECNet------------------------------------------------------------------
+conda create -p argo_ecnet_luo_conda python=3.7
+conda activate /scratch/akabir4/venvs_for_variant_effect_analysis/argo_ecnet_luo_conda
+conda install pytorch==1.4.0 cudatoolkit=10.1 -c pytorch
+git clone https://github.com/luoyunan/ECNet.git
+cd ECNet/
+pip install -r requirements.txt
+
+salloc --partition=gpuq --gres=gpu:1 --mem=64G
+module load cuda/10.1
+conda activate /scratch/akabir4/venvs_for_variant_effect_analysis/argo_ecnet_luo_conda
+export PYTHONPATH=/scratch/akabir4/venvs_for_variant_effect_analysis/ECNet:
+
+cd /scratch/akabir4/variant_effect_analysis/ecnet_luo
+wget https://www.dropbox.com/s/nkgubuwfwiyy0ze/data.tar.gz
+tar xf data.tar.gz
+
+CUDA_VISIBLE_DEVICES=0 python ../../venvs_for_variant_effect_analysis/ECNet/scripts/run_example.py \
+    --train data/RRM_single.tsv \
+    --fasta data/RRM.fasta \
+    --local_feature data/RRM.braw \
+    --output_dir RRM_CV \
+    --save_prediction \
+    --n_ensembles 2 \
+    --epochs 100
+
+(Without "CUDA_VISIBLE_DEVICES=0", it runs too)
+Note: Runs successfully on Argo (took less than 5mins), but not in Hopper. It has a dependency on cuda 10.1, and argo has it.
+
+
+
+
+------------------------------------------------------------------VESPA------------------------------------------------------------------
+conda deactivate
+module load python/3.8.6-generic-x86_64
+source /scratch/akabir4/venvs_for_variant_effect_analysis/hopper_vespa_marquet/bin/activate
+pip install vespa-effect
+
+salloc --partition=gpuq --qos=gpu --gres=gpu:A100.80gb:1 --mem=64G
+conda deactivate
+module load cudnn
+source /scratch/akabir4/venvs_for_variant_effect_analysis/hopper_vespa_marquet/bin/activate
+cd /scratch/akabir4/variant_effect_analysis
+vespa vespa_marquet/data/inp_seq.fasta --prott5_weights_cache vespa_marquet/data/cache/ --vespa_output_directory vespa_marquet/outputs/
+
+Note: runs successfully.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,40 @@
+
+
+The Python script is expected to spawn two threads:
+srun --ntasks=1 --cpus-per-task=2 python my_py3_script.py
+
+The srun will first allocate a total of 8 processes on 2 nodes
+srun --nodes=2 --ntasks-per-node=4 --output=/scratch/%u/slurm-%N-%j.out ./my_mpi_program
+
+
+
+To see total ram: grep MemTotal /proc/meminfo
+To know about #-of cpus: lscpu
+
+--ntasks=1 # Number of processes to launch. Most important parameter for parallal python. Max=300.
+--cpus-per-task # must be <= #-of cores on a node, default=48. Max=64. Mostly not needed, but may use this when #-of threads are >48.
+--nodes=2 # default=1. Mostly not needed.
+--ntasks-per-node=4 # #-of processes to run in each node. Since --nodes not needed, we can skip this too.
+--mem=16G # Total memory needed per task (units: K,M,G,T)
+--mem-per-cpu # 
+
+# 50 workers, 1 manager. This will be allocated into multiple nodes, since a node has max 48 cores, so 48 tasks can run on parallal. 
+salloc --partition=normal --mem=16G --ntasks=51
+# Contrarily, the following will run on 1 node.
+salloc --partition=normal --mem=16G --ntasks=48
+
+
+
+Some good resources: 
+A template slurm: https://wiki.orc.gmu.edu/mkdocs/Template.slurm/
+Running Multi-threaded jobs: https://wiki.orc.gmu.edu/mkdocs/How_to_run_Multi-threaded_job_on_ARGO/
+Parallel python code: https://wiki.orc.gmu.edu/mkdocs/How_to_Write_Parallel_Python_Code/
+
+
+salloc --partition=normal --ntasks=201 --cpus-per-task=2 --mem-per-cpu=4G
+Note: I cannot give --node=1, bc 1 node has max=48 cpus (cores). But here I am allocating 101*4 cores.
+
+if __name__ == '__main__':
+
+module load openmpi4
+pip install mpi4py

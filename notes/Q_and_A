@@ -1,0 +1,51 @@
+Questions and follow-ups:
+>>>Did you have time to extract the recent updates from these datasets? I mean data points deposited after 2021 or 2022. That count could help us to reduce the dataset size and would make your job a lot easier.
+	Humsavar: Uniprot previous release gunzips all the data into one which is ~140GB in gipped format.
+	Clinvar:  #-of rows increased from 2021-12 to 2023-01 in ClinVar according to human genome assembly GRCh38:
+		Possibly benign: 424545
+		Possibly pathogenic: 50265
+		Possibly no clinical significance: 112
+
+>>>Did you find proteins with more than 1000 variants (pathogenic or not) from clinvar?
+An example row in clinvar db is as follows. I am not sure how to map this variants of the same protein.
+	#AlleleID                                                           15041
+	Type                                                                Indel
+	Name                    NM_014855.3(AP5Z1):c.80_83delinsTGCTGTAAACTGTA...
+	GeneID                                                               9907
+	GeneSymbol                                                          AP5Z1
+	HGNC_ID                                                        HGNC:22197
+	ClinicalSignificance                                           Pathogenic
+	ClinSigSimple                                                           1
+	LastEvaluated                                                           -
+	RS# (dbSNP)                                                     397704705
+	nsv/esv (dbVar)                                                         -
+	RCVaccession                                                 RCV000000012
+	PhenotypeIDS            MONDO:MONDO:0013342,MedGen:C3150901,OMIM:61364...
+	PhenotypeList                            Hereditary spastic paraplegia 48
+	Origin                                                   germline;unknown
+	OriginSimple                                                     germline
+	Assembly                                                           GRCh37
+	ChromosomeAccession                                          NC_000007.13
+	Chromosome                                                              7
+	Start                                                             4820844
+	Stop                                                              4820847
+	ReferenceAllele                                                        na
+	AlternateAllele                                                        na
+	Cytogenetic                                                        7p22.1
+	ReviewStatus                          criteria provided, single submitter
+	NumberSubmitters                                                        2
+	Guidelines                                                              -
+	TestedInGTR                                                             N
+	OtherIDs                                ClinGen:CA215070,OMIM:613653.0001
+	SubmitterCategories                                                     3
+	VariationID                                                             2
+	PositionVCF                                                       4820844
+	ReferenceAlleleVCF                                                   GGAT
+	AlternateAlleleVCF                                 TGCTGTAAACTGTAACTGTAAA
+
+>>>UniProt has a file in its FTP server, which maps gene variants to Protein sequences. The name of the file contains "variants" in it.
+I could not find this yet. I found "homo_sapiens_variation.txt.gz" in uniport variants ftp directory.
+
+>>>Gnomad is another widely-used database of variants. Again, it does not report protein sequences.
+>>>Another info: There are only a few sources of variant data (experiment projects). The data is stored in multiple databases. Usually, the information flows from DB to another. Clinvar data may overlap with Humsavar, etc. Hence it is important you note down and report the release date of databases.
+

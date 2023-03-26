@@ -1,0 +1,36 @@
+cd variant_effect_analysis
+
+Humsavar:
+wget https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/variants/humsavar.txt -P downloads/
+Release:     2022_05 of 14-Dec-2022
+
+Uniprot-swissprot KB human variantion
+wget https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/variants/homo_sapiens_variation.txt.gz -P downloads/
+Last modified: 2022-12-14 
+
+Uniprot fasta seq:
+wget https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz -P downloads/
+
+
+Clinvar:
+https://ftp.ncbi.nlm.nih.gov/pub/clinvar/
+https://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/
+
+wget https://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/gene_specific_summary.txt -P downloads/clinvar/
+Last modified: 2023-01-21
+
+wget https://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/variant_summary.txt.gz -P downloads/clinvar/
+Last modified: 2023-01-23
+
+
+wget https://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/archive/variant_summary_2021-12.txt.gz -P data/clinvar/2021_12/
+Last modified: 2021-12-02
+
+wget https://ftp.ncbi.nlm.nih.gov/pub/clinvar/tab_delimited/archive/gene_specific_summary_2021-12.txt.gz -P data/clinvar/2021_12/
+Last modified: 2021-12-02
+
+
+
+SNP population frequency
+wget https://ftp.ncbi.nih.gov/snp/population_frequency/latest_release/freq.vcf.gz -P downloads/
+Last modified: 2020-11-24

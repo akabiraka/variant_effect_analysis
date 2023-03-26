@@ -1,0 +1,21 @@
+ncbi_database_search_result_naming_convensions
+
+1. lowercase
+
+dbname_humanReadableQuery
+
+dbname, lowercase. clinvar, 
+humanReadableQuery, CamelCase. pathogenicMissenseVariantsFrom01012022To06022023 ("missense variant"[Molecular consequence]) AND ("2022"[Creation Date] : "3000"[Creation Date]) AND ("clinsig pathogenic"[Filter]) 
+
+clinvar_pathogenicMissenseVariantsFrom01012022To06022023
+
+Variation services: https://www.ncbi.nlm.nih.gov/variation/services/ and https://api.ncbi.nlm.nih.gov/variation/v0/
+SPDI variant notations: https://www.ncbi.nlm.nih.gov/variation/notation/
+SNP search: https://www.ncbi.nlm.nih.gov/snp/docs/entrez_help/
+Global MAF format: https://en.wikipedia.org/wiki/Minor_allele_frequency
+NCBI handbook: https://www.ncbi.nlm.nih.gov/books/NBK21101/
+RS prefix list: https://www.ncbi.nlm.nih.gov/books/NBK21091/table/ch18.T.refseq_accession_numbers_and_mole/?report=objectonly
+MANE: https://www.ncbi.nlm.nih.gov/refseq/MANE/
+NCBI prortein accession to uniprot mapping: https://ftp.ncbi.nlm.nih.gov/refseq/ filename uniprotkb
+Gene to others mapping: readme: https://ftp.ncbi.nlm.nih.gov/gene/README
+RefSeq readme: https://ftp.ncbi.nlm.nih.gov/gene/DATA/README

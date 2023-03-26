@@ -1,0 +1,80 @@
+
+------------------------------The object creation of UniRepEmbedder in bio-embeddings produces following error.------------------------------
+>>> e = UniRepEmbedder()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/bio_embeddings/embed/unirep_embedder.py", line 33, in __init__
+    from jax_unirep.utils import load_params_1900
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/jax_unirep/__init__.py", line 1, in <module>
+    from .evotuning import evotune, fit
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/jax_unirep/evotuning.py", line 8, in <module>
+    from jax import grad, jit
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/jax/__init__.py", line 22, in <module>
+    from .api import (
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/jax/api.py", line 37, in <module>
+    from . import core
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/jax/core.py", line 31, in <module>
+    from . import dtypes
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/jax/dtypes.py", line 31, in <module>
+    from .lib import xla_client
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/jax/lib/__init__.py", line 60, in <module>
+    from jaxlib import cusolver
+ImportError: cannot import name 'cusolver' from 'jaxlib' (/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/jaxlib/__init__.py)
+
+The reason of the error is the incompatibility of jax and jaxlib library as shown below that is installed by bio-embeddings.
+jax                           0.1.77
+jax-unirep                    1.0.3
+jaxlib                        0.4.1
+
+
+------------------------------Installation of jax-unirep independently------------------------------
+module load python/3.8.6-generic-x86_64 
+python -m venv venv_jax_unirep
+source ~/venv_jax_unirep/bin/activate
+pip install --upgrade pip
+pip install jax-unirep
+
+New jax-unirep installs the following libraries, way-updated.
+jax                 0.4.1
+jax-unirep          2.2.0
+jaxlib              0.4.1
+
+Api guide: https://elarkk.github.io/jax-unirep/
+
+------------------------------A example run for jax_unirep------------------------------
+from jax_unirep import get_reps
+sequence = "ASDFGHJKL"
+h_avg, h_final, c_final = get_reps(sequence)
+print(h_avg.shape)
+
+------------------------------Installation of jax-unirep 1.0.3 independently failed-------------------------------------
+python -m venv venv_jax_unirep_103
+source ~/venv_jax_unirep_103/bin/activate
+pip install jax-unirep==1.0.3
+
+jax                 0.1.77
+jax-unirep          1.0.3
+jaxlib              0.4.1
+
+>>> from jax_unirep import get_reps
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/home/akabir4/venv_jax_unirep_103/lib/python3.8/site-packages/jax_unirep/__init__.py", line 1, in <module>
+    from .evotuning import evotune, fit
+  File "/home/akabir4/venv_jax_unirep_103/lib/python3.8/site-packages/jax_unirep/evotuning.py", line 8, in <module>
+    from jax import grad, jit
+  File "/home/akabir4/venv_jax_unirep_103/lib/python3.8/site-packages/jax/__init__.py", line 22, in <module>
+    from .api import (
+  File "/home/akabir4/venv_jax_unirep_103/lib/python3.8/site-packages/jax/api.py", line 37, in <module>
+    from . import core
+  File "/home/akabir4/venv_jax_unirep_103/lib/python3.8/site-packages/jax/core.py", line 31, in <module>
+    from . import dtypes
+  File "/home/akabir4/venv_jax_unirep_103/lib/python3.8/site-packages/jax/dtypes.py", line 31, in <module>
+    from .lib import xla_client
+  File "/home/akabir4/venv_jax_unirep_103/lib/python3.8/site-packages/jax/lib/__init__.py", line 60, in <module>
+    from jaxlib import cusolver
+ImportError: cannot import name 'cusolver' from 'jaxlib' (/home/akabir4/venv_jax_unirep_103/lib/python3.8/site-packages/jaxlib/__init__.py)
+
+Conclusion: jax-unirep==1.0.3 is not compatible anymore which causes the same issue as in bio-embeddings repository.
+
+

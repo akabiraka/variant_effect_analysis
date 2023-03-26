@@ -1,0 +1,358 @@
+
+--------------------------------------------------------------------Humsavar------------------------------------------------------------
+Release:     2022_05 of 14-Dec-2022
+
+https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/docs/humsavar
+The above link has a small readme, which is concise and sufficient.
+
+
+Humsavar lists all missense variants annotated in UniProtKB/Swiss-Prot human entries. It provides a variant classification using the American College of Medical Genetics and Genomics/Association for Molecular Pathology (ACMG/AMP) terminology (Richards et al. PubMed:25741868) into the following categories:
+
+   LP/P = likely pathogenic or pathogenic
+   LB/B = likely benign or benign
+   US   = uncertain significance
+
+These categories are assigned based on the variant annotation in the corresponding UniProtKB/Swiss-Prot entries that is curated from literature reports. The column 'Disease name' shows the name of the disease or the disease sample in which variants have been found. Names are only provided for diseases catalogued in OMIM and for cancer samples.
+
+Statistics for single amino acid variants:
+             LP/P:  32293
+             LB/B:  39633
+             US:    9823
+             Total: 81749
+
+Ques: What is "p" in here "p.His52Arg"?
+             
+Keyword search:
+	carcinoma: 701
+	cancer: 3538
+More than 4000 cancer causing variants.
+
+
+columns: gene_name swissprot_ac ftid aa_change variant_category dbnsfp disease_name
+
+All swissprot_ac is found in the downloaded uniprot-fasta-sequence file.
+
+Example data:
+Main      Swiss-Prot             AA             Variant
+gene name AC         FTId        change         category dbSNP          Disease name
+_________ __________ ___________ ______________ ________ ______________ _____________________
+A1BG      P04217     VAR_018369  p.His52Arg     LB/B     rs893184       -
+A1BG      P04217     VAR_018370  p.His395Arg    LB/B     rs2241788      -
+A1CF      Q9NQ94     VAR_052201  p.Val555Met    LB/B     rs9073         -
+AAAS      Q9NRG9     VAR_012804  p.Gln15Lys     LP/P     rs121918549    Achalasia-addisonianism-alacrima syndrome (AAAS) [MIM:231550]
+
+
+
+--------------------------------------------------------------------Clinvar------------------------------------------------------------
+
+gene_summary
+Last modified: 2023-01-21
+
+#-of rows: 37572
+
+Example data:
+
+#Symbol	GeneID	Total_submissions	Total_alleles	Submissions_reporting_this_gene	Alleles_reported_Pathogenic_Likely_pathogenic	Gene_MIM_number	Number_uncertain	Number_with_conflicts
+A-GAMMA3'E	109951028	5	5	-	-	-	1	0
+A1BG	1	20	20	-	-	138670	4	0
+A1BG-AS1	503538	11	11	-	-	-	1	0
+
+
+variant_summary
+Last modified: 2023-01-23
+
+Example data:
+A line for GRCh37 (hg19) and another line for GRCh38 (hg38).
+
+#AlleleID	Type	Name	GeneID	GeneSymbol	HGNC_ID	ClinicalSignificance	ClinSigSimple	LastEvaluated	RS# (dbSNP)	nsv/esv (dbVar)	RCVaccession	PhenotypeIDS	PhenotypeList	Origin	OriginSimple	Assembly	ChromosomeAccession	Chromosome	Start	Stop	ReferenceAllele	AlternateAllele	Cytogenetic	ReviewStatus	NumberSubmitters	Guidelines	TestedInGTR	OtherIDs	SubmitterCategories	VariationID	PositionVCF	ReferenceAlleleVCF	AlternateAlleleVCF
+15041	Indel	NM_014855.3(AP5Z1):c.80_83delinsTGCTGTAAACTGTAACTGTAAA (p.Arg27_Ile28delinsLeuLeuTer)	9907	AP5Z1	HGNC:22197	Pathogenic	1	-	397704705	-	RCV000000012	MONDO:MONDO:0013342,MedGen:C3150901,OMIM:613647,Orphanet:306511	Hereditary spastic paraplegia 48	germline;unknown	germline	GRCh37	NC_000007.13	7	4820844	4820847	na	na	7p22.1	criteria provided, single submitter	2	-	N	ClinGen:CA215070,OMIM:613653.0001	3	2	4820844	GGAT	TGCTGTAAACTGTAACTGTAAA
+15041	Indel	NM_014855.3(AP5Z1):c.80_83delinsTGCTGTAAACTGTAACTGTAAA (p.Arg27_Ile28delinsLeuLeuTer)	9907	AP5Z1	HGNC:22197	Pathogenic	1	-	397704705	-	RCV000000012	MONDO:MONDO:0013342,MedGen:C3150901,OMIM:613647,Orphanet:306511	Hereditary spastic paraplegia 48	germline;unknown	germline	GRCh38	NC_000007.14	7	4781213	4781216	na	na	7p22.1	criteria provided, single submitter	2	-	N	ClinGen:CA215070,OMIM:613653.0001	3	2	4781213	GGAT	TGCTGTAAACTGTAACTGTAAA
+15042	Deletion	NM_014855.3(AP5Z1):c.1413_1426del (p.Leu473fs)	9907	AP5Z1	HGNC:22197	Pathogenic	1	Jun 29, 2010	397704709	-	RCV000000013	MONDO:MONDO:0013342,MedGen:C3150901,OMIM:613647,Orphanet:306511	Hereditary spastic paraplegia 48	germline	germline	GRCh37	NC_000007.13	7	4827361	4827374	na	na	7p22.1	no assertion criteria provided	1	-	N	ClinGen:CA215072,OMIM:613653.0002	1	3	4827360	GCTGCTGGACCTGCC	G
+15042	Deletion	NM_014855.3(AP5Z1):c.1413_1426del (p.Leu473fs)	9907	AP5Z1	HGNC:22197	Pathogenic	1	Jun 29, 2010	397704709	-	RCV000000013	MONDO:MONDO:0013342,MedGen:C3150901,OMIM:613647,Orphanet:306511	Hereditary spastic paraplegia 48	germline	germline	GRCh38	NC_000007.14	7	4787730	4787743	na	na	7p22.1	no assertion criteria provided	1	-	N	ClinGen:CA215072,OMIM:613653.0002	1	3	4787729	GCTGCTGGACCTGCC	G
+
+First row:
+#AlleleID                                                           15041
+Type                                                                Indel
+Name                    NM_014855.3(AP5Z1):c.80_83delinsTGCTGTAAACTGTA...
+GeneID                                                               9907
+GeneSymbol                                                          AP5Z1
+HGNC_ID                                                        HGNC:22197
+ClinicalSignificance                                           Pathogenic
+ClinSigSimple                                                           1
+LastEvaluated                                                           -
+RS# (dbSNP)                                                     397704705
+nsv/esv (dbVar)                                                         -
+RCVaccession                                                 RCV000000012
+PhenotypeIDS            MONDO:MONDO:0013342,MedGen:C3150901,OMIM:61364...
+PhenotypeList                            Hereditary spastic paraplegia 48
+Origin                                                   germline;unknown
+OriginSimple                                                     germline
+Assembly                                                           GRCh37
+ChromosomeAccession                                          NC_000007.13
+Chromosome                                                              7
+Start                                                             4820844
+Stop                                                              4820847
+ReferenceAllele                                                        na
+AlternateAllele                                                        na
+Cytogenetic                                                        7p22.1
+ReviewStatus                          criteria provided, single submitter
+NumberSubmitters                                                        2
+Guidelines                                                              -
+TestedInGTR                                                             N
+OtherIDs                                ClinGen:CA215070,OMIM:613653.0001
+SubmitterCategories                                                     3
+VariationID                                                             2
+PositionVCF                                                       4820844
+ReferenceAlleleVCF                                                   GGAT
+AlternateAlleleVCF                                 TGCTGTAAACTGTAACTGTAAA
+
+
+from 2023-01:
+#-of rows: 3261243 (A line for GRCh37 (hg19) and another line for GRCh38 (hg38))
+#-of rows where ClinSigSimple=0 and Assembly=GRCh38: 1378494
+#-of rows where ClinSigSimple=1 and Assembly=GRCh38: 220145
+#-of rows where ClinSigSimple=-1 and Assembly=GRCh38: 743
+
+from 2021-12
+#-of rows where ClinSigSimple=0 and Assembly=GRCh38: 953949
+#-of rows where ClinSigSimple=1 and Assembly=GRCh38: 169880
+#-of rows where ClinSigSimple=-1 and Assembly=GRCh38: 631
+Ques: How could we link this to protein?
+
+#-of rows increased from 2021-12 to 2023-01 in human genome assymble GRCh38:
+Possibly benign: 424545
+Possibly pathogenic: 50265
+Possible no clinical significance: 112
+
+
+
+"homo sapiens"[Organism] AND "missense variant"[Molecular consequence] AND "clinsig pathogenic"[Filter] AND ("2022/01/01"[Creation Date] : "2023/02/14"[Creation Date]) 
+> 4009
+> clinvar_HumanPathogenicMissenseVariants01012022To14022023
+
+"homo sapiens"[Organism] AND "missense variant"[Molecular consequence] AND "clinsig likely path"[Filter] AND ("2022/01/01"[Creation Date] : "2023/02/14"[Creation Date]) 
+> 6828
+> clinvar_HumanLikelyPathogenicMissenseVariants01012022To14022023
+
+"homo sapiens"[Organism]
+--------------------------------------------------------------------hgvs4variation------------------------------------------------------------
+
+##Report of HGVS expressions for VariationIDs and AlleleIDs
+
+##Explanation of the columns in this report
+
+#GeneSymbol:           the offical symbol from HGNC for the gene in which this allele is found.  Will be null if the variant is intergenic or spans multiple genes.
+
+#GeneID:               NCBI's identfier for the gene in which this allele is found.  Will be null if the variant is intergenic or spans multiple genes.
+
+#VariationID:          the identifier assigned by ClinVar and used to build the URL, namely https://ncbi.nlm.nih.gov/clinvar/VariantID
+
+#AlleleID:             the identifier assigned by ClinVar to the simple allele. Will be null if the allele is complex.
+
+#Type                  the type of HGVS expression
+
+#Assembly              reported only for assembly-specific HGVS expressions
+
+#NucleotideExpression  an HGVS expression based on a nucleotide sequence; may be null if the allele is defined only by a protein change
+
+#NucleotideChange      the subset of the NucleotideExpression in the previous column representing the sequence change
+
+#ProteinExpression     an HGVS expression based on a protein sequence; if NucleotideExpression is provided, then represents the translation of nucleotide change
+
+#ProteinChange         the subset of the ProteinExpression in the previous column representing the sequence change
+
+#UsedForNaming         the accession in this HGVS expression is used to report a name in ClinVar. Values are Yes or No.
+
+#Submitted             this HGVS expression was used by a submitter. Values are Current or Previous (provided in a previous version of a submission (SCV accession) but not in a current SCV or current version of an SCV)
+
+#OnRefSeqGene          the accession in this HGVS expression is annotated on a RefSeqGene
+
+#Symbol GeneID  VariationID     AlleleID        Type    Assembly        NucleotideExpression    NucleotideChange        ProteinExpression       ProteinChange   UsedForNaming   Submitted       OnRefSeqGene
+
+(10000, 13)
+  Symbol GeneID  VariationID  AlleleID     Type Assembly                           NucleotideExpression                  NucleotideChange ProteinExpression ProteinChange UsedForNaming Submitted OnRefSeqGene
+0      -      -           25     15064  genomic   GRCh38  NC_000020.11:g.25383511_25397601del14091insGG  g.25383511_25397601del14091insGG                 -             -            No        No           No
+1      -      -           25     15064  genomic   GRCh38       NC_000020.11:g.25383511_25397601delinsGG       g.25383511_25397601delinsGG                 -             -            No        No           No
+2      -      -           25     15064  genomic   GRCh37  NC_000020.10:g.25364147_25378237del14091insGG  g.25364147_25378237del14091insGG                 -             -            No        No           No
+3      -      -           25     15064  genomic   GRCh37       NC_000020.10:g.25364147_25378237delinsGG       g.25364147_25378237delinsGG                 -             -            No        No           No
+4      -      -           25     15064  genomic   GRCh38        NC_000020.11:g.25383511_25397600delinsG        g.25383511_25397600delinsG                 -             -            No        No           No
+Symbol                                                              -
+GeneID                                                              -
+VariationID                                                        25
+AlleleID                                                        15064
+Type                                                          genomic
+Assembly                                                       GRCh38
+NucleotideExpression    NC_000020.11:g.25383511_25397601del14091insGG
+NucleotideChange                     g.25383511_25397601del14091insGG
+ProteinExpression                                                   -
+ProteinChange                                                       -
+UsedForNaming                                                      No
+Submitted                                                          No
+OnRefSeqGene                                                       No
+
+#-rows: 17217771 (took less than 10s in a 64GB ram)
+
+ClinVar pathogenic data generation protocol:
+> We run a query in ClinVar database for selecting all missense pathogenic and likely pathogenic variants created from 01/01/2022 untill 06/02/2023. 
+("missense variant"[Molecular consequence]) AND ("2022"[Creation Date] : "3000"[Creation Date]) AND (("clinsig likely path"[Filter]) OR "clinsig pathogenic"[Filter]) 
+8579 rows
+> Second, we merge this data with hgvs4variation to map with transcripted proteins. This gives us 34526 datapoints for each variation mapped to possiply multiple protein isoforms. And there are 1952 unique genes.
+> Next, we map MANE [https://www.ncbi.nlm.nih.gov/refseq/MANE/] transcripted proteins for each genomic variants. Now we have 8416 data points.
+
+
+--------------------------------------------------------------------SNP population frequency------------------------------------------------------------
+Last modified: 2020-11-24
+SNP population frequency (conservation) vs. pathogenicity
+https://ftp.ncbi.nih.gov/snp/population_frequency/
+
+# readme of the downloaded file, also search for VCFv4.0.
+##fileformat=VCFv4.0	
+##build_id=20201027095038	
+##Population=https://www.ncbi.nlm.nih.gov/biosample/?term=GRAF-pop	
+##FORMAT=<ID=AN,Number=1,Type=Integer,Description="Total allele count for the population, including REF">	
+##FORMAT=<ID=AC,Number=A,Type=Integer,Description="Allele count for each ALT allele for the population">
+
+SAMN#: BioSample accession number is prefixed by SAMN. https://www.ncbi.nlm.nih.gov/books/NBK169436/
+An example: https://www.ncbi.nlm.nih.gov/biosample/?term=SAMN10492705
+
+         #CHROM        POS            ID REF ALT QUAL FILTER INFO FORMAT  ... SAMN10492698 SAMN10492699 SAMN10492700 SAMN10492701 SAMN10492702 SAMN11605645 SAMN10492703 SAMN10492704 SAMN10492705
+0   NC_000001.9  144135212  rs1553120241   G   A    .      .    .  AN:AC  ...      336:288        32:24      170:117        32:24        18:13        20:15      344:296      288:248    9432:6100
+1   NC_000001.9  144148243     rs2236566   G   T    .      .    .  AN:AC  ...          0:0          0:0          0:0          0:0          0:0         84:8          0:0          0:0     6080:518
+2   NC_000001.9  146267105  rs1553119693   T   G    .      .    .  AN:AC  ...     1378:839        18:14        70:60         10:9    4836:3639      452:322     1414:861        66:53  44024:33749
+3   NC_000001.9  148488564             .   C   A    .      .    .  AN:AC  ...        338:0         32:0        170:0         32:0         16:0         20:0        346:0        288:0       9424:0
+4  NC_000001.10    2701535   rs371068661   C   T    .      .    .  AN:AC  ...         48:1          0:0          0:0          0:0          0:0       188:15         48:1          0:0       370:25
+
+
+#CHROM           NC_000001.9
+POS                144135212
+ID              rs1553120241
+REF                        G
+ALT                        A
+QUAL                       .
+FILTER                     .
+INFO                       .
+FORMAT                 AN:AC
+SAMN10492695       8560:5387	European
+SAMN10492696             8:8	African Others
+SAMN10492697         256:224	East Asian
+SAMN10492698         336:288	African American
+SAMN10492699           32:24	Latin American 1
+SAMN10492700         170:117	Latin American 2
+SAMN10492701           32:24	Other Asian
+SAMN10492702           18:13	South Asian
+SAMN11605645           20:15	Other
+SAMN10492703         344:296	African
+SAMN10492704         288:248	Asian
+SAMN10492705       9432:6100	Total
+
+
+
+
+
+----------------------------------------------------------------SNP--------------------------------------------------
+
+Search and download using the following queries:
+	For 0 <= MAF < 0.0001: Extremely rare. 
+	"humo sapiens"[Organism] AND "missense variant"[Function Class] AND 00000.0000:00000.0001[GLOBAL_MAF] AND "snp protein"[Filter] AND ("validated by alfa"[Filter] OR "validated by cluster"[Filter] OR "validated by frequency"[Filter])
+	> 1903
+
+	For 0.0001 <= MAF < 0.01: Rare.
+	"humo sapiens"[Organism] AND "missense variant"[Function Class] AND 00000.0001:00000.0099[GLOBAL_MAF] AND "snp protein"[Filter] AND ("validated by alfa"[Filter] OR "validated by cluster"[Filter] OR "validated by frequency"[Filter])
+	> 667503 
+
+	For 0.01 <= MAF < 1.0: Common.
+	"humo sapiens"[Organism] AND "missense variant"[Function Class] AND 00000.0100:00001.0000[GLOBAL_MAF] AND "snp protein"[Filter] AND ("validated by alfa"[Filter] OR "validated by cluster"[Filter] OR "validated by frequency"[Filter])
+	or, "homo spiens"[Organism] AND "missense variant"[Function Class] AND "common variant"[Filter] AND "snp protein"[Filter] AND ("validated by alfa"[Filter] OR "validated by cluster"[Filter] OR "validated by frequency"[Filter])
+	> 54092 
+	> it took ~15 mins to download, parse and save. 
+	
+
+Applying validation filter by alfa, cluster and frequency gives the same results, however keeping it for the better quality of data.
+
+
+"homo sapians"[Organism] AND "missense variant"[Function Class] AND "snp protein"[Filter] AND "by alfa"[Validation Status] 
+	> 5141322
+	> 5140350
+
+common: 39250
+rare: 58377
+ultra rare: 4577439
+
+### GLOBAL_MAF is based on 1000genomes project
+"humo sapiens"[Organism] AND "missense variant"[Function Class] AND 0.001:0.0099[GLOBAL_MAF] AND "snp protein"[Filter] AND "validated by alfa"[Filter] 
+	> 91951
+"humo sapiens"[Organism] AND "missense variant"[Function Class] AND 0.0:0.00099[GLOBAL_MAF] AND "snp protein"[Filter] AND "validated by alfa"[Filter] 
+	> 486279
+"humo sapiens"[Organism] AND "missense variant"[Function Class] AND 0.01:1.0[GLOBAL_MAF] AND "snp protein"[Filter] AND "validated by alfa"[Filter] 	
+or "homo sapians"[Organism] AND "missense variant"[Function Class] AND "snp protein"[Filter] AND "by alfa"[Validation Status] AND "common variant"[Filter]
+	> 53765
+
+----------------------------------------------------------------gene2refseq--------------------------------------------------
+
+readme: https://ftp.ncbi.nlm.nih.gov/gene/README
+
+#-or rows: ~6344*10^4 
+It took ~3mins for iterating over the dataset only.
+
+tax_id                                                 24
+GeneID                                           77267466
+status                                                NaN
+RNA_nucleotide_accession.version                        -
+RNA_nucleotide_gi                                       -
+protein_accession.version                  WP_011787424.1
+protein_gi                                      500111419
+genomic_nucleotide_accession.version        NZ_CP104755.1
+genomic_nucleotide_gi                          2310801391
+start_position_on_the_genomic_accession                 0
+end_position_on_the_genomic_accession                1385
+orientation                                             +
+assembly                                                -
+mature_peptide_accession.version                        -
+mature_peptide_gi                                       -
+Symbol                                               dnaA
+
+----------------------------------------------------------------refseq/H_sapiens/RefSeqGene--------------------------------------------------
+
+readme: https://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/README
+readme file says "LRG_RefSeqGene  -- a LRG to RefSeqGene mapping file" which maps gene id to gene products such as RNA transcript, proteins
+
+wget https://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/RefSeqGene/LRG_RefSeqGene -P data/refseq/
+mv data/refseq/LRG_RefSeqGene data/refseq/HumanLRGRefSeqGene.txt
+
+#tax_id	GeneID	Symbol	RSG	LRG	RNA	t	Protein	p	Category
+9606	29974	A1CF	NG_029916.1		NM_014576.4		NP_055391.2		reference standard
+9606	29974	A1CF	NG_029916.1		NM_138932.3		NP_620310.1		aligned: Selected
+9606	29974	A1CF	NG_029916.1		NM_138933.3		NP_620311.1		aligned: Selected
+9606	29974	A1CF	NG_029916.1		NM_001198818.2		NP_001185747.1		aligned: Selected
+9606	29974	A1CF	NG_029916.1		NM_001198819.2		NP_001185748.1		aligned: Selected
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

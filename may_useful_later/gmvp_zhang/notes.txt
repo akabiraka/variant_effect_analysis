@@ -1,0 +1,3 @@
+hopper_variant_effect_analysis_mine
+
+wget https://www.dropbox.com/s/nce1jhg3i7jw1hx/gMVP.2021-02-28.csv.gz -P models/gmvp_zhang/

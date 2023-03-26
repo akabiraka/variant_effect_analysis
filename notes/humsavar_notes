@@ -1,0 +1,76 @@
+Humsavar
+Release:     2022_05 of 14-Dec-2022
+
+https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/docs/humsavar
+The above link has a small readme, which is concise and sufficient.
+
+
+Humsavar lists all missense variants annotated in UniProtKB/Swiss-Prot human entries. It provides a variant classification using the American College of Medical Genetics and Genomics/Association for Molecular Pathology (ACMG/AMP) terminology (Richards et al. PubMed:25741868) into the following categories:
+
+   LP/P = likely pathogenic or pathogenic
+   LB/B = likely benign or benign
+   US   = uncertain significance
+
+These categories are assigned based on the variant annotation in the corresponding UniProtKB/Swiss-Prot entries that is curated from literature reports. The column 'Disease name' shows the name of the disease or the disease sample in which variants have been found. Names are only provided for diseases catalogued in OMIM and for cancer samples.
+
+Statistics for single amino acid variants:
+             LP/P:  32293
+             LB/B:  39633
+             US:    9823
+             Total: 81749
+
+Ques: What is "p" in here "p.His52Arg"?
+             
+Keyword search:
+	carcinoma: 701
+	cancer: 3538
+	
+More than 4000 cancer causing variants.
+
+Uniprot downloads: https://www.uniprot.org/help/downloads
+https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/variants/
+
+
+gene_name swissprot_ac ftid aa_change variant_category dbnsfp disease_name
+
+11883 CD300LD-ASQ96MU5 VAR_029628 not found in uniprot
+17387 CSGALNACT1Q8TDX6 VAR_055647 not found in uniprot
+17388 CSGALNACT1Q8TDX6 VAR_055648 not found in uniprot
+17389 CSGALNACT1Q8TDX6 VAR_060391 not found in uniprot
+17390 CSGALNACT1Q8TDX6 VAR_078123 not found in uniprot
+17391 CSGALNACT1Q8TDX6 VAR_078124 not found in uniprot
+17392 CSGALNACT1Q8TDX6 VAR_078125 not found in uniprot
+17393 CSGALNACT1Q8TDX6 VAR_084187 not found in uniprot
+17394 CSGALNACT1Q8TDX6 VAR_084188 not found in uniprot
+17395 CSGALNACT2Q8N6G5 VAR_048715 not found in uniprot
+17396 CSGALNACT2Q8N6G5 VAR_048716 not found in uniprot
+25708 FER1L6-AS2Q96M78 VAR_029819 not found in uniprot
+39908 KRTAP10-10P60014 VAR_017755 not found in uniprot
+39909 KRTAP10-10P60014 VAR_053463 not found in uniprot
+39910 KRTAP10-10P60014 VAR_053464 not found in uniprot
+39911 KRTAP10-10P60014 VAR_060053 not found in uniprot
+39912 KRTAP10-10P60014 VAR_060054 not found in uniprot
+39913 KRTAP10-10P60014 VAR_060055 not found in uniprot
+39914 KRTAP10-10P60014 VAR_062114 not found in uniprot
+39915 KRTAP10-11P60412 VAR_060056 not found in uniprot
+39916 KRTAP10-12P60413 VAR_053465 not found in uniprot
+39917 KRTAP10-12P60413 VAR_053466 not found in uniprot
+45232 MRGPRG-AS1Q2M3A8 VAR_027707 not found in uniprot
+45233 MRGPRG-AS1Q2M3A8 VAR_027708 not found in uniprot
+45234 MRGPRG-AS1Q2M3A8 VAR_027709 not found in uniprot
+55415 PKD1L1-AS1Q9H7B7 VAR_043942 not found in uniprot
+64938 SERTAD4-ASQ5TG53 VAR_046125 not found in uniprot
+66419 SLC22A18ASQ8N1D0 VAR_024064 not found in uniprot
+66420 SLC22A18ASQ8N1D0 VAR_068886 not found in uniprot
+69907 ST6GALNAC1Q9NSC7 VAR_021514 not found in uniprot
+69908 ST6GALNAC1Q9NSC7 VAR_049226 not found in uniprot
+69909 ST6GALNAC1Q9NSC7 VAR_086492 not found in uniprot
+69910 ST6GALNAC1Q9NSC7 VAR_086493 not found in uniprot
+69911 ST6GALNAC1Q9NSC7 VAR_086494 not found in uniprot
+69912 ST6GALNAC1Q9NSC7 VAR_086495 not found in uniprot
+69913 ST6GALNAC3Q8NDV1 VAR_055846 not found in uniprot
+73113 TMEM132E-DA2RUQ5 VAR_046187 not found in uniprot
+73114 TMEM132E-DA2RUQ5 VAR_046188 not found in uniprot
+78158 UMODL1-AS1Q8N2C9 VAR_017941 not found in uniprot
+80827 ZNF252P-ASQ0IIN9 VAR_032035 not found in uniprot
+

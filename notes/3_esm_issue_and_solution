@@ -1,0 +1,61 @@
+
+------------------------------The object creation of ESMEmbedder and ESM1bEmbedder in bio-embeddings produces following error.------------------------------
+>>> e = ESMEmbedder()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/bio_embeddings/embed/esm_embedder.py", line 39, in __init__
+    model, alphabet = load_model_and_alphabet_local(self._options["model_file"])
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/bio_embeddings/embed/esm_embedder.py", line 22, in load_model_and_alphabet_local
+    model_data = torch.load(model_location, map_location="cpu")
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/torch/serialization.py", line 608, in load
+    return _legacy_load(opened_file, map_location, pickle_module, **pickle_load_args)
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/torch/serialization.py", line 794, in _legacy_load
+    deserialized_objects[key]._set_from_file(f, offset, f_should_read_directly)
+RuntimeError: unexpected EOF, expected 12234426 more bytes. The file might be corrupted.
+
+>>> e = ESM1bEmbedder()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/bio_embeddings/embed/esm_embedder.py", line 39, in __init__
+    model, alphabet = load_model_and_alphabet_local(self._options["model_file"])
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/bio_embeddings/embed/esm_embedder.py", line 22, in load_model_and_alphabet_local
+    model_data = torch.load(model_location, map_location="cpu")
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/torch/serialization.py", line 608, in load
+    return _legacy_load(opened_file, map_location, pickle_module, **pickle_load_args)
+  File "/home/akabir4/venv_variant_effect/lib/python3.8/site-packages/torch/serialization.py", line 794, in _legacy_load
+    deserialized_objects[key]._set_from_file(f, offset, f_should_read_directly)
+RuntimeError: unexpected EOF, expected 3396422 more bytes. The file might be corrupted.
+
+------------------------------Installation of esm independently------------------------------
+module load python/3.8.6-generic-x86_64 
+python -m venv venv_esm
+pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
+pip install fair-esm
+
+
+------------------------------A example run for esm------------------------------
+salloc --partition=gpuq --qos=gpu --gres=gpu:A100.80gb:1 --mem=64G
+conda deactivate
+source ~/venv_esm/bin/activate
+
+# module load cuda/11.1.1-w7 # did not load this while testing, may need this later
+
+import torch
+import esm
+
+model, alphabet = esm.pretrained.esm2_t33_650M_UR50D()
+batch_converter = alphabet.get_batch_converter()
+model.eval()
+
+
+data = [("protein1", "MKTVRQERLKSIVRILERSKEPVSGAQLA")]
+batch_labels, batch_strs, batch_tokens = batch_converter(data)
+
+with torch.no_grad():
+    results = model(batch_tokens, repr_layers=[33], return_contacts=False)
+
+token_representations = results["representations"][33]
+
+print(token_representations.shape)
+
+

@@ -1,0 +1,11 @@
+Workflow
+Search Clinvar for pathogenic and likely pathogenic data using query.
+Download gene2refseq data.
+
+Do gene2refseq_preprocessing
+    gene2refseq_preprocessing.ipynb
+
+
+clinvar_mapping_gene2refseq.ipynb
+
+
