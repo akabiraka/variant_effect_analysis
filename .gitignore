@@ -138,6 +138,8 @@ models/esm_rives/outputs/*
 
 models/dbnsfp/inputs/*
 models/dbnsfp/outputs/*
+models/dbnsfp/datasets_pathogenicity/*
+models/dbnsfp/datasets_population_freq/*
 
 models/bioembeddings_dallago/outputs/*
 

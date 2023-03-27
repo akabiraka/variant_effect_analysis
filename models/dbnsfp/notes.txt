@@ -54,12 +54,6 @@ source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/ac
 		"D" and "T" is 0.6149.
 
 
-85	MutPred_score: General MutPred score. Scores range from 0 to 1. The larger the score the more
-		likely the SNP has damaging effect.
-86	MutPred_rankscore: MutPred scores were ranked among all MutPred scores in dbNSFP. The rankscore is
-		the ratio of the rank of the score over the total number of MutPred scores in dbNSFP.
-
-
 90	MVP_score: A pathogenicity prediction score for missense variants using deep learning approach.
 		The range of MVP score is from 0 to 1. The larger the score, the more likely the variant is 
 		pathogenic. The authors suggest thresholds of 0.7 and 0.75 for separating damaging vs tolerant 
@@ -70,20 +64,80 @@ source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/ac
 		the ratio of the rank of the score over the total number of MVP scores in dbNSFP. 
 
 
-94	PrimateAI_score: A pathogenicity prediction score for missense variants based on common variants of
-		non-human primate species using a deep neural network. The range of PrimateAI score is 0 to 1. 
-		The larger the score, the more likely the variant is pathogenic. The authors suggest a threshold
-		of 0.803 for separating damaging vs tolerant variants. 
-		Details see https://doi.org/10.1038/s41588-018-0167-z
-95	PrimateAI_rankscore: PrimateAI scores were ranked among all PrimateAI scores in dbNSFP. The rankscore is
-		the ratio of the rank of the score over the total number of PrimateAI scores in dbNSFP. 
-96	PrimateAI_pred: Prediction of PrimateAI score based on the authors' recommendation, "T(olerated)" or
-		"D(amaging)". The score cutoff between "D" and "T" is 0.803.
+38	SIFT_score: SIFT score (SIFTori). Scores range from 0 to 1. The smaller the score the
+		more likely the SNP has damaging effect. 
+		Multiple scores separated by ";", corresponding to Ensembl_proteinid.
+39	SIFT_converted_rankscore: SIFTori scores were first converted to SIFTnew=1-SIFTori,
+		then ranked among all SIFTnew scores in dbNSFP. The rankscore is the ratio of 
+		the rank the SIFTnew score over the total number of SIFTnew scores in dbNSFP. 
+		If there are multiple scores, only the most damaging (largest) rankscore is presented.
+		The rankscores range from 0.00964 to 0.91255.
+40	SIFT_pred: If SIFTori is smaller than 0.05 (rankscore>0.39575) the corresponding nsSNV is
+		predicted as "D(amaging)"; otherwise it is predicted as "T(olerated)". 
+		Multiple predictions separated by ";"
 
 
-124	DANN_score: DANN is a functional prediction score retrained based on the training data
-		of CADD using deep neural network. Scores range from 0 to 1. A larger number indicate 
-		a higher probability to be damaging. More information of this score can be found in
-		doi: 10.1093/bioinformatics/btu703. 
-125	DANN_rankscore: DANN scores were ranked among all DANN scores in dbNSFP. The rankscore is
-		the ratio of the rank of the score over the total number of DANN scores in dbNSFP.
+44	Polyphen2_HDIV_score: Polyphen2 score based on HumDiv, i.e. hdiv_prob.
+		The score ranges from 0 to 1. 
+		Multiple entries separated by ";", corresponding to Uniprot_acc.
+45	Polyphen2_HDIV_rankscore: Polyphen2 HDIV scores were first ranked among all HDIV scores
+		in dbNSFP. The rankscore is the ratio of the rank the score over the total number of 
+		the scores in dbNSFP. If there are multiple scores, only the most damaging (largest) 
+		rankscore is presented. The scores range from 0.03061 to 0.91137.
+46	Polyphen2_HDIV_pred: Polyphen2 prediction based on HumDiv, "D" ("probably damaging",
+		HDIV score in [0.957,1] or rankscore in [0.55859,0.91137]), "P" ("possibly damaging", 
+		HDIV score in [0.454,0.956] or rankscore in [0.37043,0.55681]) and "B" ("benign", 
+		HDIV score in [0,0.452] or rankscore in [0.03061,0.36974]). Score cutoff for binary 
+		classification is 0.5 for HDIV score or 0.38028 for rankscore, i.e. the prediction is 
+		"neutral" if the HDIV score is smaller than 0.5 (rankscore is smaller than 0.38028), 
+		and "deleterious" if the HDIV score is larger than 0.5 (rankscore is larger than 
+		0.38028). Multiple entries are separated by ";", corresponding to Uniprot_acc.
+47	Polyphen2_HVAR_score: Polyphen2 score based on HumVar, i.e. hvar_prob.
+		The score ranges from 0 to 1. 
+		Multiple entries separated by ";", corresponding to Uniprot_acc.
+48	Polyphen2_HVAR_rankscore: Polyphen2 HVAR scores were first ranked among all HVAR scores
+		in dbNSFP. The rankscore is the ratio of the rank the score over the total number of 
+		the scores in dbNSFP. If there are multiple scores, only the most damaging (largest) 
+		rankscore is presented. The scores range from 0.01493 to 0.97581.
+49	Polyphen2_HVAR_pred: Polyphen2 prediction based on HumVar, "D" ("probably damaging",
+		HVAR score in [0.909,1] or rankscore in [0.65694,0.97581]), "P" ("possibly damaging", 
+		HVAR in [0.447,0.908] or rankscore in [0.47121,0.65622]) and "B" ("benign", HVAR 
+		score in [0,0.446] or rankscore in [0.01493,0.47076]). Score cutoff for binary 
+		classification is 0.5 for HVAR score or 0.48762 for rankscore, i.e. the prediction 
+		is "neutral" if the HVAR score is smaller than 0.5 (rankscore is smaller than 
+		0.48762), and "deleterious" if the HVAR score is larger than 0.5 (rankscore is larger 
+		than 0.48762). Multiple entries are separated by ";", corresponding to Uniprot_acc.
+
+
+118	CADD_raw: CADD raw score for functional prediction of a SNP. Please refer to Kircher et al.
+		(2014) Nature Genetics 46(3):310-5 for details. The larger the score the more likely
+		the SNP has damaging effect. Scores range from -6.458163 to 18.301497 in dbNSFP. 
+		Please note the following copyright statement for CADD: 
+		"CADD scores (http://cadd.gs.washington.edu/) are Copyright 2013 University of 
+		Washington and Hudson-Alpha Institute for Biotechnology (all rights reserved) but are 
+		freely available for all academic, non-commercial applications. For commercial 
+		licensing information contact Jennifer McCullar (mccullaj@uw.edu)."
+119	CADD_raw_rankscore: CADD raw scores were ranked among all CADD raw scores in dbNSFP. The
+		rankscore is the ratio of the rank of the score over the total number of CADD 
+		raw scores in dbNSFP. Please note the following copyright statement for CADD: "CADD 
+		scores (http://cadd.gs.washington.edu/) are Copyright 2013 University of Washington 
+		and Hudson-Alpha Institute for Biotechnology (all rights reserved) but are freely 
+		available for all academic, non-commercial applications. For commercial licensing 
+		information contact Jennifer McCullar (mccullaj@uw.edu)."
+120	CADD_phred: CADD phred-like score. This is phred-like rank score based on whole genome
+		CADD raw scores. Please refer to Kircher et al. (2014) Nature Genetics 46(3):310-5 
+		for details. The larger the score the more likely the SNP has damaging effect. 
+		Please note the following copyright statement for CADD: "CADD scores 
+		(http://cadd.gs.washington.edu/) are Copyright 2013 University of Washington and 
+		Hudson-Alpha Institute for Biotechnology (all rights reserved) but are freely 
+		available for all academic, non-commercial applications. For commercial licensing 
+		information contact Jennifer McCullar (mccullaj@uw.edu)."
+
+
+83	REVEL_score: REVEL is an ensemble score based on 13 individual scores for predicting the
+		pathogenicity of missense variants. Scores range from 0 to 1. The larger the score the more 
+		likely the SNP has damaging effect. "REVEL scores are freely available for non-commercial use.  
+		For other uses, please contact Weiva Sieh" (weiva.sieh@mssm.edu)
+		Multiple entries are separated by ";", corresponding to Ensembl_transcriptid.
+84	REVEL_rankscore: REVEL scores were ranked among all REVEL scores in dbNSFP. The rankscore is
+		the ratio of the rank of the score over the total number of REVEL scores in dbNSFP.

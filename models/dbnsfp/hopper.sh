@@ -19,10 +19,12 @@ source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/ac
 ##python models/aa_common/chromosomal_SNV_conversion_for_population_freq.py
 
 ## for full scale run it took ~32 minutes
-java -cp data/dbnsfp/dbNSFP43a/ search_dbNSFP43a -i models/dbnsfp/inputs/chromosomal_SNVs.txt -o models/dbnsfp/outputs/chromosomal_SNVs_preds.txt -w 1-6,77-79,90-91
-##python models/dbnsfp/analysis_population_freq.py
+# java -cp data/dbnsfp/dbNSFP43a/ search_dbNSFP43a -i models/dbnsfp/datasets_population_freq/SNVs_with_popu_freq_balanced_chromosomal.txt -o models/dbnsfp/outputs/popu_freq_preds.txt -w 1-6,77,90,38,44,47,118,83 
 
 
 ## for pathogenicity analysis
-## java -cp data/dbnsfp/dbNSFP43a/ search_dbNSFP43a -i models/aa_common/inputs/clinvar_HumanPathogenicMissenseVariants01012022To14022023.txt -o models/dbnsfp/outputs/clinvar_HumanPathogenicMissenseVariants01012022To14022023.out -w 1-6,77-79,85-86,90-91,94-96,124-125    
-## java -cp data/dbnsfp/dbNSFP43a/ search_dbNSFP43a -i models/aa_common/inputs/clinvar_HumanLikelyPathogenicMissenseVariants01012022To14022023.txt -o models/dbnsfp/outputs/clinvar_HumanLikelyPathogenicMissenseVariants01012022To14022023.out -w 1-6,77-79,85-86,91-92,94-96,124-125
+for i in {0..9}
+do
+    # java -cp data/dbnsfp/dbNSFP43a/ search_dbNSFP43a -i models/dbnsfp/datasets_pathogenicity/pathogenic_and_neutral_SNVs/$i.txt -o models/dbnsfp/outputs/pathogenic_and_neutral_SNVs/$i.txt -w 1-6,77,90,38,44,47,118,83
+    java -cp data/dbnsfp/dbNSFP43a/ search_dbNSFP43a -i models/dbnsfp/datasets_pathogenicity/likely_pathogenic_and_neutral_SNVs/$i.txt -o models/dbnsfp/outputs/likely_pathogenic_and_neutral_SNVs/$i.txt -w 1-6,77,90,38,44,47,118,83
+done
