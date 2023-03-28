@@ -14,5 +14,19 @@ We further cleanup this dataset by removing SNVs whose mutant allele population 
     This function is used for computing all models predictions for population frequency based analysis.
 
 
-python models/aa_common/SNVs_conversion_for_pathogenicity.py
+From preprocessed SNVs for Pathogenicity analysis, we clean the dataset, 
+downloaded the corresponding protein sequences from NCBI-Protein (https://www.ncbi.nlm.nih.gov/protein/) database,
+and combined all the protein sequences into one fasta document
+    python models/aa_common/SNVs_conversion_for_pathogenicity.py
+
+We compute a neutral dataset from the population frequency dataset to test with the pathogenic (or likely) dataset. 
+Based on the query on ncbi clinvar database, we previously got the dataset for pathogenic and likely-pathogenic.
+I exclusively made the dataset for pathogenic and likely-pathogenic, so no intersection between them.
+Then I sampled variants for neutral SNVs from population-frequency dataset. The sampling criteria are as follows:
+      . excluding 0/1 population count variants.
+      . from the remaining I sampled the same number of variants as pathogenic (or likely-pathogenic) variants. And these sampled variants are corresponding to the same proteins (genes) as are in the pathogenic (or likely-pathogenic) dataset.
+This sampling has been done 10 times.
+
+
+
 models/aa_common/SNVs_conversion_for_PMD.ipynb

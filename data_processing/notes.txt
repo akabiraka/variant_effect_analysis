@@ -1,3 +1,7 @@
+To preprocess gene2refseq:
+    gene2refseq_preprocessing.ipynb
+    
+
 Population frequency based analysis dataset curation:
 
 Downloaded the single nucleotide missense variants (SNVs) for humans from NCBI-dbSNP:
@@ -14,11 +18,13 @@ Then we map the SNVs with ALFA population count dataset (https://ftp.ncbi.nih.go
 
 
 
-To preprocess gene2refseq:
-    gene2refseq_preprocessing.ipynb
-
 
 Pathogenicity (pathogenic and likely pathogenic) analysis dataset curation:
-    clinvar_mapping_gene2refseq.ipynb
+    
+    Downloaded the pathogenic and likely-pathogenic SNVs for humans from NCBI-dbSNP separately:
+        "homo sapiens"[Organism] AND "missense variant"[Molecular consequence] AND "clinsig pathogenic"[Filter] AND ("2022/01/01"[Creation Date] : "2023/02/14"[Creation Date]) 
+        "homo sapiens"[Organism] AND "missense variant"[Molecular consequence] AND "clinsig likely path"[Filter] AND ("2022/01/01"[Creation Date] : "2023/02/14"[Creation Date]) 
 
+    Map the SNPs with the corresponding canonical transcription protein products using gene2refseq (https://ftp.ncbi.nlm.nih.gov/gene/DATA/, gene2refseq.gz, 1.3G):
+        clinvar_mapping_gene2refseq.ipynb
 
