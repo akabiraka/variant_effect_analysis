@@ -1,11 +1,24 @@
-Workflow
-Search Clinvar for pathogenic and likely pathogenic data using query.
-Download gene2refseq data.
+Population frequency based analysis dataset curation:
 
-Do gene2refseq_preprocessing
+Downloaded the single nucleotide missense variants (SNVs) for humans from NCBI-dbSNP:
+    python data_processing/dbsnp_search_download_parse_save.py
+    The query used in this script is:
+        "homo sapians"[Organism] AND "missense variant"[Function Class] AND "snp protein"[Filter] AND "by alfa"[Validation Status]  
+
+
+The to map the SNPs to its corresponding canonical transcription protein products, we use MANE (https://ftp.ncbi.nlm.nih.gov/refseq/MANE/MANE_human/current/, MANE.GRCh38.v1.0.summary.txt.gz, 1M).
+We also tried mapping SNVs based on following gene2refseq (https://ftp.ncbi.nlm.nih.gov/gene/DATA/, gene2refseq.gz, 1.3G) and  LRG_RefSeqGene (https://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/RefSeqGene/, LRG_RefSeqGene, 2.4M), however found MANE best. 
+From the readme associated with each file, MANE is more appropriate for selecting canonical mRNA transcripts and protein products. 
+Then we map the SNVs with ALFA population count dataset (https://ftp.ncbi.nih.gov/snp/population_frequency/latest_release/, freq.vcf.gz, 11G). 
+    data_processing/dbsnp_data_cleanup.ipynb
+
+
+
+To preprocess gene2refseq:
     gene2refseq_preprocessing.ipynb
 
 
-clinvar_mapping_gene2refseq.ipynb
+Pathogenicity (pathogenic and likely pathogenic) analysis dataset curation:
+    clinvar_mapping_gene2refseq.ipynb
 
 

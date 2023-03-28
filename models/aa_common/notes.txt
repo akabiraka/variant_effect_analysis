@@ -1,5 +1,18 @@
 source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/activate
 
-python models/aa_common/popu_freq_SNVs_conversion.py
-python models/aa_common/pathogenicity_SNVs_conversion.py
-pmd_SNVs_conversion.py
+From preprocessed SNVs with corresponding allele population count and canonical protein transcription, we first computed the allele population frequency.
+They we downloaded the corresponding protein sequences from NCBI-Protein (https://www.ncbi.nlm.nih.gov/protein/) database.
+Finally, we combine all the protein sequences into one fasta document.
+    python models/aa_common/SNVs_conversion_for_popu_freq.py
+
+We further cleanup this dataset by removing SNVs whose mutant allele population count is 0. From the remaining we kept three types of SNVs.
+    common
+    rare
+    sampled-singtons: sampled singletons (mutant allele population count is 1) as equal of common+rare number of SNVs
+
+    Function signature: get_population_freq_SNVs from models/aa_common/data_loader.py.
+    This function is used for computing all models predictions for population frequency based analysis.
+
+
+python models/aa_common/SNVs_conversion_for_pathogenicity.py
+models/aa_common/SNVs_conversion_for_PMD.ipynb
