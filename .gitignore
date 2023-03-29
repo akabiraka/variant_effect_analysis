@@ -146,4 +146,5 @@ models/bioembeddings_dallago/outputs/*
 models/aa_common/datasets_pathogenicity/*
 models/aa_common/datasets_pmd_analysis/*
 models/aa_common/datasets_population_freq/*
-models/aa_common/outputs/*
+models/aa_common/merged_predictions/*
+models/aa_common/performance_analysis/*
