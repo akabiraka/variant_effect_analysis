@@ -13,8 +13,6 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 import xmltodict
 
-print("Alhumdulillah")
-
 
 Entrez.email = "akabir0101@gmail.com" # provide your user email 
 # RECOMMENDED: apply for API key from NCBI (https://ncbiinsights.ncbi.nlm.nih.gov/2017/11/02/new-api-keys-for-the-e-utilities/). 
