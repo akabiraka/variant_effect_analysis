@@ -30,6 +30,8 @@ def get_protein_sequences(home_dir="", max_seq_len=1022, return_type=None, data_
         data = [seq_record for seq_record in fasta_iterator if len(str(seq_record.seq))<=max_seq_len]
     elif return_type == "protid_seq_tuple_list":
         data = [(seq_record.id, str(seq_record.seq)) for seq_record in fasta_iterator if len(str(seq_record.seq))<=max_seq_len]
+    elif return_type == "protid_seq_dict":
+        data = {seq_record.id: str(seq_record.seq) for seq_record in fasta_iterator if len(str(seq_record.seq))<=max_seq_len}
     else:
         raise NotImplementedError("'return_type' must be of seq_record_list, protid_seq_tuple_list")
     

@@ -6,23 +6,23 @@ import pandas as pd
 from sklearn import metrics as sklearn_metrics
 
 def get_auc_roc_score(non_nan_result_df:pd.DataFrame):
+    larger_means_positive_class = True
     df = non_nan_result_df.copy(deep=True)
     auc_roc_score = sklearn_metrics.roc_auc_score(df["class_numeric"], df["pred"])
-    # if auc_roc_score < 0.5: 
-    #     auc_roc_score = 1 - auc_roc_score
+    if auc_roc_score < 0.5: 
+        larger_means_positive_class = False
     print(f"\tAUC-ROC: {auc_roc_score:.3f}")
-    return auc_roc_score
+    return auc_roc_score, larger_means_positive_class
 
 def get_auc_pr_score(non_nan_result_df:pd.DataFrame):
     df = non_nan_result_df.copy(deep=True)
-    precisions, recalls, thresholds = sklearn_metrics.precision_recall_curve(df["class_numeric"], df["pred"])
-    auc_pr_score = sklearn_metrics.auc(recalls, precisions)
+    precision, recall, thresholds = sklearn_metrics.precision_recall_curve(df["class_numeric"], df["pred"], pos_label=1)
+    auc_pr_score = sklearn_metrics.auc(recall, precision)
 
     # if auc_pr_score < 0.5: 
     #     auc_pr_score = 1 - auc_pr_score
     print(f"\tAUC-PR: {auc_pr_score:.3f}")
-    return auc_pr_score, precisions, recalls, thresholds
-
+    return auc_pr_score, precision, recall, thresholds
 
 def get_f1max_and_th(precisions, recalls, thresholds):
     zero_indices = [i for i in range(precisions.shape[0]) if precisions[i]==0. and recalls[i]==0.]
@@ -37,7 +37,38 @@ def get_f1max_and_th(precisions, recalls, thresholds):
     th_max = thresholds[np.argmax(f1_scores)]
     f1_max = np.max(f1_scores)
     print(f"\tBest F1-Score: {f1_max:.3f} at threshold: {th_max:.3f}")
-    return f1_max, th_max
+    return f1_max, th_max, precisions, recalls, thresholds
+
+def get_f1max_and_th_(non_nan_result_df:pd.DataFrame):
+    df = non_nan_result_df.copy(deep=True)
+    f1_scores, precisions, recalls = [], [], []
+    thresholds = np.arange(0, 1, .01)
+
+    for th in thresholds:
+        df.loc[df["pred"]>=th, "class_numeric_pred"] = 1
+        df.loc[df["pred"]<th, "class_numeric_pred"] = 0
+        prec = sklearn_metrics.precision_score(df["class_numeric"], df["class_numeric_pred"], pos_label=1, average="weighted")
+        rec = sklearn_metrics.recall_score(df["class_numeric"], df["class_numeric_pred"], pos_label=1, average="weighted")
+        f1 = sklearn_metrics.f1_score(df["class_numeric"], df["class_numeric_pred"], pos_label=1, average="weighted")
+
+        precisions.append(prec)
+        recalls.append(rec)
+        f1_scores.append(f1)
+
+    f1_max = np.max(f1_scores)
+    th_max = thresholds[np.argmax(f1_scores)]
+    print(f"\tcBest F1-Score: {f1_max:.3f} at threshold: {th_max:.3f}")
+    return f1_max, th_max, precisions, recalls, thresholds
+
+    
+# def get_f1max_and_th_(precision, recall, thresholds):
+#     numerator = 2 * recall * precision
+#     denom = recall + precision
+#     f1_scores = np.divide(numerator, denom, out=np.zeros_like(denom), where=(denom!=0))
+#     f1_max = np.max(f1_scores)
+#     th_max = thresholds[np.argmax(f1_scores)]
+#     print(f"\tBest F1-Score: {f1_max:.3f} at threshold: {th_max:.3f}")
+#     return f1_max, th_max
 
 def get_precision_score(non_nan_result_df:pd.DataFrame, th):
     df = non_nan_result_df.copy(deep=True)
