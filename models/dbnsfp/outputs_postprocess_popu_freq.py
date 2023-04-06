@@ -3,6 +3,7 @@ sys.path.append("../variant_effect_analysis")
 home_dir = ""
 
 import os
+import numpy as np
 import pandas as pd
 from models.aa_common.data_loader import get_population_freq_SNVs
 
@@ -15,6 +16,10 @@ def filter_dbnsfp_preds(x):
     elif ".;" in str(x): return False
     else: return True 
     
+def compute_avg(x):
+    x = str(x).split(";")
+    return np.mean([float(i) for i in x if i!="."])    
+    
 def create_output_directories(model_name=None, task=None, home_dir=""):
     print("\nLog: Creating output directories ...") #-------------------------------------------
     model_out_dir = home_dir+f"models/dbnsfp/outputs/{model_name}/"
@@ -25,13 +30,18 @@ def create_output_directories(model_name=None, task=None, home_dir=""):
 
 def separate_dbnsfp_outputs_and_save(result_df, model_name, col_name):
     model_task_out_dir = create_output_directories(model_name, task, home_dir)
-    model_scores_df = result_df[result_df[col_name].apply(filter_dbnsfp_preds)] # removing those comparisons that does not produce any result
+    # model_scores_df = result_df[result_df[col_name].apply(filter_dbnsfp_preds)] # removing those comparisons that does not produce any result
+    model_scores_df = result_df.copy(deep=True)
     
     print(f"Log: Saving {model_name} prediction scores for {model_scores_df.shape[0]} SNVs...")
-    model_scores = model_scores_df[col_name].apply(lambda x: float(str(x).split(";")[0])) # can have multiple scores, ie '0.4573521;0.4573521;0.4573521;0.4573521'. taking 1st one
+    model_scores = model_scores_df[col_name].apply(compute_avg) #lambda x: float(str(x).split(";")[0])) # can have multiple scores, ie '0.4573521;0.4573521;0.4573521;0.4573521'. taking 1st one
     result_df["pred"] = model_scores
     result_df = result_df[['snp_id', 'chrom_acc_version', 'chrom_pos', 'ref_allele', 'alt_allele', 'prot_acc_version', 'prot_pos', 'wt', 'mut', 'wt_population','mut_poulation', 'wt_freq', 'mt_freq', "pred"]]
     result_df.to_csv(f"{model_task_out_dir}/preds_{model_name}_(mt-wt).csv", sep="\t", index=False, header=True)
+    
+    missing, total = result_df[pd.isna(result_df["pred"])].shape[0], result_df.shape[0]
+    missing_values_percentage = (missing / total) * 100
+    print(f"\tMissing values: ({missing}/{total})*100 = {missing_values_percentage}")
     print(f"Log: Saved df shape {model_name}-{col_name}: {result_df.shape}")
     
 
@@ -47,7 +57,7 @@ result_df = variants_df.merge(pred_df, how="left", left_on=["chrom", "chrom_pos"
 result_df = result_df.drop_duplicates(keep="first")
 print(result_df.columns)
 print(result_df.shape)
-
+# result_df.to_csv(f"models/dbnsfp/outputs/temp.csv", sep="\t", index=False, header=True)
 
 separate_dbnsfp_outputs_and_save(result_df, model_name="metarnn", col_name="MetaRNN_score")
 separate_dbnsfp_outputs_and_save(result_df, model_name="mvp", col_name="MVP_score")
