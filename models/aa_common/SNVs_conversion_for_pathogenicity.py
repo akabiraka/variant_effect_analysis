@@ -12,19 +12,24 @@ def three_to_one(aa):
         return protein_letters_3to1[str.upper(aa)]
     return "unknown"
 
-def get_variants_df(df: pd.DataFrame, pathogenicity_type="pathogenic") -> pd.DataFrame:   
+def get_variants_df(inp_filepath:str, pathogenicity_type=None) -> pd.DataFrame:   
+    df = pd.read_csv(inp_filepath, sep="\t")
+    # print(df.shape)
+    # print(df.columns)
+    # print(df.head())
+
     # pathogenicity_type: pathogenic, likely_pathogenic   
     # columns = ["Symbol", "GeneID", "GRCh38Chromosome", "GRCh38Location", "Canonical SPDI", "protein_accession.version", "Protein change"]
+
     variations = []
     for row_i in range(df.shape[0]):
         # print(df.loc[row_i])
         
         try:
             clinical_sig = df.loc[row_i, "Clinical significance (Last reviewed)"]
-            if pathogenicity_type=="pathogenic":
-                if "Likely pathogenic" in clinical_sig: continue # exclusively pathogenic
-            elif pathogenicity_type=="likely_pathogenic":
-                if "Likely pathogenic" not in clinical_sig: continue # exclusively likely_pathogenic
+            if "Likely pathogenic" in clinical_sig:
+                pathogenicity_type = "likely_pathogenic"
+            else: pathogenicity_type = "pathogenic"
             
             # Case: bad->NM_032756.4(HPDL):c.[832G>A;91T>C], no protein variants, good->NM_000478.6(ALPL):c.1276G>A (p.Gly426Ser)
             x = df.loc[row_i, "Name"].split() # 
@@ -78,21 +83,19 @@ def get_variants_df(df: pd.DataFrame, pathogenicity_type="pathogenic") -> pd.Dat
         
         
 if __name__ == '__main__':
-    # inp_filepath = "data/clinvar/filtered/clinvar_HumanPathogenicMissenseVariants01012022To14022023.txt"
-    # pathogenicity_type="pathogenic"
-    
+    inp_filepath = "data/clinvar/filtered/clinvar_HumanPathogenicMissenseVariants01012022To14022023.txt"
+    patho_variations_df = get_variants_df(inp_filepath, pathogenicity_type="pathogenic")
+    print(patho_variations_df.shape)
+
     inp_filepath = "data/clinvar/filtered/clinvar_HumanLikelyPathogenicMissenseVariants01012022To14022023.txt"
-    pathogenicity_type="likely_pathogenic"
+    likelypatho_variations_df = get_variants_df(inp_filepath, pathogenicity_type="likely_pathogenic")
+    print(likelypatho_variations_df.shape)
     
-    df = pd.read_csv(inp_filepath, sep="\t")
-    print(df.shape)
-    print(df.columns)
-    # print(df.head())  
+    variations_df = pd.concat([patho_variations_df, likelypatho_variations_df], ignore_index=True)
+    n_patho = variations_df[variations_df["class"] == "pathogenic"].shape[0]
+    n_likelypatho = variations_df[variations_df["class"] == "likely_pathogenic"].shape[0]
+    print(f"Pathogenic: {n_patho}, Likely-pathogenic: {n_likelypatho}")
     
-    print("\nLog: preprocessing raw variants data ...")
-    variations_df = get_variants_df(df, pathogenicity_type)
-    print(variations_df.shape)
-    print(variations_df)
     
     print("\nLog: downloaing proteins ... ")
     protein_acc_list = list(variations_df["prot_acc_version"].unique())
@@ -101,7 +104,8 @@ if __name__ == '__main__':
     print("#-unique NCBI protein sequences downloaded: ", len(protein_acc_list))
     
 
-    filename = inp_filepath.split("/")[-1].split(".")[0]
+    # filename = inp_filepath.split("/")[-1].split(".")[0]
+    filename = "patho_and_likelypatho"
     out_filepath = f"models/aa_common/datasets_pathogenicity/{filename}"
     print("\nLog: saving variants ...")
     variations_df.to_csv(out_filepath+".txt", index=False, sep="\t", header=True)
