@@ -45,7 +45,7 @@ def separate_dbnsfp_outputs_and_save(result_df, model_name, col_name):
     print(f"Log: Saved df shape {model_name}-{col_name}: {result_df.shape}")
     
 
-pred_df = pd.read_csv(home_dir+"models/dbnsfp/outputs/popu_freq_preds_1.txt", sep="\t")
+pred_df = pd.read_csv(home_dir+"models/dbnsfp/outputs/popu_freq_preds.txt", sep="\t")
 pred_df = pred_df.loc[pred_df[["#chr", "pos(1-based)", "ref", "alt"]].drop_duplicates(keep="first").index] # for a single chromosomal position, a model can have multiple outputs from dbnsfp, so removing them
 print(f"#-of SNVs found from dbNSFP: {pred_df.shape[0]}")
 

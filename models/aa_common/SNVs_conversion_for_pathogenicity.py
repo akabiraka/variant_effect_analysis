@@ -92,28 +92,28 @@ if __name__ == '__main__':
     print(likelypatho_variations_df.shape)
     
     variations_df = pd.concat([patho_variations_df, likelypatho_variations_df], ignore_index=True)
+    variations_df = variations_df.drop_duplicates(keep="first")
     n_patho = variations_df[variations_df["class"] == "pathogenic"].shape[0]
     n_likelypatho = variations_df[variations_df["class"] == "likely_pathogenic"].shape[0]
     print(f"Pathogenic: {n_patho}, Likely-pathogenic: {n_likelypatho}")
     
     
-    print("\nLog: downloaing proteins ... ")
-    protein_acc_list = list(variations_df["prot_acc_version"].unique())
-    download_protein_list(protein_acc_list, start_i=0) # sequential downloading
-    # download_protein_list_mpi(protein_acc_list, len(protein_acc_list))
-    print("#-unique NCBI protein sequences downloaded: ", len(protein_acc_list))
+    # print("\nLog: downloaing proteins ... ")
+    # protein_acc_list = list(variations_df["prot_acc_version"].unique())
+    # download_protein_list(protein_acc_list, start_i=0) # sequential downloading
+    # # download_protein_list_mpi(protein_acc_list, len(protein_acc_list))
+    # print("#-unique NCBI protein sequences downloaded: ", len(protein_acc_list))
     
 
-    # filename = inp_filepath.split("/")[-1].split(".")[0]
     filename = "patho_and_likelypatho"
     out_filepath = f"models/aa_common/datasets_pathogenicity/{filename}"
     print("\nLog: saving variants ...")
     variations_df.to_csv(out_filepath+".txt", index=False, sep="\t", header=True)
     
 
-    print("\nLog: Creating merged fasta document ...")
-    protein_acc_list = list(variations_df["prot_acc_version"].unique())
-    create_combined_fasta(protein_acc_list, out_filepath+".fasta")
+    # print("\nLog: Creating merged fasta document ...")
+    # protein_acc_list = list(variations_df["prot_acc_version"].unique())
+    # create_combined_fasta(protein_acc_list, out_filepath+".fasta")
     print(variations_df.shape)
 
 

@@ -20,7 +20,6 @@ def filter_unknown_variants(x):
     return len(x)==1
 
 
-
 def get_variants_df(dbsnps_df):      
     # columns = ["snp_id", "chrom_acc_version", "chrom_pos", "ref_allele", "alt_allele", "prot_acc_version", "prot_pos", "wt", "mut", "wt_population", "mut_poulation", "wt_freq", "mt_freq"]
     variations = []

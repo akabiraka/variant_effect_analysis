@@ -62,7 +62,7 @@ def get_pmd_analysis_dataset(home_dir=""):
 
 def get_population_freq_SNVs(home_dir="", force=False):
     print("\nLog: Loading data ...")
-    data_filepath = home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq_balanced_1.txt"
+    data_filepath = home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq_balanced.txt"
     if os.path.exists(data_filepath) and not force:
         variants_df =  pd.read_csv(data_filepath, sep="\t")
         variants_df = variants_df.drop_duplicates(keep="first")
@@ -142,63 +142,69 @@ def get_patho_and_likelypatho_SNVs(home_dir=""):
     protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type="patho_and_likelypatho")
     new_protein_acc_list = list(zip(*protid_seq_tuple_list))[0]
     variants_df = variants_df[variants_df["prot_acc_version"].isin(new_protein_acc_list)]
-    print(variants_df.shape)
+    
+    variants_df = variants_df.drop_duplicates(keep="first")
+    
+    n_patho = variants_df[variants_df["class"]=="pathogenic"].shape[0]
+    n_likelypatho = variants_df[variants_df["class"]=="likely_pathogenic"].shape[0]
+    print(f"Pathogenic: {n_patho}, Likely pathogenic: {n_likelypatho}, total: {variants_df.shape}")
     return variants_df
+# get_patho_and_likelypatho_SNVs()
 
+# def generate_neutral_SNVs(home_dir="", pathogenicity_type=None):
+#     # pathogenicity_type: pathogenic, likely_pathogenic
+#     variants_df = get_patho_and_likelypatho_SNVs(home_dir)
+#     patho_variants_df = variants_df[variants_df["class"]==pathogenicity_type]
 
-def generate_neutral_SNVs(home_dir="", pathogenicity_type=None):
-    # pathogenicity_type: pathogenic, likely_pathogenic
-    variants_df = get_patho_and_likelypatho_SNVs(home_dir)
-    patho_variants_df = variants_df[variants_df["class"]==pathogenicity_type]
+#     patho_unique_prot_acc_version_list = patho_variants_df["prot_acc_version"].unique()
 
-    patho_unique_prot_acc_version_list = patho_variants_df["prot_acc_version"].unique()
-
-    print("\nLog: Loading population freq variants dataset ...")
-    popu_variants_df = get_population_freq_SNVs(home_dir)
-    print(popu_variants_df.columns)
-
-    commnon_popu_variants_df = popu_variants_df[popu_variants_df["class"]=="Common"]
-    commnon_popu_variants_df = commnon_popu_variants_df[commnon_popu_variants_df["prot_acc_version"].isin(patho_unique_prot_acc_version_list)] # variants must be of pathogenic (likely) proteins/genes
+#     print("\nLog: Loading population freq variants dataset ...")
+#     popu_variants_df = get_population_freq_SNVs(home_dir)
+#     print(popu_variants_df.columns)
     
-    rare_popu_variants_df = popu_variants_df[popu_variants_df["class"]=="Rare"]
-    rare_popu_variants_df = rare_popu_variants_df[rare_popu_variants_df["prot_acc_version"].isin(patho_unique_prot_acc_version_list)] # variants must be of pathogenic (likely) proteins/genes
+#     commnon_popu_variants_df = popu_variants_df[popu_variants_df["class"]=="Common"]
+#     commnon_popu_variants_df = commnon_popu_variants_df[commnon_popu_variants_df["prot_acc_version"].isin(patho_unique_prot_acc_version_list)] # variants must be of pathogenic (likely) proteins/genes
     
-    ultrarare_popu_variants_df = popu_variants_df[popu_variants_df["class"]=="Ultra-rare"]
-    ultrarare_popu_variants_df = ultrarare_popu_variants_df[ultrarare_popu_variants_df["prot_acc_version"].isin(patho_unique_prot_acc_version_list)] # variants must be of pathogenic (likely) proteins/genes
+#     rare_popu_variants_df = popu_variants_df[popu_variants_df["class"]=="Rare"]
+#     rare_popu_variants_df = rare_popu_variants_df[rare_popu_variants_df["prot_acc_version"].isin(patho_unique_prot_acc_version_list)] # variants must be of pathogenic (likely) proteins/genes
     
-    # popu_variants_df = popu_variants_df[popu_variants_df["mut_poulation"]>1] # removing 0/1 population count variants
-    # popu_variants_df = popu_variants_df[popu_variants_df["prot_acc_version"].isin(patho_unique_prot_acc_version_list)] # variants must be of pathogenic (likely) proteins/genes
-    # print(f"{popu_variants_df.shape}")
+#     ultrarare_popu_variants_df = popu_variants_df[popu_variants_df["class"]=="Ultra-rare"]
+#     ultrarare_popu_variants_df = ultrarare_popu_variants_df[ultrarare_popu_variants_df["prot_acc_version"].isin(patho_unique_prot_acc_version_list)] # variants must be of pathogenic (likely) proteins/genes
+    
+    
+#     popu_variants_df = popu_variants_df[popu_variants_df["mut_poulation"]>1] # removing 0/1 population count variants
+#     popu_variants_df = popu_variants_df[popu_variants_df["prot_acc_version"].isin(patho_unique_prot_acc_version_list)] # variants must be of pathogenic (likely) proteins/genes
+#     print(f"{popu_variants_df.shape}")
 
-    out_dfs = []
-    for random_state in range(10):
-        data_filepath = home_dir+f"models/aa_common/datasets_pathogenicity/neutral_SNVs_for_{pathogenicity_type}_analysis/{random_state}.txt"
-        if os.path.exists(data_filepath):
-            sampled_neutral_variants_df = pd.read_csv(data_filepath, sep="\t")
-            print("Already exist", random_state, sampled_neutral_variants_df.shape)
-        else:
-            # sampled_neutral_variants_df = popu_variants_df.sample(n=patho_variants_df.shape[0], random_state=random_state)# sampling same number of pathogenic variants
-            # print(f"sampled population freq variants: {sampled_neutral_variants_df.shape}")
-            # sampled_neutral_variants_df["class"] = "neutral"
+#     out_dfs = []
+#     for random_state in range(10):
+#         data_filepath = home_dir+f"models/aa_common/datasets_pathogenicity/neutral_SNVs_for_{pathogenicity_type}_analysis/{random_state}.txt"
+#         if os.path.exists(data_filepath):
+#             sampled_neutral_variants_df = pd.read_csv(data_filepath, sep="\t")
+#             print("Already exist", random_state, sampled_neutral_variants_df.shape)
+#         else:
+#             # sampled_neutral_variants_df = popu_variants_df.sample(n=patho_variants_df.shape[0], random_state=random_state)# sampling same number of pathogenic variants
+#             # print(f"sampled population freq variants: {sampled_neutral_variants_df.shape}")
+#             # sampled_neutral_variants_df["class"] = "neutral"
 
-            min(int(patho_variants_df.shape[0]/2), rare_popu_variants_df.shape[0])
-            sampled_commnon_popu_variants_df = commnon_popu_variants_df.sample(n=min(int(patho_variants_df.shape[0]/2), commnon_popu_variants_df.shape[0]), random_state=random_state)
-            sampled_rare_popu_variants_df = rare_popu_variants_df.sample(n=min(int(patho_variants_df.shape[0]/2), rare_popu_variants_df.shape[0]), random_state=random_state)
+#             min(int(patho_variants_df.shape[0]/2), rare_popu_variants_df.shape[0])
+#             sampled_commnon_popu_variants_df = commnon_popu_variants_df.sample(n=min(int(patho_variants_df.shape[0]/2), commnon_popu_variants_df.shape[0]), random_state=random_state)
+#             sampled_rare_popu_variants_df = rare_popu_variants_df.sample(n=min(int(patho_variants_df.shape[0]/2), rare_popu_variants_df.shape[0]), random_state=random_state)
             
-            n_remaining = patho_variants_df.shape[0] - (sampled_commnon_popu_variants_df.shape[0] + sampled_rare_popu_variants_df.shape[0])
-            sampled_ultrarare_popu_variants_df = pd.DataFrame()
-            if n_remaining > 0:
-                sampled_ultrarare_popu_variants_df = ultrarare_popu_variants_df.sample(n=n_remaining, random_state=random_state)
+#             n_remaining = patho_variants_df.shape[0] - (sampled_commnon_popu_variants_df.shape[0] + sampled_rare_popu_variants_df.shape[0])
+#             sampled_ultrarare_popu_variants_df = pd.DataFrame()
+#             if n_remaining > 0:
+#                 sampled_ultrarare_popu_variants_df = ultrarare_popu_variants_df.sample(n=n_remaining, random_state=random_state)
             
-            sampled_neutral_variants_df = pd.concat([sampled_commnon_popu_variants_df, sampled_rare_popu_variants_df, sampled_ultrarare_popu_variants_df])
-            sampled_neutral_variants_df = sampled_neutral_variants_df.rename(columns={"class": "popu_freq_class"})
-            sampled_neutral_variants_df["class"] = "neutral"
+#             sampled_neutral_variants_df = pd.concat([sampled_commnon_popu_variants_df, sampled_rare_popu_variants_df, sampled_ultrarare_popu_variants_df])
+#             sampled_neutral_variants_df = sampled_neutral_variants_df.rename(columns={"class": "popu_freq_class"})
+#             sampled_neutral_variants_df["class"] = "neutral"
 
-            sampled_neutral_variants_df.to_csv(data_filepath, sep="\t", header=True, index=False)
-            print("Sampled", random_state, sampled_neutral_variants_df.shape)
+#             sampled_neutral_variants_df.to_csv(data_filepath, sep="\t", header=True, index=False)
+#             print("Sampled", random_state, sampled_neutral_variants_df.shape)
             
-        out_dfs.append(sampled_neutral_variants_df)
-    return out_dfs
+#         out_dfs.append(sampled_neutral_variants_df)
+#     return out_dfs
 
 # generate_neutral_SNVs(home_dir="", pathogenicity_type="pathogenic")
 # generate_neutral_SNVs(home_dir="", pathogenicity_type="likely_pathogenic")

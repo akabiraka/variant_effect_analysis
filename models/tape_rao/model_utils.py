@@ -16,15 +16,11 @@ def create_output_directories(model_name=None, task=None, home_dir=""):
     print("\nLog: Creating output directories ...") #-------------------------------------------
     model_out_dir = home_dir+f"models/tape_rao/outputs/{model_name}/"
     model_logits_out_dir = f"{model_out_dir}lm_outputs/"
-    model_task_out_dir = f"{model_out_dir}/patho_and_likelypatho/"
-    patho_out_dir = f"{model_task_out_dir}/neutral_preds_for_pathogenic"
-    likelypatho_out_dir = f"{model_task_out_dir}/neutral_preds_for_likely_pathogenic"
+    model_task_out_dir = f"{model_out_dir}{task}/"
     os.makedirs(model_out_dir, exist_ok=True)
     os.makedirs(model_logits_out_dir, exist_ok=True)
     os.makedirs(model_task_out_dir, exist_ok=True)
-    os.makedirs(patho_out_dir, exist_ok=True)
-    os.makedirs(likelypatho_out_dir, exist_ok=True)
-    return model_task_out_dir, model_logits_out_dir, patho_out_dir, likelypatho_out_dir
+    return model_task_out_dir, model_logits_out_dir
 
 
 def get_model_tokenizer(model_name="protbert"):
