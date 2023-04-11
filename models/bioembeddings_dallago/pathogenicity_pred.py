@@ -6,20 +6,21 @@ import torch
 import pandas as pd
 import time
 
-from models.aa_common.data_loader import get_protein_sequences, get_pathogenicity_analysis_SNVs
+from models.aa_common.data_loader import get_patho_and_likelypatho_SNVs, get_protein_sequences
 import models.bioembeddings_dallago.model_utils as model_utils
 
-pathogenicity_type="likely_pathogenic" # pathogenic, likely_pathogenic
-list_of_variants_df = get_pathogenicity_analysis_SNVs(home_dir=home_dir, pathogenicity_type=pathogenicity_type)
-protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type=pathogenicity_type)
+task = "patho_and_likelypatho"
+patho_and_likelypatho_variants_df = get_patho_and_likelypatho_SNVs(home_dir)
 
-model_name = "prottrans_t5_xl_u50" #  plus_rnn, prottrans_bert_bfd, prottrans_albert_bfd, prottrans_xlnet_uniref100, prottrans_t5_bfd, prottrans_t5_uniref50, prottrans_t5_xl_u50
+protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type=task)
+
+model_name = "prottrans_t5_bfd" #  plus_rnn, prottrans_bert_bfd, prottrans_albert_bfd, prottrans_xlnet_uniref100, prottrans_t5_bfd, prottrans_t5_uniref50, prottrans_t5_xl_u50
 model, tokenizer, model_name = model_utils.get_model_tokenizer(model_name) 
-model_task_out_dir, model_logits_out_dir = model_utils.create_output_directories(model_name, task=pathogenicity_type)
+model_task_out_dir, model_logits_out_dir = model_utils.create_output_directories(model_name, task=task)
 
 
-def execute(protid_seq_tuple_list, analysis_no=0):
-    variants_df = list_of_variants_df[analysis_no]
+def execute(protid_seq_tuple_list):
+    variants_df = patho_and_likelypatho_variants_df.copy(deep=True)
     preds = []        
     for i, (prot_acc_version, seq) in enumerate(protid_seq_tuple_list):
         output_logits = model_utils.compute_model_logits(model, prot_acc_version, seq, model_logits_out_dir)
@@ -39,13 +40,12 @@ if __name__=="__main__": # main worker
     # data_chunks = data_chunks[:10] 
     print(f"#-of chunks: {len(data_chunks)}, 1st chunk size: {len(data_chunks[0])}")
 
-    for analysis_no in range(10):
-        pred_dfs = []
-        # # sequential run and debugging
-        for i, data_chunk in enumerate(data_chunks):
-            pred_df = execute(data_chunk, analysis_no)
-            print(f"Finished {i}/{len(data_chunks)}th chunk: {pred_df.shape}")
-            pred_dfs.append(pred_df)
+    pred_dfs = []
+    # sequential run and debugging
+    for i, data_chunk in enumerate(data_chunks):
+        pred_df = execute(data_chunk)
+        print(f"Finished {i}/{len(data_chunks)}th chunk: {pred_df.shape}")
+        pred_dfs.append(pred_df)
 
         # mpi run    
         # from mpi4py.futures import MPIPoolExecutor
@@ -55,11 +55,10 @@ if __name__=="__main__": # main worker
         #     pred_dfs.append(pred_df)
         # executor.shutdown()
         
-        result_df = pd.concat(pred_dfs)  
-        print("Saving predictions ...")
-        result_df.to_csv(f"{model_task_out_dir}/{str(analysis_no)}.csv", sep="\t", index=False, header=True)
-        print(result_df.shape)
-        print(result_df.head())
-
-
-        print(f"Time taken: {time.time()-start} seconds")
+    result_df = pd.concat(pred_dfs)  
+    print("Saving predictions ...")
+    result_df.to_csv(f"{model_task_out_dir}/preds_{model_name}.csv", sep="\t", index=False, header=True)
+    print(result_df.shape)
+    # print(result_df.head())
+        
+    print(f"Time taken: {time.time()-start} seconds")

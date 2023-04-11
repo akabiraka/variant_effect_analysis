@@ -5,10 +5,10 @@ home_dir = ""
 import os
 import numpy as np
 import pandas as pd
-from models.aa_common.data_loader import get_pathogenicity_analysis_SNVs
+from models.aa_common.data_loader import get_patho_and_likelypatho_SNVs
 
-task="pathogenic" # pathogenic, likely_pathogenic
-list_of_variants_df = get_pathogenicity_analysis_SNVs(home_dir, pathogenicity_type=task)
+task = "patho_and_likelypatho"
+patho_and_likelypatho_variants_df = get_patho_and_likelypatho_SNVs(home_dir)
 
 def filter_dbnsfp_preds(x):
     if x==".": return False
@@ -27,7 +27,7 @@ def create_output_directories(model_name=None, task=None, home_dir=""):
     os.makedirs(model_task_out_dir, exist_ok=True)
     return model_task_out_dir
 
-def separate_dbnsfp_outputs_and_save(result_df, analysis_no, model_name, col_name):
+def separate_dbnsfp_outputs_and_save(result_df, model_name, col_name):
     model_task_out_dir = create_output_directories(model_name, task, home_dir)
     # model_scores_df = result_df[result_df[col_name].apply(filter_dbnsfp_preds)] # removing those comparisons that does not produce any result
     model_scores_df = result_df.copy(deep=True)
@@ -35,8 +35,8 @@ def separate_dbnsfp_outputs_and_save(result_df, analysis_no, model_name, col_nam
     print(f"Log: Saving {model_name} prediction scores for {model_scores_df.shape[0]} SNVs...")
     model_scores = model_scores_df[col_name].apply(compute_avg) #lambda x: float(str(x).split(";")[0])) # can have multiple scores, ie '0.4573521;0.4573521;0.4573521;0.4573521'. taking 1st one
     result_df["pred"] = model_scores
-    result_df = result_df[['id', 'chrom_acc_version', 'chrom_pos', 'ref_allele', 'alt_allele', 'prot_acc_version', 'prot_pos', 'wt', 'mut', "class", "pred"]]
-    result_df.to_csv(f"{model_task_out_dir}/{str(analysis_no)}.csv", sep="\t", index=False, header=True)
+    result_df = result_df[['clinvar_id', 'gene_symbol', 'gene_id', 'chrom_acc_version', 'chrom_pos', 'ref_allele', 'alt_allele', 'prot_acc_version', 'prot_pos', 'wt', 'mut', "class", "pred"]]
+    result_df.to_csv(f"{model_task_out_dir}/preds_{model_name}.csv", sep="\t", index=False, header=True)
     
     missing, total = result_df[pd.isna(result_df["pred"])].shape[0], result_df.shape[0]
     missing_values_percentage = (missing / total) * 100
@@ -45,30 +45,29 @@ def separate_dbnsfp_outputs_and_save(result_df, analysis_no, model_name, col_nam
 
 
 if __name__ == "__main__":
-    for analysis_no, variants_df in enumerate(list_of_variants_df):
         
-        pred_df = pd.read_csv(home_dir+f"models/dbnsfp/outputs/{task}_and_neutral_SNVs/{analysis_no}.txt", sep="\t")
-        pred_df = pred_df.loc[pred_df[["#chr", "pos(1-based)", "ref", "alt"]].drop_duplicates(keep="first").index] # for a single chromosomal position, a model can have multiple outputs from dbnsfp, so removing them
-        print(f"#-of SNVs found from dbNSFP: {pred_df.shape[0]}")
-        
-        variants_df["chrom"] = variants_df["chrom_acc_version"].apply(lambda x: int(x[x.index("_")+1:x.index(".")])) # taking only chromosom number for dbNSFP inputs
+    pred_df = pd.read_csv(home_dir+f"models/dbnsfp/outputs/{task}_preds.txt", sep="\t")
+    pred_df = pred_df.loc[pred_df[["#chr", "pos(1-based)", "ref", "alt"]].drop_duplicates(keep="first").index] # for a single chromosomal position, a model can have multiple outputs from dbnsfp, so removing them
+    print(f"#-of SNVs found from dbNSFP: {pred_df.shape[0]}")
+    
+    
+    variants_df = patho_and_likelypatho_variants_df.copy(deep=True)
+    variants_df["chrom"] = variants_df["chrom_acc_version"].apply(lambda x: int(x[x.index("_")+1:x.index(".")])) # taking only chromosom number for dbNSFP inputs
 
-        print("Log: merging dbNSFP prediction scores with ground truth population freq data ...")
-        # result_df = pred_df.merge(variants_df, how="left", left_on=["#chr", "pos(1-based)", "ref", "alt"], right_on=["chrom", "chrom_pos", "ref_allele", "alt_allele"])
-        result_df = variants_df.merge(pred_df, how="left", left_on=["chrom", "chrom_pos", "ref_allele", "alt_allele"], right_on=["#chr", "pos(1-based)", "ref", "alt"])
-        result_df = result_df.drop_duplicates(keep="first")
-        print(result_df.columns)
-        print(result_df.shape)
-        # result_df.to_csv(f"models/dbnsfp/outputs/temp.csv", sep="\t", index=False, header=True)
-        
-        separate_dbnsfp_outputs_and_save(result_df, analysis_no, model_name="metarnn", col_name="MetaRNN_score")
-        separate_dbnsfp_outputs_and_save(result_df, analysis_no, model_name="mvp", col_name="MVP_score")
-        separate_dbnsfp_outputs_and_save(result_df, analysis_no, model_name="sift", col_name="SIFT_score")
-        separate_dbnsfp_outputs_and_save(result_df, analysis_no, model_name="cadd", col_name="CADD_raw")
-        separate_dbnsfp_outputs_and_save(result_df, analysis_no, model_name="polyphen2_HVAR", col_name="Polyphen2_HVAR_score")
-        separate_dbnsfp_outputs_and_save(result_df, analysis_no, model_name="polyphen2_HDIV", col_name="Polyphen2_HDIV_score")
-        separate_dbnsfp_outputs_and_save(result_df, analysis_no, model_name="revel", col_name="REVEL_score")
-        
-        # break
+    print("Log: merging dbNSFP prediction scores with ground truth population freq data ...")
+    # result_df = pred_df.merge(variants_df, how="left", left_on=["#chr", "pos(1-based)", "ref", "alt"], right_on=["chrom", "chrom_pos", "ref_allele", "alt_allele"])
+    result_df = variants_df.merge(pred_df, how="left", left_on=["chrom", "chrom_pos", "ref_allele", "alt_allele"], right_on=["#chr", "pos(1-based)", "ref", "alt"])
+    result_df = result_df.drop_duplicates(keep="first")
+    print(result_df.columns)
+    print(result_df.shape)
+    # result_df.to_csv(f"models/dbnsfp/outputs/temp.csv", sep="\t", index=False, header=True)
+    
+    separate_dbnsfp_outputs_and_save(result_df, model_name="metarnn", col_name="MetaRNN_score")
+    separate_dbnsfp_outputs_and_save(result_df, model_name="mvp", col_name="MVP_score")
+    separate_dbnsfp_outputs_and_save(result_df, model_name="sift", col_name="SIFT_score")
+    separate_dbnsfp_outputs_and_save(result_df, model_name="cadd", col_name="CADD_raw")
+    separate_dbnsfp_outputs_and_save(result_df, model_name="polyphen2_HVAR", col_name="Polyphen2_HVAR_score")
+    separate_dbnsfp_outputs_and_save(result_df, model_name="polyphen2_HDIV", col_name="Polyphen2_HDIV_score")
+    separate_dbnsfp_outputs_and_save(result_df, model_name="revel", col_name="REVEL_score")
     
     
