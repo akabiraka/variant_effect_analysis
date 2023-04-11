@@ -144,3 +144,12 @@ def get_balanced_accuracy_score(non_nan_result_df:pd.DataFrame, th):
     balanced_accuracy = score
     print(f"\tBalanced accuracy score: {balanced_accuracy:.3f} at threshold: {th:.3f}")
     return balanced_accuracy
+
+from scipy.stats import ks_2samp
+def get_KS_test_score(df:pd.DataFrame):
+    pos_cls_preds = df[df["class_numeric"]==1]["pred"]
+    neg_cls_preds = df[df["class_numeric"]==0]["pred"]
+    
+    res = ks_2samp(pos_cls_preds, neg_cls_preds)
+    print(f"\tKS-test score. statistic: {res.statistic:.3f}, p-value: {res.pvalue:.3f}")
+    return res.statistic, res.pvalue
