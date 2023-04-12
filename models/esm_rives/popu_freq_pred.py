@@ -10,7 +10,7 @@ from models.aa_common.data_loader import get_population_freq_SNVs, get_protein_s
 import models.esm_rives.model_utils as model_utils
 
 task = "popu_freq"
-variants_df = get_population_freq_SNVs()
+variants_df = get_population_freq_SNVs(home_dir)
 protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type=task)
 
 model_name="esm2_t33_650M_UR50D" # esm1b_t33_650M_UR50S, esm1v_t33_650M_UR90S, esm2_t33_650M_UR50D

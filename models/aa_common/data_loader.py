@@ -69,19 +69,14 @@ def get_population_freq_SNVs(home_dir="", force=False):
         print(variants_df.shape)
         print(variants_df.columns)
 
-        # Assigning class labels
-        variants_df.loc[variants_df["mt_freq"]>=.01, "class"] = "Common"
-        variants_df.loc[(variants_df["mt_freq"]<.01) & (variants_df["mt_freq"]>=.001), "class"] = "Rare"
-        variants_df.loc[(variants_df["mt_freq"]<.001), "class"] = "Ultra-rare"
-        variants_df.loc[variants_df["mut_poulation"]==1, "class"] = "Singleton"
-
         n_commnon = variants_df[variants_df["class"]=="Common"].shape[0]
         n_rare = variants_df[variants_df["class"]=="Rare"].shape[0]
         n_ultra_rare = variants_df[variants_df["class"]=="Ultra-rare"].shape[0]
         n_singleton = variants_df[variants_df["class"]=="Singleton"].shape[0]
+        n_zero_population = variants_df[variants_df["class"]=="Zero-population"].shape[0]
 
         print(variants_df["prot_acc_version"].value_counts())
-        print(f"Common: ({n_commnon}), rare: ({n_rare}), ultra-rare: ({n_ultra_rare}), sampled-singletons: ({n_singleton}) and total: {variants_df.shape[0]}")
+        print(f"Common: {n_commnon}, rare: {n_rare}, ultra-rare: {n_ultra_rare}, singletons: {n_singleton}, zero-population: {n_zero_population} and total: {variants_df.shape[0]}")
 
         return variants_df
     
@@ -97,33 +92,39 @@ def get_population_freq_SNVs(home_dir="", force=False):
     variants_df = variants_df[variants_df["prot_acc_version"].isin(new_protein_acc_list)]
     print(variants_df.shape)
 
+    variants_df.loc[variants_df["mt_freq"]>=.01, "class"] = "Common"
+    variants_df.loc[(variants_df["mt_freq"]<.01) & (variants_df["mt_freq"]>=.001), "class"] = "Rare"
+    variants_df.loc[(variants_df["mt_freq"]<.001), "class"] = "Ultra-rare"
+    variants_df.loc[variants_df["mut_poulation"]==1, "class"] = "Singleton"
+    variants_df.loc[variants_df["mut_poulation"]<1, "class"] = "Zero-population"
 
-    filttered_variants_df = variants_df[variants_df["mut_poulation"]>1] # excluding singletons here
+    # filttered_variants_df = variants_df[variants_df["mut_poulation"]>1] # excluding singletons here
 
-    common = filttered_variants_df[filttered_variants_df["mt_freq"]>=.01]
-    rare = filttered_variants_df[(filttered_variants_df["mt_freq"]<.01) & (filttered_variants_df["mt_freq"]>=.001)]
-    ultra_rare = filttered_variants_df[filttered_variants_df["mt_freq"]<.001] # do not using this directly now
+    # common = filttered_variants_df[filttered_variants_df["mt_freq"]>=.01]
+    # rare = filttered_variants_df[(filttered_variants_df["mt_freq"]<.01) & (filttered_variants_df["mt_freq"]>=.001)]
+    # ultra_rare = filttered_variants_df[filttered_variants_df["mt_freq"]<.001] # do not using this directly now
     # print(common.shape, rare.shape, ultra_rare.shape)
 
 
-    singletons = variants_df[variants_df["mut_poulation"]==1] # sampling singletons here
-    singletons_sampled = singletons.sample(n=common.shape[0]+rare.shape[0], random_state=1)
+    # singletons = variants_df[variants_df["mut_poulation"]==1] # sampling singletons here
+    # singletons_sampled = singletons.sample(n=common.shape[0]+rare.shape[0], random_state=1)
     # print(singletons_sampled.shape)
 
-    variants_df = pd.concat([common, rare, ultra_rare, singletons_sampled])
-    variants_df.reset_index(drop=True, inplace=True)
+    # variants_df = pd.concat([common, rare, ultra_rare, singletons_sampled])
+    # variants_df.reset_index(drop=True, inplace=True)
     # print(f"After combining common ({common.shape[0]}), rare ({rare.shape[0]}), ultra-rare ({ultra_rare.shape[0]}), sampled-singletons ({singletons.shape[0]}) and data: {variants_df.shape}")
 
-    print(variants_df["prot_acc_version"].value_counts())
     variants_df = variants_df.drop_duplicates(keep="first")
     variants_df.to_csv(data_filepath, sep="\t", header=True, index=False)
 
-    # to print
-    common = variants_df[variants_df["mt_freq"]>=.01]
-    rare = variants_df[(variants_df["mt_freq"]<.01) & (variants_df["mt_freq"]>=.001)]
-    ultra_rare = variants_df[variants_df["mt_freq"]<.001]
-    singletons = variants_df[variants_df["mut_poulation"]==1]
-    print(f"After combining common ({common.shape[0]}), rare ({rare.shape[0]}), ultra-rare ({ultra_rare.shape[0]}) sampled-singletons ({singletons.shape[0]}) and total: {variants_df.shape[0]}")
+    n_commnon = variants_df[variants_df["class"]=="Common"].shape[0]
+    n_rare = variants_df[variants_df["class"]=="Rare"].shape[0]
+    n_ultra_rare = variants_df[variants_df["class"]=="Ultra-rare"].shape[0]
+    n_singleton = variants_df[variants_df["class"]=="Singleton"].shape[0]
+    n_zero_population = variants_df[variants_df["class"]=="Zero-population"].shape[0]
+
+    print(variants_df["prot_acc_version"].value_counts())
+    print(f"Common: {n_commnon}, rare: {n_rare}, ultra-rare: {n_ultra_rare}, singletons: {n_singleton}, zero-population: {n_zero_population} and total: {variants_df.shape[0]}")
 
     return variants_df
 
