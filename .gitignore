@@ -152,6 +152,7 @@ models/aa_common/merged_np_nm_seq/*
 models/aa_common/pred_scores_distribution_plots_pmd_analysis/*
 models/aa_common/pred_scores_distribution_plots_popu_freq_analysis/*
 models/aa_common/pred_scores_distribution_plots_pathogenicity_analysis/*
+models/aa_common/conservation_vs_model_preds_plots/*
 models/vespa_marquet/outputs/*
 models/vespa_marquet/logodds*
 models/vespa_marquet/cache/*
