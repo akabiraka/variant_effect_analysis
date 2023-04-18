@@ -58,7 +58,11 @@ def get_pmd_analysis_dataset(home_dir=""):
 # get_pmd_analysis_dataset()
 
 
-
+def map_NP_to_uniprot(df, col_name, home_dir=""):
+    np_to_uniprot_mapping_df = pd.read_csv(home_dir+"data/gene/np_to_uniprot_mapping.csv", sep="\t")
+    merged_df = pd.merge(left=df, right=np_to_uniprot_mapping_df, how="inner", left_on=col_name, right_on="NCBI_protein_accession")
+    merged_df.drop(columns="NCBI_protein_accession", inplace=True)
+    return merged_df
 
 def get_population_freq_SNVs(home_dir="", force=False):
     print("\nLog: Loading data ...")
@@ -129,6 +133,8 @@ def get_population_freq_SNVs(home_dir="", force=False):
     return variants_df
 
 # get_population_freq_SNVs()#force=True)
+
+
 
 
 
@@ -211,65 +217,65 @@ def get_patho_and_likelypatho_SNVs(home_dir=""):
 # generate_neutral_SNVs(home_dir="", pathogenicity_type="likely_pathogenic")
 
 
-def get_pathogenicity_analysis_SNVs(home_dir="", pathogenicity_type=None):
-    """Deprecated. pathogenicity_type: pathogenic or likely_pathogenic, 
-    """
+# def get_pathogenicity_analysis_SNVs(home_dir="", pathogenicity_type=None):
+#     """Deprecated. pathogenicity_type: pathogenic or likely_pathogenic, 
+#     """
     
-    print("\nLog: Loading combined fasta iterator ...")
-    if pathogenicity_type == "pathogenic":
-        filepath = home_dir+"models/aa_common/datasets_pathogenicity/clinvar_HumanPathogenicMissenseVariants01012022To14022023.txt"
-    elif pathogenicity_type == "likely_pathogenic":
-        filepath = home_dir+"models/aa_common/datasets_pathogenicity/clinvar_HumanLikelyPathogenicMissenseVariants01012022To14022023.txt"
-    else:
-        raise NotImplementedError("'pathogenicity_type' must be of pathogenic, likely_pathogenic")
+#     print("\nLog: Loading combined fasta iterator ...")
+#     if pathogenicity_type == "pathogenic":
+#         filepath = home_dir+"models/aa_common/datasets_pathogenicity/clinvar_HumanPathogenicMissenseVariants01012022To14022023.txt"
+#     elif pathogenicity_type == "likely_pathogenic":
+#         filepath = home_dir+"models/aa_common/datasets_pathogenicity/clinvar_HumanLikelyPathogenicMissenseVariants01012022To14022023.txt"
+#     else:
+#         raise NotImplementedError("'pathogenicity_type' must be of pathogenic, likely_pathogenic")
     
-    patho_variants_df = pd.read_csv(filepath, sep="\t")
-    print(f"{pathogenicity_type} raw data: {patho_variants_df.shape}")
-    print(patho_variants_df.columns)
-    
-    
-    print("\nLog: excluding variants corresponding to proteins having seq-len>1022 ...")
-    protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type=pathogenicity_type)
-    new_protein_acc_list = list(zip(*protid_seq_tuple_list))[0]
-    patho_variants_df = patho_variants_df[patho_variants_df["prot_acc_version"].isin(new_protein_acc_list)]
-    print(patho_variants_df.shape)
-    
-    patho_variants_df["id"] = patho_variants_df["clinvar_id"].apply(lambda x: "clinvar_id:"+str(x))
-    patho_variants_df = patho_variants_df[['id', 'chrom_acc_version', 'chrom_pos', 'ref_allele', 'alt_allele', 'prot_acc_version', 'prot_pos', 'wt', 'mut', "class"]]
-    
-    patho_unique_prot_acc_version_list = patho_variants_df["prot_acc_version"].unique()
-    
-    print("\nLog: Loading population freq variants dataset ...")
-    popu_variants_df = pd.read_csv(home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq.txt", sep="\t")
-    print(popu_variants_df.columns)
-    
-    popu_variants_df = popu_variants_df[popu_variants_df["mut_poulation"]>1] # removing 0/1 population count variants
-    popu_variants_df = popu_variants_df[popu_variants_df["prot_acc_version"].isin(patho_unique_prot_acc_version_list)] # variants must be of pathogenic (likely) proteins/genes
-    # print(f"{popu_variants_df.shape}")
+#     patho_variants_df = pd.read_csv(filepath, sep="\t")
+#     print(f"{pathogenicity_type} raw data: {patho_variants_df.shape}")
+#     print(patho_variants_df.columns)
     
     
-    out_dfs = []
-    for random_state in range(10):
-        data_filepath = home_dir+f"models/aa_common/datasets_pathogenicity/{pathogenicity_type}_and_neutral_SNVs/{random_state}.txt"
-        if os.path.exists(data_filepath):
-            variants_df = pd.read_csv(data_filepath, sep="\t")
-            print(random_state, variants_df.shape)
-        else:
-            sampled_popu_variants_df = popu_variants_df.sample(n=patho_variants_df.shape[0], random_state=random_state)# sampling same number of pathogenic variants
-            print(f"sampled population freq variants: {sampled_popu_variants_df.shape}")
-            sampled_popu_variants_df["id"] = sampled_popu_variants_df["snp_id"].apply(lambda x: "snp_id:"+str(x))
-            sampled_popu_variants_df["class"] = "neutral"
-            sampled_popu_variants_df = sampled_popu_variants_df[['id', 'chrom_acc_version', 'chrom_pos', 'ref_allele', 'alt_allele', 'prot_acc_version', 'prot_pos', 'wt', 'mut', "class"]]
+#     print("\nLog: excluding variants corresponding to proteins having seq-len>1022 ...")
+#     protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type=pathogenicity_type)
+#     new_protein_acc_list = list(zip(*protid_seq_tuple_list))[0]
+#     patho_variants_df = patho_variants_df[patho_variants_df["prot_acc_version"].isin(new_protein_acc_list)]
+#     print(patho_variants_df.shape)
+    
+#     patho_variants_df["id"] = patho_variants_df["clinvar_id"].apply(lambda x: "clinvar_id:"+str(x))
+#     patho_variants_df = patho_variants_df[['id', 'chrom_acc_version', 'chrom_pos', 'ref_allele', 'alt_allele', 'prot_acc_version', 'prot_pos', 'wt', 'mut', "class"]]
+    
+#     patho_unique_prot_acc_version_list = patho_variants_df["prot_acc_version"].unique()
+    
+#     print("\nLog: Loading population freq variants dataset ...")
+#     popu_variants_df = pd.read_csv(home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq.txt", sep="\t")
+#     print(popu_variants_df.columns)
+    
+#     popu_variants_df = popu_variants_df[popu_variants_df["mut_poulation"]>1] # removing 0/1 population count variants
+#     popu_variants_df = popu_variants_df[popu_variants_df["prot_acc_version"].isin(patho_unique_prot_acc_version_list)] # variants must be of pathogenic (likely) proteins/genes
+#     # print(f"{popu_variants_df.shape}")
+    
+    
+#     out_dfs = []
+#     for random_state in range(10):
+#         data_filepath = home_dir+f"models/aa_common/datasets_pathogenicity/{pathogenicity_type}_and_neutral_SNVs/{random_state}.txt"
+#         if os.path.exists(data_filepath):
+#             variants_df = pd.read_csv(data_filepath, sep="\t")
+#             print(random_state, variants_df.shape)
+#         else:
+#             sampled_popu_variants_df = popu_variants_df.sample(n=patho_variants_df.shape[0], random_state=random_state)# sampling same number of pathogenic variants
+#             print(f"sampled population freq variants: {sampled_popu_variants_df.shape}")
+#             sampled_popu_variants_df["id"] = sampled_popu_variants_df["snp_id"].apply(lambda x: "snp_id:"+str(x))
+#             sampled_popu_variants_df["class"] = "neutral"
+#             sampled_popu_variants_df = sampled_popu_variants_df[['id', 'chrom_acc_version', 'chrom_pos', 'ref_allele', 'alt_allele', 'prot_acc_version', 'prot_pos', 'wt', 'mut', "class"]]
             
-            variants_df = pd.concat([patho_variants_df, sampled_popu_variants_df], axis=0, ignore_index=True)
-            variants_df.reset_index(drop=True, inplace=True)
+#             variants_df = pd.concat([patho_variants_df, sampled_popu_variants_df], axis=0, ignore_index=True)
+#             variants_df.reset_index(drop=True, inplace=True)
             
-            # print(variants_df["prot_acc_version"].value_counts())
-            variants_df.to_csv(data_filepath, sep="\t", header=True, index=False)
-            print(random_state, variants_df.shape)
+#             # print(variants_df["prot_acc_version"].value_counts())
+#             variants_df.to_csv(data_filepath, sep="\t", header=True, index=False)
+#             print(random_state, variants_df.shape)
             
-        out_dfs.append(variants_df)
-    return out_dfs
+#         out_dfs.append(variants_df)
+#     return out_dfs
 
     
 # get_pathogenicity_analysis_SNVs(pathogenicity_type="likely_pathogenic")

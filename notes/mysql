@@ -1,0 +1,78 @@
+mysql server running
+sudo systemctl status mysql
+
+sudo mysql -u root
+
+bzcat SNPdbe_2012_03_05_sql.bz2 | sudo mysql -u root -D SNPdbe
+
+select * from SNPs_dbSNP limit 10;
+
+
+documentation of the tables: https://www.rostlab.org/services/snpdbe/docu/schema.pdf
+
+SNPs_dbSNP
+1529679 rows
+1526352 ater removing the empty mut-id rows
+
+SNPs_PMD
+127565
+
+55465 now
+
+exporting mysql table to csv
+
+----------------------------------------------SNPs_PMD------------------------
+# getting the column names 
+select GROUP_CONCAT("'",COLUMN_NAME,"'" ORDER BY ORDINAL_POSITION)
+from INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'SNPs_PMD';
+
+>>>
+'mut_id','md5','pmd_id','nr','authors','journal','title','medline','crossref','uniprot_id','ensembl_id','other_ref','protein','source','expression_sys','mut_PMD','mut_real','function','fb','structure','strB','stability','staB','expression','eB','transport','tB','maturation','mB','disease','dB','uni_real','uni_realid','uni_start','uni_finish','uniq_start','uniq_finish','uni_loc','ens_real','ens_organism','ens_start','ens_finish','ensq_start','ensq_finish','ens_loc','pos_real','mt_real','taxid'
+
+>>> export a table with headers to csv (tab separated)
+SELECT 'mut_id','md5','pmd_id','nr','authors','journal','title','medline','crossref','uniprot_id','ensembl_id','other_ref','protein','source','expression_sys','mut_PMD','mut_real','function','fb','structure','strB','stability','staB','expression','eB','transport','tB','maturation','mB','disease','dB','uni_real','uni_realid','uni_start','uni_finish','uniq_start','uniq_finish','uni_loc','ens_real','ens_organism','ens_start','ens_finish','ensq_start','ensq_finish','ens_loc','pos_real','mt_real','taxid'
+UNION ALL
+select * from SNPs_PMD
+INTO OUTFILE '/var/lib/mysql-files/SNPs_PMD.csv'
+FIELDS TERMINATED BY '\t;'
+LINES TERMINATED BY '\n';
+
+--------------------------------------------------------SNPs_dbSNP--------------
+# getting the column names 
+select GROUP_CONCAT("'",COLUMN_NAME,"'" ORDER BY ORDINAL_POSITION)
+from INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'SNPs_dbSNP';
+
+>>>
+'mut_id','build','assembly','verified','md5','taxid','snp_id','contig_acc','contig_ver','asn_from','asn_to','locus_id','locus_symbol','mrna_acc','mrna_ver','protein_acc','protein_ver','fxn_class','reading_frame','allele','mt','pos','ctg_id','mrna_pos','mrna_start','mrna_stop','codon','protRes','contig_gi','mrna_gi','mrna_orien','cp_mrna_ver','cp_mrna_gi','verComp'
+
+>>> export a table with headers to csv (tab separated)
+SELECT 'mut_id','build','assembly','verified','md5','taxid','snp_id','contig_acc','contig_ver','asn_from','asn_to','locus_id','locus_symbol','mrna_acc','mrna_ver','protein_acc','protein_ver','fxn_class','reading_frame','allele','mt','pos','ctg_id','mrna_pos','mrna_start','mrna_stop','codon','protRes','contig_gi','mrna_gi','mrna_orien','cp_mrna_ver','cp_mrna_gi','verComp'
+UNION ALL
+select * from SNPs_dbSNP
+INTO OUTFILE '/var/lib/mysql-files/SNPs_dbSNP.csv'
+FIELDS TERMINATED BY '\t;'
+LINES TERMINATED BY '\n';
+
+select count(mut_id) from geno2func
+where in_PMD='1' and in_dbSNP='1';
+
+select * from geno2func
+where in_PMD=1 and in_dbSNP=1
+limit 10
+3364
+
+
+SELECT count(SNPs_PMD.mut_id)
+FROM SNPs_PMD
+INNER JOIN SNPs_dbSNP
+ON SNPs_PMD.mut_id = SNPs_dbSNP.mut_id;
+9417
+
+
+catalytic activity[0], protein constitutive activity[-]
+catalytic activity[=], protein constitutive activity[-]
+catalytic activity[—], protein constitutive activity[-]
+catalytic activity[- -], protein constitutive activity[-]
+catalytic activity[- - -]
