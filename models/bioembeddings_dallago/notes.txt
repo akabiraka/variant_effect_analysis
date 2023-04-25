@@ -26,12 +26,12 @@ module load gnu10 #gnu10/10.3.0-ya
 module load openmpi # openmpi/4.1.2-4a
 pip install mpi4py
 
-# 16G bert, albert and xlnet
+# 16G plus_rnn, bert, albert and xlnet
 # 32G prottrans_t5_bfd, 
 # 64G prottrans_t5_uniref50, prottrans_t5_xl_u50
 
 salloc --partition=normal --mem-per-cpu=16G --ntasks=11
-or, salloc --partition=contrib --mem-per-cpu=64G --ntasks=11 --time=0-02:00
+or, salloc --partition=contrib --mem-per-cpu=16G --ntasks=11 --time=0-02:00
 module load gnu10
 module load openmpi
 source /projects/ashehu/akabir4/venvs/hopper_bioembeddings_dallago_from_source/bin/activate
