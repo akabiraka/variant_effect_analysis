@@ -8,7 +8,7 @@ from Bio import SeqIO
 
 def get_protein_sequences(home_dir="", max_seq_len=1022, return_type=None, data_type=None):
     """return_type: seq_record_list, protid_seq_tuple_list
-       data_type: pathogenic, likely_pathogenic, popu_freq, pmd_analysis
+       data_type: pathogenic, likely_pathogenic, popu_freq, pmd
     """
     print("\nLog: Loading combined fasta iterator ...")
 
@@ -20,10 +20,10 @@ def get_protein_sequences(home_dir="", max_seq_len=1022, return_type=None, data_
         filepath = home_dir+"models/aa_common/datasets_pathogenicity/clinvar_HumanLikelyPathogenicMissenseVariants01012022To14022023.fasta"
     elif data_type == "popu_freq":
         filepath = home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq.fasta"
-    elif data_type == "pmd_analysis":
+    elif data_type == "pmd":
         filepath = home_dir+"models/aa_common/datasets_pmd_analysis/pmd_sequences.fasta"
     else:
-        raise NotImplementedError("'data_type' must be of pathogenic, likely_pathogenic, popu_freq")
+        raise NotImplementedError("'data_type' must be of pathogenic, likely_pathogenic, popu_freq, pmd")
         
         
     fasta_iterator = SeqIO.parse(filepath, format="fasta")
@@ -51,7 +51,7 @@ def get_pmd_dataset(home_dir=""):
     print(pmd_df.columns)
     
     print("\nLog: excluding variants corresponding to proteins having seq-len>1022 ...")
-    protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type="pmd_analysis")
+    protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type="pmd")
     new_protein_acc_list = list(zip(*protid_seq_tuple_list))[0]
     pmd_df = pmd_df[pmd_df["pmd_nr_id"].isin(new_protein_acc_list)]
     print(pmd_df.shape)

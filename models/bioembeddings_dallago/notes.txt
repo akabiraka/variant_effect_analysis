@@ -31,7 +31,7 @@ pip install mpi4py
 # 64G prottrans_t5_uniref50, prottrans_t5_xl_u50
 
 salloc --partition=normal --mem-per-cpu=16G --ntasks=11
-or, salloc --partition=contrib --mem-per-cpu=16G --ntasks=11 --time=0-02:00
+or, salloc --partition=contrib --mem-per-cpu=64G --ntasks=11 --time=0-02:00
 module load gnu10
 module load openmpi
 source /projects/ashehu/akabir4/venvs/hopper_bioembeddings_dallago_from_source/bin/activate

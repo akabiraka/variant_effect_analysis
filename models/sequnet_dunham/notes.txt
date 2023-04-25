@@ -34,7 +34,7 @@ module load gnu10
 module load openmpi
 source /projects/ashehu/akabir4/venvs/hopper_sequnet_dunham/bin/activate
 
-mpirun -np 5 python -m mpi4py.futures models/sequnet_dunham/popu_freq_pred.py
+mpirun -np 9 python -m mpi4py.futures models/sequnet_dunham/popu_freq_pred.py
 For 10*32 proteins, 2917 variants, Time taken: 28.22511315345764 seconds
 
 mpirun -np 11 python -m mpi4py.futures models/sequnet_dunham/popu_freq_pred.py

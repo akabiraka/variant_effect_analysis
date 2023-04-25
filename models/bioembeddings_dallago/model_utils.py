@@ -54,6 +54,9 @@ def compute_variant_effect_scores(variants_df, tokenizer, prot_acc_version, outp
         wt_tok_idx = tokenizer.convert_tokens_to_ids(model_aa_prefix+tuple.wt)
         mt_tok_idx = tokenizer.convert_tokens_to_ids(model_aa_prefix+tuple.mut)
         pos = tuple.prot_pos-1 #ncbi prot variants are 1 indexed, outputs are 0-indexed, so -1
+
+        # print(output_logits.shape, pos)
+        if pos>=output_logits.shape[0]: continue
         
         wt_logit = output_logits[pos][wt_tok_idx]
         mt_logit = output_logits[pos][mt_tok_idx]

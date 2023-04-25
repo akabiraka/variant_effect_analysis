@@ -5,15 +5,15 @@ sys.path.append("../variant_effect_analysis")
 import time
 import pandas as pd
 
-from models.aa_common.data_loader import get_protein_sequences, get_pmd_analysis_dataset
+from models.aa_common.data_loader import get_protein_sequences, get_pmd_dataset
 import models.bioembeddings_dallago.model_utils as model_utils
 
-task = "pmd_analysis"
-variants_df = get_pmd_analysis_dataset(home_dir=home_dir)
-variants_df = variants_df.rename(columns={"protein_id": "prot_acc_version"})
+task = "pmd"
+variants_df = get_pmd_dataset(home_dir=home_dir)
+variants_df = variants_df.rename(columns={"pmd_nr_id": "prot_acc_version"})
 protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type=task)
 
-model_name = "prottrans_t5_xl_u50" #  plus_rnn, prottrans_bert_bfd, prottrans_albert_bfd, prottrans_xlnet_uniref100, prottrans_t5_bfd, prottrans_t5_uniref50, prottrans_t5_xl_u50
+model_name = "prottrans_t5_uniref50" #  plus_rnn, prottrans_bert_bfd, prottrans_albert_bfd, prottrans_xlnet_uniref100, prottrans_t5_bfd, prottrans_t5_uniref50, prottrans_t5_xl_u50
 model, tokenizer, model_name = model_utils.get_model_tokenizer(model_name) 
 model_task_out_dir, model_logits_out_dir = model_utils.create_output_directories(model_name, task=task)
 
@@ -55,8 +55,8 @@ if __name__ == "__main__":
     
     result_df = pd.concat(pred_dfs)  
     print("Saving predictions ...")
-    result_df = result_df.rename(columns={"prot_acc_version": "protein_id"})
-    result_df.to_csv(f"{model_task_out_dir}/preds_{model_name}.csv", sep=",", index=False, header=True)
+    result_df = result_df.rename(columns={"prot_acc_version": "pmd_nr_id"})
+    result_df.to_csv(f"{model_task_out_dir}/preds_{model_name}.tsv", sep="\t", index=False, header=True)
     print(result_df.shape)
     print(result_df.head())
         
