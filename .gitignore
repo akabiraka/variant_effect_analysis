@@ -156,3 +156,5 @@ models/aa_common/conservation_vs_model_preds_plots/*
 models/vespa_marquet/outputs/*
 models/vespa_marquet/logodds*
 models/vespa_marquet/cache/*
+models/aa_common/datasets_pmd_analysis_prev/*
+models/dbnsfp/datasets_pmd/*

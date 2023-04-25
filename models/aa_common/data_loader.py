@@ -40,22 +40,24 @@ def get_protein_sequences(home_dir="", max_seq_len=1022, return_type=None, data_
     print(f"#-protein sequences (seq-len<={max_seq_len}): {len(data)}")
     return data
 # get_protein_sequences()
+# data = get_protein_sequences(home_dir="", max_seq_len=1022, return_type="protid_seq_tuple_list", data_type="pmd_analysis")
+# print(data[0])
 
 
-def get_pmd_analysis_dataset(home_dir=""):
+def get_pmd_dataset(home_dir=""):
     print("\nLog: Loading Protein Mutation Dataset (PMD) ...")
-    pmd_df = pd.read_csv(home_dir+"models/aa_common/datasets_pmd_analysis/pmd_data.csv", sep=",") # PMD: protein mutation dataset
+    pmd_df = pd.read_csv(home_dir+"models/aa_common/datasets_pmd_analysis/pmd_data.tsv", sep="\t") # PMD: protein mutation dataset
     print(pmd_df.shape)
     print(pmd_df.columns)
     
     print("\nLog: excluding variants corresponding to proteins having seq-len>1022 ...")
     protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type="pmd_analysis")
     new_protein_acc_list = list(zip(*protid_seq_tuple_list))[0]
-    pmd_df = pmd_df[pmd_df["protein_id"].isin(new_protein_acc_list)]
+    pmd_df = pmd_df[pmd_df["pmd_nr_id"].isin(new_protein_acc_list)]
     print(pmd_df.shape)
     
     return pmd_df
-# get_pmd_analysis_dataset()
+# get_pmd_dataset()
 
 
 def map_NP_to_uniprot(df, col_name, home_dir=""):

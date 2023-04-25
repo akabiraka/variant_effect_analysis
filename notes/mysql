@@ -70,9 +70,25 @@ INNER JOIN SNPs_dbSNP
 ON SNPs_PMD.mut_id = SNPs_dbSNP.mut_id;
 9417
 
+--------------------------------------------------------seqs_PMD--------------
+# getting the column names 
+select GROUP_CONCAT("'",COLUMN_NAME,"'" ORDER BY ORDINAL_POSITION)
+from INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'seqs_PMD';
 
-catalytic activity[0], protein constitutive activity[-]
-catalytic activity[=], protein constitutive activity[-]
-catalytic activity[—], protein constitutive activity[-]
-catalytic activity[- -], protein constitutive activity[-]
-catalytic activity[- - -]
+>>>
+'md5','pmd_id','nr','seq','taxid'
+
+>>> export a table with headers to csv (tab separated)
+SELECT 'md5','pmd_id','nr','seq','taxid'
+UNION ALL
+select * from seqs_PMD
+INTO OUTFILE '/var/lib/mysql-files/seqs_PMD.csv'
+FIELDS TERMINATED BY '\t;'
+LINES TERMINATED BY '\n';
+
+catalytic activity[0], protein constitutive activity[-]: knockout
+catalytic activity[=], protein constitutive activity[-]: effect
+catalytic activity[-], protein constitutive activity[-]: effect
+catalytic activity[- -], protein constitutive activity[-]: effect
+catalytic activity[- - -]: knockout
