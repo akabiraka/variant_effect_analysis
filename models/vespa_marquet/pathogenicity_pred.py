@@ -31,14 +31,14 @@ def execute(protid_seq_tuple_list):
         if np_uniprot_pairs_df.shape[0]== 1: # if NP-id mapped to 1 uniprot id
             uniprot_id = np_uniprot_pairs_df.at[0, "uniprot_id"]
             # print(uniprot_id)
-            output_logits = model_utils.compute_model_logits(uniprot_id)
+            output_logits = model_utils.get_model_logits(uniprot_id)
             if output_logits.shape[0] == len(seq): # corresponding to same sequence length
                 preds_related_to_aprot = model_utils.compute_variant_effect_scores(variants_df, prot_acc_version, output_logits)
         
         else:
             for tuple in np_uniprot_pairs_df.itertuples():
                 uniprot_id = tuple.uniprot_id
-                output_logits = model_utils.compute_model_logits(uniprot_id)
+                output_logits = model_utils.get_model_logits(uniprot_id)
                 
                 # print(output_logits.shape[0], len(seq))
                 if output_logits.shape[0] == len(seq):
