@@ -54,6 +54,7 @@ def get_pmd_dataset(home_dir=""):
     protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type="pmd")
     new_protein_acc_list = list(zip(*protid_seq_tuple_list))[0]
     pmd_df = pmd_df[pmd_df["pmd_nr_id"].isin(new_protein_acc_list)]
+    pmd_df = pmd_df.drop_duplicates(keep="first")
     print(pmd_df.shape)
     
     return pmd_df
