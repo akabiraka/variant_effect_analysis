@@ -83,7 +83,7 @@ WHERE TABLE_NAME = 'seqs_PMD';
 SELECT 'md5','pmd_id','nr','seq','taxid'
 UNION ALL
 select * from seqs_PMD
-INTO OUTFILE '/var/lib/mysql-files/seqs_PMD.csv'
+INTO OUTFILE '/var/lib/mysql-files/seqs_PMD.tsv'
 FIELDS TERMINATED BY '\t;'
 LINES TERMINATED BY '\n';
 
@@ -92,3 +92,21 @@ catalytic activity[=], protein constitutive activity[-]: effect
 catalytic activity[-], protein constitutive activity[-]: effect
 catalytic activity[- -], protein constitutive activity[-]: effect
 catalytic activity[- - -]: knockout
+
+
+--------------------------------------------------------geno2func--------------
+# getting the column names 
+select GROUP_CONCAT("'",COLUMN_NAME,"'" ORDER BY ORDINAL_POSITION)
+from INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'geno2func';
+
+>>>
+'mut_id','md5','wt','pos','mt','in_dbSNP','in_SP','in_PMD','in_1KG','SNAP_status','SNAP_bin','SNAP_score','SNAP_ri','SNAP_acc','SIFT_bin','SIFT_score','PERC_wt','PERC_mt','PSSM_wt','PSSM_mt','PSIC_wt','PSIC_mt','pph2'
+
+>>> export a table with headers to csv (tab separated)
+SELECT 'mut_id','md5','wt','pos','mt','in_dbSNP','in_SP','in_PMD','in_1KG','SNAP_status','SNAP_bin','SNAP_score','SNAP_ri','SNAP_acc','SIFT_bin','SIFT_score','PERC_wt','PERC_mt','PSSM_wt','PSSM_mt','PSIC_wt','PSIC_mt','pph2'
+UNION ALL
+select * from geno2func
+INTO OUTFILE '/var/lib/mysql-files/geno2func.csv'
+FIELDS TERMINATED BY '\t'
+LINES TERMINATED BY '\n';
