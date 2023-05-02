@@ -160,3 +160,6 @@ models/aa_common/datasets_pmd_analysis_prev/*
 models/dbnsfp/datasets_pmd/*
 models/aa_common/pred_scores_distribution_plots_pmd_human_analysis/*
 models/aa_common/pred_scores_distribution_plots_pmd_nonhuman_analysis/*
+models/aa_common/violin_plots_pathogenicity_analysis/*
+models/aa_common/violin_plots_pmd_analysis/*
+models/aa_common/violin_plots_popu_freq_analysis/*
