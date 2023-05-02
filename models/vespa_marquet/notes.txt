@@ -33,7 +33,7 @@ module load openmpi # openmpi/4.1.2-4a
 pip install mpi4py
 
 # need at least 32G
-salloc --partition=normal --mem-per-cpu=32G --ntasks=11
+salloc --partition=contrib --mem-per-cpu=32G --ntasks=11
 module load gnu10
 module load openmpi
 source /projects/ashehu/akabir4/venvs/hopper_vespa_marquet_from_source/bin/activate

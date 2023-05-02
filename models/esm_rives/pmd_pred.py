@@ -13,7 +13,7 @@ variants_df = get_pmd_dataset(home_dir=home_dir)
 variants_df = variants_df.rename(columns={"pmd_nr_id": "prot_acc_version"})
 protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type=task)
 
-model_name="esm2_t33_650M_UR50D" # esm1b_t33_650M_UR50S, esm1v_t33_650M_UR90S, esm2_t33_650M_UR50D
+model_name="esm1b_t33_650M_UR50S" # esm1b_t33_650M_UR50S, esm1v_t33_650M_UR90S, esm2_t33_650M_UR50D
 model, alphabet, batch_converter = model_utils.get_model_tokenizer(model_name)
 model_task_out_dir, model_logits_out_dir = model_utils.create_output_directories(model_name=model_name, task=task, home_dir=home_dir)
 
