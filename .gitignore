@@ -163,3 +163,4 @@ models/aa_common/pred_scores_distribution_plots_pmd_nonhuman_analysis/*
 models/aa_common/violin_plots_pathogenicity_analysis/*
 models/aa_common/violin_plots_pmd_analysis/*
 models/aa_common/violin_plots_popu_freq_analysis/*
+models/aa_common/mut_allele_freq_vs_model_preds_plots/*
