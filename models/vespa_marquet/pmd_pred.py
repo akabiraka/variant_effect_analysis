@@ -23,7 +23,7 @@ def execute(protid_seq_tuple_list):
     preds = []        
     for i, (prot_acc_version, seq) in enumerate(protid_seq_tuple_list):
         output_logits = model_utils.compute_model_logits(model, tokenizer, prot_acc_version, seq, model_logits_out_dir)
-        preds_related_to_aprot = model_utils.compute_variant_effect_scores_for_PMD(variants_df, tokenizer, prot_acc_version, output_logits)
+        preds_related_to_aprot = model_utils.compute_variant_effect_scores(variants_df, tokenizer, prot_acc_version, output_logits)
         preds += preds_related_to_aprot
     preds_df = pd.DataFrame(preds)   
     return preds_df

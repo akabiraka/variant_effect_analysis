@@ -141,3 +141,22 @@ source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/ac
 		Multiple entries are separated by ";", corresponding to Ensembl_transcriptid.
 84	REVEL_rankscore: REVEL scores were ranked among all REVEL scores in dbNSFP. The rankscore is
 		the ratio of the rank of the score over the total number of REVEL scores in dbNSFP.
+
+---------------------------------------The following columns are for conservation prediction scores.---------------------------------------
+
+141	integrated_fitCons_score: fitCons score predicts the fraction of genomic positions belonging to
+		a specific function class (defined by epigenomic "fingerprint") that are under selective 
+		pressure. Scores range from 0 to 1, with a larger score indicating a higher proportion of 
+		nucleic sites of the functional class the genomic position belong to are under selective 
+		pressure, therefore more likely to be functional important. Integrated (i6) scores are
+		integrated across three cell types (GM12878, H1-hESC and HUVEC). More details can be found
+		in doi:10.1038/ng.3196.		
+162	phyloP17way_primate: a conservation score based on 17way alignment primate set,
+		the higher the more conservative. Scores range from -13.362 to 0.756 in dbNSFP.
+168	phastCons17way_primate: a conservation score based on 17way alignment primate set,
+		The larger the score, the more conserved the site. Scores range from 0 to 1. 
+173	bStatistic: Background selection (B) value estimates from doi.org/10.1371/journal.pgen.1000471.
+		Ranges from 0 to 1000. It estimates the expected fraction (*1000) of neutral diversity present 
+		at a site. Values close to 0 represent near complete removal of diversity as a result of 
+		background selection and values near 1000 indicating absent of background selection. 
+		Data from CADD v1.4.

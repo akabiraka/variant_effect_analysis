@@ -61,7 +61,7 @@ def get_model_logits(uniprot_id):
         data = np.array([]) # shape[0] is 0
     return data
 
-def compute_variant_effect_scores(variants_df, prot_acc_version, output_logits):
+def compute_variant_effect_scores_vespal(variants_df, prot_acc_version, output_logits):
     """This is for population freq and pathogenicity analysis
     """
     preds = []
@@ -85,7 +85,7 @@ def compute_variant_effect_scores(variants_df, prot_acc_version, output_logits):
     return preds
 
 
-def compute_variant_effect_scores_for_PMD(variants_df, tokenizer, prot_acc_version, output_logits, model_aa_prefix="▁"):
+def compute_variant_effect_scores(variants_df, tokenizer, prot_acc_version, output_logits, model_aa_prefix="▁"):
     """this is robust when computing from the model directly
     """
     preds = []
