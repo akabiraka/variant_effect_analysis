@@ -55,7 +55,7 @@ if __name__ == "__main__":
         
     result_df = pd.concat(pred_dfs)  
     print("Saving predictions ...")
-    result_df.to_csv(f"{model_task_out_dir}/preds_{model_name}.csv", sep="\t", index=False, header=True)
+    result_df.to_csv(f"{model_task_out_dir}/preds_{model_name}.tsv", sep="\t", index=False, header=True)
     print(result_df.shape)
     # print(result_df.head())
         

@@ -51,7 +51,7 @@ def separate_dbnsfp_outputs_and_save(result_df, model_name, col_name):
     
 
 
-pred_df = pd.read_csv(home_dir+"models/dbnsfp/outputs/pmd_preds.txt", sep="\t")
+pred_df = pd.read_csv(home_dir+"models/dbnsfp/outputs/dbnsfp_outputs/pmd_preds.txt", sep="\t")
 pred_df = pred_df.loc[pred_df[["#chr", "pos(1-based)", "ref", "alt"]].drop_duplicates(keep="first").index] # for a single chromosomal position, a model can have multiple outputs from dbnsfp, so removing them
 print(f"\n #-of SNVs found from dbNSFP: {pred_df.shape[0]}")
 
@@ -72,3 +72,7 @@ separate_dbnsfp_outputs_and_save(result_df, model_name="polyphen2_HVAR", col_nam
 separate_dbnsfp_outputs_and_save(result_df, model_name="polyphen2_HDIV", col_name="Polyphen2_HDIV_score")
 separate_dbnsfp_outputs_and_save(result_df, model_name="revel", col_name="REVEL_score")
 
+separate_dbnsfp_outputs_and_save(result_df, model_name="integrated_fitCons", col_name="integrated_fitCons_score")
+separate_dbnsfp_outputs_and_save(result_df, model_name="phyloP17way_primate", col_name="phyloP17way_primate")
+separate_dbnsfp_outputs_and_save(result_df, model_name="phastCons17way_primate", col_name="phastCons17way_primate")
+separate_dbnsfp_outputs_and_save(result_df, model_name="bStatistic", col_name="bStatistic")

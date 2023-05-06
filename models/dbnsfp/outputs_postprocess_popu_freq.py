@@ -37,7 +37,7 @@ def separate_dbnsfp_outputs_and_save(result_df, model_name, col_name):
     model_scores = model_scores_df[col_name].apply(compute_avg) #lambda x: float(str(x).split(";")[0])) # can have multiple scores, ie '0.4573521;0.4573521;0.4573521;0.4573521'. taking 1st one
     result_df["pred"] = model_scores
     result_df = result_df[['snp_id', 'chrom_acc_version', 'chrom_pos', 'ref_allele', 'alt_allele', 'prot_acc_version', 'prot_pos', 'wt', 'mut', 'wt_population','mut_poulation', 'wt_freq', 'mt_freq', "class", "pred"]]
-    result_df.to_csv(f"{model_task_out_dir}/preds_{model_name}.csv", sep="\t", index=False, header=True)
+    result_df.to_csv(f"{model_task_out_dir}/preds_{model_name}.tsv", sep="\t", index=False, header=True)
     
     missing, total = result_df[pd.isna(result_df["pred"])].shape[0], result_df.shape[0]
     missing_values_percentage = (missing / total) * 100
@@ -45,7 +45,7 @@ def separate_dbnsfp_outputs_and_save(result_df, model_name, col_name):
     print(f"Log: Saved df shape {model_name}-{col_name}: {result_df.shape}")
     
 
-pred_df = pd.read_csv(home_dir+"models/dbnsfp/outputs/popu_freq_preds.txt", sep="\t")
+pred_df = pd.read_csv(home_dir+"models/dbnsfp/outputs/dbnsfp_outputs/popu_freq_preds.txt", sep="\t")
 pred_df = pred_df.loc[pred_df[["#chr", "pos(1-based)", "ref", "alt"]].drop_duplicates(keep="first").index] # for a single chromosomal position, a model can have multiple outputs from dbnsfp, so removing them
 print(f"#-of SNVs found from dbNSFP: {pred_df.shape[0]}")
 
@@ -67,3 +67,7 @@ separate_dbnsfp_outputs_and_save(result_df, model_name="polyphen2_HVAR", col_nam
 separate_dbnsfp_outputs_and_save(result_df, model_name="polyphen2_HDIV", col_name="Polyphen2_HDIV_score")
 separate_dbnsfp_outputs_and_save(result_df, model_name="revel", col_name="REVEL_score")
 
+separate_dbnsfp_outputs_and_save(result_df, model_name="integrated_fitCons", col_name="integrated_fitCons_score")
+separate_dbnsfp_outputs_and_save(result_df, model_name="phyloP17way_primate", col_name="phyloP17way_primate")
+separate_dbnsfp_outputs_and_save(result_df, model_name="phastCons17way_primate", col_name="phastCons17way_primate")
+separate_dbnsfp_outputs_and_save(result_df, model_name="bStatistic", col_name="bStatistic")
