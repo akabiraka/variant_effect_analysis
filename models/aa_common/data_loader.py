@@ -56,7 +56,8 @@ def get_pmd_dataset(home_dir=""):
     pmd_df = pmd_df[pmd_df["pmd_nr_id"].isin(new_protein_acc_list)]
     pmd_df = pmd_df.drop_duplicates(keep="first")
     print(pmd_df.shape)
-    
+    print(pmd_df["functional_effect"].value_counts())
+    print("#-of unique genes: ", pmd_df["gene_symbol"].unique().shape)
     return pmd_df
 # get_pmd_dataset()
 

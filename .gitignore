@@ -164,4 +164,5 @@ models/aa_common/violin_plots_pathogenicity_analysis/*
 models/aa_common/violin_plots_pmd_analysis/*
 models/aa_common/violin_plots_popu_freq_analysis/*
 models/aa_common/mut_allele_freq_vs_model_preds_plots/*
-models/aa_common/models_scores_pcc_plot/*
+models/aa_common/models_scores_pcc_plot/
+models/aa_common/datasets_pmd_analysis_prev_1/*
