@@ -18,6 +18,28 @@ def get_model_tokenizer(home_dir=""):
     model, tokenizer = t5_condProbas.prott5.get_model(1) #1=LOGODDS
     return model, tokenizer
 
+def compute_model_logits_from_masked_sequences(model, tokenizer, prot_acc_version, seq, mut_pos, logits_output_path)->np.array:
+    # mut_pos must be 1-indexed
+    mut_pos_zero_idxd = mut_pos-1
+
+    filepath = f"{logits_output_path}{prot_acc_version}_{str(mut_pos)}.pkl"
+    if os.path.exists(filepath):
+        print(f"Model logits already exists: {prot_acc_version}_{str(mut_pos)}")
+        logits = pickle_utils.load_pickle(filepath) 
+    else: 
+        print(f"Computing model logits: {prot_acc_version}_{str(mut_pos)}")
+        with torch.no_grad():
+            seq = re.sub(r"[UZOB]", "X", seq) # replacing unknown amino acids 
+            seq = list(seq)
+            seq[mut_pos_zero_idxd] = "<extra_id_0>" # mut_pos should be 0-indexed. replace AA by special mask token used by T5
+            seq = " ".join(seq)
+            input_ids = tokenizer(seq, return_tensors="pt").input_ids.to("cpu")
+            logits = model(input_ids, labels=input_ids).logits
+            logits = logits[0].detach().numpy() 
+            pickle_utils.save_as_pickle(logits, filepath)
+    # print(logits.shape)
+    return logits # logits shape: (seq_len+1, vocab_size=128) # eos token added
+
 def compute_model_logits(model, tokenizer, prot_acc_version, seq, logits_output_path)->np.array:
     filepath = f"{logits_output_path}{prot_acc_version}.pkl"
     if os.path.exists(filepath):
@@ -99,6 +121,29 @@ def compute_variant_effect_scores(variants_df, tokenizer, prot_acc_version, outp
 
         # print(output_logits.shape, pos)
         if pos>=output_logits.shape[0]: continue
+        
+        wt_logit = output_logits[pos][wt_tok_idx]
+        mt_logit = output_logits[pos][mt_tok_idx]
+        var_effect_score = mt_logit - wt_logit
+        tuple = dict(tuple)
+        tuple["pred"] = var_effect_score
+        preds.append(tuple)
+        # print(preds)
+        # break
+    return preds
+
+def compute_variant_effect_scores_from_masked_logits(variants_df, tokenizer, prot_acc_version, mut_pos, output_logits, model_aa_prefix="▁"):
+    preds = []
+    indices = variants_df[(variants_df["prot_acc_version"]==prot_acc_version) & (variants_df["prot_pos"]==mut_pos)].index 
+    for idx in indices:
+        tuple = variants_df.loc[idx]
+        
+        wt_tok_idx = tokenizer.convert_tokens_to_ids(model_aa_prefix+tuple.wt)
+        mt_tok_idx = tokenizer.convert_tokens_to_ids(model_aa_prefix+tuple.mut)
+        pos = tuple.prot_pos-1 #ncbi prot variants are 1 indexed, outputs are 0-indexed, so -1. PMD mut_real col is 1-indexed
+
+        # print(output_logits.shape, pos)
+        # if pos>=output_logits.shape[0]: continue
         
         wt_logit = output_logits[pos][wt_tok_idx]
         mt_logit = output_logits[pos][mt_tok_idx]
