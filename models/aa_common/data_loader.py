@@ -82,8 +82,8 @@ def get_population_freq_SNVs(home_dir="", force=False):
         n_singleton = variants_df[variants_df["class"]=="Singleton"].shape[0]
         n_zero_population = variants_df[variants_df["class"]=="Zero-population"].shape[0]
 
-        print(variants_df["prot_acc_version"].value_counts())
-        print(f"Common: {n_commnon}, rare: {n_rare}, ultra-rare: {n_ultra_rare}, singletons: {n_singleton}, zero-population: {n_zero_population} and total: {variants_df.shape[0]}")
+        print(variants_df["class"].value_counts())
+        # print(f"Common: {n_commnon}, rare: {n_rare}, ultra-rare: {n_ultra_rare}, singletons: {n_singleton}, zero-population: {n_zero_population} and total: {variants_df.shape[0]}")
 
         return variants_df
     
@@ -138,9 +138,6 @@ def get_population_freq_SNVs(home_dir="", force=False):
 # get_population_freq_SNVs()#force=True)
 
 
-
-
-
 def get_patho_and_likelypatho_SNVs(home_dir=""):
     filepath = home_dir+f"models/aa_common/datasets_pathogenicity/patho_and_likelypatho.txt"
 
@@ -154,9 +151,11 @@ def get_patho_and_likelypatho_SNVs(home_dir=""):
     variants_df = variants_df[variants_df["prot_acc_version"].isin(new_protein_acc_list)]
     
     variants_df = variants_df.drop_duplicates(keep="first")
+    n_snp_ids = variants_df[~pd.isna(variants_df["snp_id"])].shape[0]
+    print("#-of rs-ids mapped to pathogenicity dataset: ", n_snp_ids)
     
-    n_patho = variants_df[variants_df["class"]=="pathogenic"].shape[0]
-    n_likelypatho = variants_df[variants_df["class"]=="likely_pathogenic"].shape[0]
+    n_patho = variants_df[variants_df["class"]=="Pathogenic"].shape[0]
+    n_likelypatho = variants_df[variants_df["class"]=="Likely-pathogenic"].shape[0]
     print(f"Pathogenic: {n_patho}, Likely pathogenic: {n_likelypatho}, total: {variants_df.shape}")
     return variants_df
 # get_patho_and_likelypatho_SNVs()

@@ -28,8 +28,8 @@ def get_variants_df(inp_filepath:str, pathogenicity_type=None) -> pd.DataFrame:
         try:
             clinical_sig = df.loc[row_i, "Clinical significance (Last reviewed)"]
             if "Likely pathogenic" in clinical_sig:
-                pathogenicity_type = "likely_pathogenic"
-            else: pathogenicity_type = "pathogenic"
+                pathogenicity_type = "Likely-pathogenic"
+            else: pathogenicity_type = "Pathogenic"
             
             # Case: bad->NM_032756.4(HPDL):c.[832G>A;91T>C], no protein variants, good->NM_000478.6(ALPL):c.1276G>A (p.Gly426Ser)
             x = df.loc[row_i, "Name"].split() # 
@@ -57,6 +57,7 @@ def get_variants_df(inp_filepath:str, pathogenicity_type=None) -> pd.DataFrame:
             new_v = {"clinvar_id": df.loc[row_i, "VariationID"], 
                     "gene_symbol": df.loc[row_i, "Symbol"],
                     "gene_id": df.loc[row_i, "GeneID"], 
+                    "snp_id": df.loc[row_i, "dbSNP ID"],
                     
                     "chrom_acc_version": chrom_acc_version,
                     "chrom_pos": chrom_pos, # 1-indexed
@@ -111,9 +112,9 @@ if __name__ == '__main__':
     variations_df.to_csv(out_filepath+".txt", index=False, sep="\t", header=True)
     
 
-    # print("\nLog: Creating merged fasta document ...")
-    # protein_acc_list = list(variations_df["prot_acc_version"].unique())
-    # create_combined_fasta(protein_acc_list, out_filepath+".fasta")
+    print("\nLog: Creating merged fasta document ...")
+    protein_acc_list = list(variations_df["prot_acc_version"].unique())
+    create_combined_fasta(protein_acc_list, out_filepath+".fasta")
     print(variations_df.shape)
 
 
