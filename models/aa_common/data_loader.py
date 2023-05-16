@@ -57,8 +57,6 @@ def get_pmd_dataset(home_dir=""):
     pmd_df = pmd_df.drop_duplicates(keep="first")
     print(pmd_df.shape)
     print(pmd_df["functional_effect"].value_counts())
-    print("#-of unique proteins", pmd_df[["pmd_id", "nr"]].drop_duplicates(keep="first").shape) # 2068
-    print("#-of unique genes", pmd_df["genename"].drop_duplicates(keep="first").shape) # 997
     return pmd_df
 # get_pmd_dataset()
 
