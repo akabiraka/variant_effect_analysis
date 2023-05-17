@@ -167,3 +167,6 @@ models/aa_common/mut_allele_freq_vs_model_preds_plots/*
 models/aa_common/models_scores_pcc_plot/
 models/aa_common/datasets_pmd_analysis_prev_1/*
 models/aa_common/datasets_pathogenicity_prev/*
+models/dbnsfp/datasets/*
+argo_logs/*
+models/dbnsfp/postprocessed_outputs/*

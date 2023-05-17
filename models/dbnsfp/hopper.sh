@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=dbNSFP
-#SBATCH --output=/projects/ashehu/akabir4/projects/variant_effect_analysis/outputs/logs/popu_freq-%j.out
-#SBATCH --error=/projects/ashehu/akabir4/projects/variant_effect_analysis/outputs/logs/popu_freq-%j.err
+#SBATCH --output=/projects/ashehu/akabir4/projects/variant_effect_analysis/argo_logs/dbnsfp-%j.out
+#SBATCH --error=/projects/ashehu/akabir4/projects/variant_effect_analysis/argo_logs/dbnsfp-%j.err
 #SBATCH --mail-user=<akabir4@gmu.edu>
 #SBATCH --mail-type=BEGIN,END,FAIL
 
@@ -19,8 +19,8 @@ source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/ac
 ##python models/aa_common/chromosomal_SNV_conversion_for_population_freq.py
 
 ## for full scale run it took ~32 minutes
-##java -cp data/dbnsfp/dbNSFP43a/ search_dbNSFP43a -i models/dbnsfp/datasets_population_freq/SNVs_with_popu_freq_balanced_chromosomal.txt -o models/dbnsfp/outputs/dbnsfp_outputs/popu_freq_preds.txt -w 1-6,77,90,38,44,47,118,83,141,162,168,173
+##java -cp data/dbnsfp/dbNSFP43a/ search_dbNSFP43a -i models/dbnsfp/datasets_population_freq/SNVs_with_popu_freq_balanced_chromosomal.txt -o models/dbnsfp/outputs/dbnsfp_outputs/popu_freq_preds.txt -w 1-6,38,47,77,83,90,118,141,162,168,173
 
-##java -cp data/dbnsfp/dbNSFP43a/ search_dbNSFP43a -i models/dbnsfp/datasets_pathogenicity/patho_and_likelypatho.txt -o models/dbnsfp/outputs/dbnsfp_outputs/patho_and_likelypatho_preds.txt -w 1-6,77,90,38,44,47,118,83,141,162,168,173
+java -cp data/dbnsfp/dbNSFP43a/ search_dbNSFP43a -i models/dbnsfp/datasets/patho_and_likelypatho.txt -o models/dbnsfp/outputs/dbnsfp_outputs/patho_and_likelypatho_preds.txt -w 1-6,38,47,77,83,90,118,141,162,168,173
 
-##java -cp data/dbnsfp/dbNSFP43a/ search_dbNSFP43a -i models/dbnsfp/datasets_pmd/PMD_chromosomal.txt -o models/dbnsfp/outputs/dbnsfp_outputs/pmd_preds.txt -w 1-6,77,90,38,44,47,118,83,141,162,168,173
+##java -cp data/dbnsfp/dbNSFP43a/ search_dbNSFP43a -i models/dbnsfp/datasets_pmd/PMD_chromosomal.txt -o models/dbnsfp/outputs/dbnsfp_outputs/pmd_preds.txt -w 1-6,38,47,77,83,90,118,141,162,168,173

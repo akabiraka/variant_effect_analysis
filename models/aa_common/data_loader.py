@@ -123,7 +123,7 @@ def get_population_freq_SNVs(home_dir="", force=False):
 
 
 def get_patho_and_likelypatho_SNVs(home_dir=""):
-    filepath = home_dir+f"models/aa_common/datasets_pathogenicity/patho_and_likelypatho.txt"
+    filepath = home_dir+f"models/aa_common/datasets_pathogenicity/patho_and_likelypatho.tsv"
 
     variants_df = pd.read_csv(filepath, sep="\t")
     print(f"raw data: {variants_df.shape}")
@@ -138,9 +138,8 @@ def get_patho_and_likelypatho_SNVs(home_dir=""):
     n_snp_ids = variants_df[~pd.isna(variants_df["snp_id"])].shape[0]
     print("#-of rs-ids mapped to pathogenicity dataset: ", n_snp_ids)
     
-    n_patho = variants_df[variants_df["class"]=="Pathogenic"].shape[0]
-    n_likelypatho = variants_df[variants_df["class"]=="Likely-pathogenic"].shape[0]
-    print(f"Pathogenic: {n_patho}, Likely pathogenic: {n_likelypatho}, total: {variants_df.shape}")
+    print(variants_df["class"].value_counts())
+    print(f"total: {variants_df.shape[0]}")
     return variants_df
 # get_patho_and_likelypatho_SNVs()
 
