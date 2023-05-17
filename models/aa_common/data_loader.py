@@ -46,31 +46,24 @@ def get_protein_sequences(home_dir="", max_seq_len=1022, return_type=None, data_
 
 def get_pmd_dataset(home_dir=""):
     print("\nLog: Loading Protein Mutation Dataset (PMD) ...")
-    pmd_df = pd.read_csv(home_dir+"models/aa_common/datasets_pmd_analysis/pmd_data.tsv", sep="\t") # PMD: protein mutation dataset
-    print(pmd_df.shape)
-    print(pmd_df.columns)
+    pmd_df = pd.read_csv(home_dir+"models/aa_common/datasets_pmd_analysis/pmd.tsv", sep="\t") # PMD: protein mutation dataset
+    pmd_df.drop_duplicates(keep="first", inplace=True, ignore_index=True)
     
-    print("\nLog: excluding variants corresponding to proteins having seq-len>1022 ...")
-    protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type="pmd")
-    new_protein_acc_list = list(zip(*protid_seq_tuple_list))[0]
-    pmd_df = pmd_df[pmd_df["pmd_nr_id"].isin(new_protein_acc_list)]
-    pmd_df = pmd_df.drop_duplicates(keep="first")
-    print(pmd_df.shape)
+    # print("\nLog: excluding variants corresponding to proteins having seq-len>1022 ...")
+    # protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type="pmd")
+    # new_protein_acc_list = list(zip(*protid_seq_tuple_list))[0]
+    # pmd_df = pmd_df[pmd_df["pmd_nr_id"].isin(new_protein_acc_list)]
+    
+    print(pmd_df.columns)
     print(pmd_df["functional_effect"].value_counts())
+    print(pmd_df.shape)
+    
     return pmd_df
 # get_pmd_dataset()
 
-
-def map_NP_to_uniprot(df, col_name, home_dir=""):
-    np_to_uniprot_mapping_df = pd.read_csv(home_dir+"data/gene/np_to_uniprot_mapping.csv", sep="\t")
-    merged_df = pd.merge(left=df, right=np_to_uniprot_mapping_df, how="inner", left_on=col_name, right_on="NCBI_protein_accession")
-    merged_df.drop(columns="NCBI_protein_accession", inplace=True)
-    return merged_df
-
 def get_population_freq_SNVs(home_dir=""):
     print("\nLog: Loading data ...")
-    data_filepath = home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq.tsv"
-    variants_df = pd.read_csv(data_filepath, sep="\t")
+    variants_df = pd.read_csv(home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq.tsv", sep="\t")
     variants_df.drop_duplicates(keep="first", inplace=True, ignore_index=True)
     print(variants_df.columns)
     print(variants_df["class"].value_counts())
@@ -151,6 +144,12 @@ def get_patho_and_likelypatho_SNVs(home_dir=""):
     print(f"total: {variants_df.shape[0]}")
     return variants_df
 # get_patho_and_likelypatho_SNVs()
+
+# def map_NP_to_uniprot(df, col_name, home_dir=""):
+#     np_to_uniprot_mapping_df = pd.read_csv(home_dir+"data/gene/np_to_uniprot_mapping.csv", sep="\t")
+#     merged_df = pd.merge(left=df, right=np_to_uniprot_mapping_df, how="inner", left_on=col_name, right_on="NCBI_protein_accession")
+#     merged_df.drop(columns="NCBI_protein_accession", inplace=True)
+#     return merged_df
 
 # def generate_neutral_SNVs(home_dir="", pathogenicity_type=None):
 #     # pathogenicity_type: pathogenic, likely_pathogenic
