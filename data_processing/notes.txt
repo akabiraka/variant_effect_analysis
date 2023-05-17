@@ -15,16 +15,3 @@ We also tried mapping SNVs based on following gene2refseq (https://ftp.ncbi.nlm.
 From the readme associated with each file, MANE is more appropriate for selecting canonical mRNA transcripts and protein products. 
 Then we map the SNVs with ALFA population count dataset (https://ftp.ncbi.nih.gov/snp/population_frequency/latest_release/, freq.vcf.gz, 11G). 
     data_processing/dbsnp_data_cleanup.ipynb
-
-
-
-
-Pathogenicity (pathogenic and likely pathogenic) analysis dataset curation:
-    
-    Downloaded the pathogenic and likely-pathogenic SNVs for humans from NCBI-dbSNP separately:
-        "homo sapiens"[Organism] AND "missense variant"[Molecular consequence] AND "clinsig pathogenic"[Filter] AND ("2022/01/01"[Creation Date] : "2023/02/14"[Creation Date]) 
-        "homo sapiens"[Organism] AND "missense variant"[Molecular consequence] AND "clinsig likely path"[Filter] AND ("2022/01/01"[Creation Date] : "2023/02/14"[Creation Date]) 
-
-    Map the SNPs with the corresponding canonical transcription protein products using gene2refseq (https://ftp.ncbi.nlm.nih.gov/gene/DATA/, gene2refseq.gz, 1.3G):
-        clinvar_mapping_gene2refseq.ipynb
-
