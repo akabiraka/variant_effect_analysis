@@ -75,15 +75,7 @@ def get_population_freq_SNVs(home_dir="", force=False):
         variants_df = variants_df.drop_duplicates(keep="first")
         print(variants_df.shape)
         print(variants_df.columns)
-
-        n_commnon = variants_df[variants_df["class"]=="Common"].shape[0]
-        n_rare = variants_df[variants_df["class"]=="Rare"].shape[0]
-        n_ultra_rare = variants_df[variants_df["class"]=="Ultra-rare"].shape[0]
-        n_singleton = variants_df[variants_df["class"]=="Singleton"].shape[0]
-        n_zero_population = variants_df[variants_df["class"]=="Zero-population"].shape[0]
-
         print(variants_df["class"].value_counts())
-        # print(f"Common: {n_commnon}, rare: {n_rare}, ultra-rare: {n_ultra_rare}, singletons: {n_singleton}, zero-population: {n_zero_population} and total: {variants_df.shape[0]}")
 
         return variants_df
     
@@ -124,15 +116,7 @@ def get_population_freq_SNVs(home_dir="", force=False):
     variants_df = variants_df.drop_duplicates(keep="first")
     variants_df.to_csv(data_filepath, sep="\t", header=True, index=False)
 
-    n_commnon = variants_df[variants_df["class"]=="Common"].shape[0]
-    n_rare = variants_df[variants_df["class"]=="Rare"].shape[0]
-    n_ultra_rare = variants_df[variants_df["class"]=="Ultra-rare"].shape[0]
-    n_singleton = variants_df[variants_df["class"]=="Singleton"].shape[0]
-    n_zero_population = variants_df[variants_df["class"]=="Zero-population"].shape[0]
-
-    print(variants_df["prot_acc_version"].value_counts())
-    print(f"Common: {n_commnon}, rare: {n_rare}, ultra-rare: {n_ultra_rare}, singletons: {n_singleton}, zero-population: {n_zero_population} and total: {variants_df.shape[0]}")
-
+    print(variants_df["class"].value_counts())
     return variants_df
 
 # get_population_freq_SNVs()#force=True)

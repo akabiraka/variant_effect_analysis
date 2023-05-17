@@ -13,8 +13,8 @@ Entrez.email = "akabir0101@gmail.com"
 Entrez.api_key = "328570309ccd040632796143ec88b51bcf08"
 retmax = 500
 
-def download_a_protein_seq(prot_acc_version, idx=0):
-    out_filepath = f"data/proteins/fastas/{prot_acc_version}.fasta"
+def download_a_protein_seq(prot_acc_version, idx=0, home_dir=""):
+    out_filepath = home_dir+f"data/proteins/fastas/{prot_acc_version}.fasta"
     if os.path.exists(out_filepath): 
         print(idx, prot_acc_version, "Already existis")
         return
@@ -48,11 +48,11 @@ def download_a_protein_seq(prot_acc_version, idx=0):
 # download_protein_seq_and_save(0, prot_acc="NP_003673.3")
 
 
-def download_protein_list(protein_acc_list, start_i=0):
+def download_protein_list(protein_acc_list, start_i=0, home_dir=""):
     # print(protein_acc_list)
     for i, prot_acc in enumerate(protein_acc_list):
         if i<start_i: continue
-        download_a_protein_seq(prot_acc, i)
+        download_a_protein_seq(prot_acc, i, home_dir)
         # if i==20: break    
 
 
@@ -78,7 +78,7 @@ def create_combined_fasta(protein_acc_list, out_filepath, home_dir=""):
     # the main input of this model is a fasta formatted sequences file. So the input file must only contain the relevant sequences.
     # out_filepath = home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq.fasta"
     
-    download_protein_list(protein_acc_list, start_i=0) # sequential downloading
+    download_protein_list(protein_acc_list, start_i=0, home_dir=home_dir) # sequential downloading
     # download_protein_list_mpi(protein_acc_list, len(protein_acc_list)) # download proteins
     print("#-unique NCBI protein sequences downloaded: ", len(protein_acc_list))
 
