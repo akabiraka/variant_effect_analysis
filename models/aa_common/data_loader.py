@@ -70,7 +70,6 @@ def map_NP_to_uniprot(df, col_name, home_dir=""):
 def get_population_freq_SNVs(home_dir=""):
     print("\nLog: Loading data ...")
     data_filepath = home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq.tsv"
-    print(data_filepath)
     variants_df = pd.read_csv(data_filepath, sep="\t")
     variants_df.drop_duplicates(keep="first", inplace=True, ignore_index=True)
     print(variants_df.columns)

@@ -6,6 +6,7 @@ Then run SNVs_conversion_for_popu_freq.py.
 
 Then run dbNSFP data extraction.
     models/dbnsfp/data_preprocess.ipynb (only popu-freq sec)
-    models/dbnsfp/
+    models/dbnsfp/hopper.sh (partial)
+    models/dbnsfp/outputs_postprocess_popu_freq.ipynb 
 
 run sample_popu_freq_data.ipynb
