@@ -67,35 +67,45 @@ def map_NP_to_uniprot(df, col_name, home_dir=""):
     merged_df.drop(columns="NCBI_protein_accession", inplace=True)
     return merged_df
 
-def get_population_freq_SNVs(home_dir="", force=False):
+def get_population_freq_SNVs(home_dir=""):
     print("\nLog: Loading data ...")
-    data_filepath = home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq_balanced.txt"
-    if os.path.exists(data_filepath) and not force:
-        variants_df =  pd.read_csv(data_filepath, sep="\t")
-        variants_df = variants_df.drop_duplicates(keep="first")
-        print(variants_df.shape)
-        print(variants_df.columns)
-        print(variants_df["class"].value_counts())
+    data_filepath = home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq.tsv"
+    print(data_filepath)
+    variants_df = pd.read_csv(data_filepath, sep="\t")
+    variants_df.drop_duplicates(keep="first", inplace=True, ignore_index=True)
+    print(variants_df.columns)
+    print(variants_df["class"].value_counts())
+    print("total: ", variants_df.shape)
 
-        return variants_df
+    return variants_df
+
+    # data_filepath = home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq_balanced.txt"
+    # if os.path.exists(data_filepath) and not force:
+    #     variants_df =  pd.read_csv(data_filepath, sep="\t")
+    #     variants_df = variants_df.drop_duplicates(keep="first")
+    #     print(variants_df.shape)
+    #     print(variants_df.columns)
+    #     print(variants_df["class"].value_counts())
+
+    #     return variants_df
     
 
-    variants_df = pd.read_csv(home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq.txt", sep="\t")
-    print(f"raw data: {variants_df.shape}")
-    print(variants_df.columns)
-    # print(variants_df.head())
+    # variants_df = pd.read_csv(home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq.txt", sep="\t")
+    # print(f"raw data: {variants_df.shape}")
+    # print(variants_df.columns)
+    # # print(variants_df.head())
 
-    print("\nLog: excluding variants corresponding to proteins having seq-len>1022 ...")
-    protid_seq_tuple_list = get_protein_sequences(home_dir="", max_seq_len=1022, return_type="protid_seq_tuple_list", data_type="popu_freq")
-    new_protein_acc_list = list(zip(*protid_seq_tuple_list))[0]
-    variants_df = variants_df[variants_df["prot_acc_version"].isin(new_protein_acc_list)]
-    print(variants_df.shape)
+    # print("\nLog: excluding variants corresponding to proteins having seq-len>1022 ...")
+    # protid_seq_tuple_list = get_protein_sequences(home_dir="", max_seq_len=1022, return_type="protid_seq_tuple_list", data_type="popu_freq")
+    # new_protein_acc_list = list(zip(*protid_seq_tuple_list))[0]
+    # variants_df = variants_df[variants_df["prot_acc_version"].isin(new_protein_acc_list)]
+    # print(variants_df.shape)
 
-    variants_df.loc[variants_df["mt_freq"]>=.01, "class"] = "Common"
-    variants_df.loc[(variants_df["mt_freq"]<.01) & (variants_df["mt_freq"]>=.001), "class"] = "Rare"
-    variants_df.loc[(variants_df["mt_freq"]<.001), "class"] = "Ultra-rare"
-    variants_df.loc[variants_df["mut_poulation"]==1, "class"] = "Singleton"
-    variants_df.loc[variants_df["mut_poulation"]<1, "class"] = "Zero-population"
+    # variants_df.loc[variants_df["mt_freq"]>=.01, "class"] = "Common"
+    # variants_df.loc[(variants_df["mt_freq"]<.01) & (variants_df["mt_freq"]>=.001), "class"] = "Rare"
+    # variants_df.loc[(variants_df["mt_freq"]<.001), "class"] = "Ultra-rare"
+    # variants_df.loc[variants_df["mut_poulation"]==1, "class"] = "Singleton"
+    # variants_df.loc[variants_df["mut_poulation"]<1, "class"] = "Zero-population"
 
     # filttered_variants_df = variants_df[variants_df["mut_poulation"]>1] # excluding singletons here
 
@@ -113,11 +123,11 @@ def get_population_freq_SNVs(home_dir="", force=False):
     # variants_df.reset_index(drop=True, inplace=True)
     # print(f"After combining common ({common.shape[0]}), rare ({rare.shape[0]}), ultra-rare ({ultra_rare.shape[0]}), sampled-singletons ({singletons.shape[0]}) and data: {variants_df.shape}")
 
-    variants_df = variants_df.drop_duplicates(keep="first")
-    variants_df.to_csv(data_filepath, sep="\t", header=True, index=False)
+    # variants_df = variants_df.drop_duplicates(keep="first")
+    # variants_df.to_csv(data_filepath, sep="\t", header=True, index=False)
 
-    print(variants_df["class"].value_counts())
-    return variants_df
+    # print(variants_df["class"].value_counts())
+    # return variants_df
 
 # get_population_freq_SNVs()#force=True)
 
