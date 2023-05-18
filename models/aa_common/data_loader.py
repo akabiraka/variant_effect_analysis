@@ -63,7 +63,7 @@ def get_pmd_dataset(home_dir=""):
 
 def get_population_freq_SNVs(home_dir=""):
     print("\nLog: Loading data ...")
-    variants_df = pd.read_csv(home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq.tsv", sep="\t")
+    variants_df = pd.read_csv(home_dir+"models/aa_common/datasets_population_freq/popu_freq.tsv", sep="\t")
     variants_df.drop_duplicates(keep="first", inplace=True, ignore_index=True)
     print(variants_df.columns)
     print(variants_df["class"].value_counts())
@@ -128,21 +128,18 @@ def get_patho_and_likelypatho_SNVs(home_dir=""):
     filepath = home_dir+f"models/aa_common/datasets_pathogenicity/patho_and_likelypatho.tsv"
 
     variants_df = pd.read_csv(filepath, sep="\t")
-    print(f"raw data: {variants_df.shape}")
+    variants_df.drop_duplicates(keep="first", inplace=True, ignore_index=True)
     print(variants_df.columns)
-    
-    print("\nLog: excluding variants corresponding to proteins having seq-len>1022 ...")
-    protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type="patho_and_likelypatho")
-    new_protein_acc_list = list(zip(*protid_seq_tuple_list))[0]
-    variants_df = variants_df[variants_df["prot_acc_version"].isin(new_protein_acc_list)]
-    
-    variants_df = variants_df.drop_duplicates(keep="first")
-    n_snp_ids = variants_df[~pd.isna(variants_df["snp_id"])].shape[0]
-    print("#-of rs-ids mapped to pathogenicity dataset: ", n_snp_ids)
-    
     print(variants_df["class"].value_counts())
-    print(f"total: {variants_df.shape[0]}")
+    print("total: ", variants_df.shape)
+    
+    # print("\nLog: excluding variants corresponding to proteins having seq-len>1022 ...")
+    # protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type="patho_and_likelypatho")
+    # new_protein_acc_list = list(zip(*protid_seq_tuple_list))[0]
+    # variants_df = variants_df[variants_df["prot_acc_version"].isin(new_protein_acc_list)]
+    
     return variants_df
+
 # get_patho_and_likelypatho_SNVs()
 
 # def map_NP_to_uniprot(df, col_name, home_dir=""):
