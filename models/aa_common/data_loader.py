@@ -43,6 +43,19 @@ def get_protein_sequences(home_dir="", max_seq_len=1022, return_type=None, data_
 # data = get_protein_sequences(home_dir="", max_seq_len=1022, return_type="protid_seq_tuple_list", data_type="pmd_analysis")
 # print(data[0])
 
+def get_pmd_dbnsfp_dataset(home_dir=""):
+    df = pd.read_csv(home_dir+f"models/aa_common/datasets_pmd_analysis/pmd_dbnsfp.tsv", sep="\t")
+
+    fasta_iterator = SeqIO.parse(home_dir+f"models/aa_common/datasets_pmd_analysis/pmd_dbnsfp.fasta", format="fasta")
+    protid_seq_dict = {seq_record.id: str(seq_record.seq) for seq_record in fasta_iterator}
+
+    print(df.columns)
+    print(df.shape)
+    print(df["class"].value_counts())
+    print("#-prots: ", len(protid_seq_dict))
+    return df, protid_seq_dict
+# get_pmd_dbnsfp_dataset()
+
 
 def get_pmd_dataset(home_dir=""):
     print("\nLog: Loading Protein Mutation Dataset (PMD) ...")
