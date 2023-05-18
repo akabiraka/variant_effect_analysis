@@ -11,5 +11,8 @@ PMD_merging_dbnsfp_and_rsids.ipynb
 
 We do not use SNVs_conversion_for_PMD.ipynb anymore.
 
-run models/aa_common/data_preprocess.ipynb (only pmd section).
-sbatch models/dbnsfp/hopper.sh 
+dbNSFP extraction and postprocessing:
+    models/aa_common/data_preprocess.ipynb (only pmd section).
+    models/dbnsfp/hopper.sh 
+    models/aa_common/outputs_postprocess_pmd.ipynb
+

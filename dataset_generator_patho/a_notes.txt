@@ -12,3 +12,10 @@ Pathogenicity (pathogenic and likely pathogenic) analysis dataset curation:
 
     Run the following, which will essentially cleanup and merge patho and likely-patho set. Outputs will be saved at "models/aa_common/datasets_pathogenicity/".
     SNVs_conversion_for_pathogenicity.ipynb
+
+dbnsfp data extraction
+    models/aa_common/dbnsfp/data_preprocess.ipynb (only patho section)
+    models/aa_common/dbnsfp/hopper.sh
+    models/aa_common/dbnsfp/outputs_postprocess_pathogenicity.ipynb
+
+sample_neutral_set.ipynb
