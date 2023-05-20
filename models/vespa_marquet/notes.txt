@@ -40,3 +40,5 @@ source /projects/ashehu/akabir4/venvs/hopper_vespa_marquet_from_source/bin/activ
 mpirun -np 11 python -m mpi4py.futures models/vespa_marquet/pmd_pred.py
 mpirun -np 11 python -m mpi4py.futures models/vespa_marquet/popu_freq_pred.py
 mpirun -np 11 python -m mpi4py.futures models/vespa_marquet/pathogenicity_pred.py
+
+mpirun -np 11 python -m mpi4py.futures models/vespa_marquet/pmd_pred_masked.py

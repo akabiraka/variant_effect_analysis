@@ -43,6 +43,16 @@ def compute_model_logits(model, prot_acc_version, seq, logits_output_path)->np.a
     # print(logits.shape)
     return logits
 
+def compute_model_logits_from_masked_sequences(model, tokenizer, protid, seq, mut_pos, model_logits_out_dir):
+    filepath = f"{model_logits_out_dir}{protid}_{str(mut_pos)}.pkl"
+    if os.path.exists(filepath):
+        print(f"Model logits already exists: {protid}_{str(mut_pos)}")
+        logits = pickle_utils.load_pickle(filepath) 
+    else: 
+        print(f"Computing model logits: {protid}_{str(mut_pos)}")
+
+        
+
 
 def compute_variant_effect_scores(variants_df, tokenizer, prot_acc_version, output_logits, model_aa_prefix):
     preds = []
@@ -104,3 +114,9 @@ def load_prottrans_lm_model(model_name:str):
         raise NotImplementedError()
         
     return model
+
+
+
+
+def compute_variant_effect_scores_from_masked_logits(variants_df, tokenizer, protid, mut_pos, output_logits):
+    pass

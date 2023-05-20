@@ -9,6 +9,9 @@ Downloaded the single nucleotide missense variants (SNVs) for humans from NCBI-d
     The query used in this script is:
         "homo sapians"[Organism] AND "missense variant"[Function Class] AND "snp protein"[Filter] AND "by alfa"[Validation Status]  
 
+    dbsnp_data_cleanup.ipynb
+    
+
 
 The to map the SNPs to its corresponding canonical transcription protein products, we use MANE (https://ftp.ncbi.nlm.nih.gov/refseq/MANE/MANE_human/current/, MANE.GRCh38.v1.0.summary.txt.gz, 1M).
 We also tried mapping SNVs based on following gene2refseq (https://ftp.ncbi.nlm.nih.gov/gene/DATA/, gene2refseq.gz, 1.3G) and  LRG_RefSeqGene (https://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/RefSeqGene/, LRG_RefSeqGene, 2.4M), however found MANE best. 

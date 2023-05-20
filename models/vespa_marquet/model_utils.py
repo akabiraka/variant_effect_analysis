@@ -18,16 +18,16 @@ def get_model_tokenizer(home_dir=""):
     model, tokenizer = t5_condProbas.prott5.get_model(1) #1=LOGODDS
     return model, tokenizer
 
-def compute_model_logits_from_masked_sequences(model, tokenizer, prot_acc_version, seq, mut_pos, logits_output_path)->np.array:
+def compute_model_logits_from_masked_sequences(model, tokenizer, protid, seq, mut_pos, model_logits_out_dir)->np.array:
     # mut_pos must be 1-indexed
     mut_pos_zero_idxd = mut_pos-1
 
-    filepath = f"{logits_output_path}{prot_acc_version}_{str(mut_pos)}.pkl"
+    filepath = f"{model_logits_out_dir}{protid}_{str(mut_pos)}.pkl"
     if os.path.exists(filepath):
-        print(f"Model logits already exists: {prot_acc_version}_{str(mut_pos)}")
+        print(f"Model logits already exists: {protid}_{str(mut_pos)}")
         logits = pickle_utils.load_pickle(filepath) 
     else: 
-        print(f"Computing model logits: {prot_acc_version}_{str(mut_pos)}")
+        print(f"Computing model logits: {protid}_{str(mut_pos)}")
         with torch.no_grad():
             seq = re.sub(r"[UZOB]", "X", seq) # replacing unknown amino acids 
             seq = list(seq)
