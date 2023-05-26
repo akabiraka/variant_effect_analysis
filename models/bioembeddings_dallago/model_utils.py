@@ -44,14 +44,17 @@ def compute_model_logits(model, prot_acc_version, seq, logits_output_path)->np.a
     return logits
 
 def compute_model_logits_from_masked_sequences(model, tokenizer, protid, seq, mut_pos, model_logits_out_dir):
+    zero_indexed_mutpos = mut_pos-1
+
     filepath = f"{model_logits_out_dir}{protid}_{str(mut_pos)}.pkl"
     if os.path.exists(filepath):
         print(f"Model logits already exists: {protid}_{str(mut_pos)}")
         logits = pickle_utils.load_pickle(filepath) 
     else: 
         print(f"Computing model logits: {protid}_{str(mut_pos)}")
-
-        
+        logits = model.get_masked_logits(seq, zero_indexed_mutpos) 
+        pickle_utils.save_as_pickle(logits, filepath)
+    return logits # (seq_len, vocab_size=128)
 
 
 def compute_variant_effect_scores(variants_df, tokenizer, prot_acc_version, output_logits, model_aa_prefix):
@@ -67,6 +70,29 @@ def compute_variant_effect_scores(variants_df, tokenizer, prot_acc_version, outp
 
         # print(output_logits.shape, pos)
         if pos>=output_logits.shape[0]: continue
+        
+        wt_logit = output_logits[pos][wt_tok_idx]
+        mt_logit = output_logits[pos][mt_tok_idx]
+        var_effect_score = mt_logit - wt_logit
+        tuple = dict(tuple)
+        tuple["pred"] = var_effect_score
+        preds.append(tuple)
+        # print(preds)
+        # break
+    return preds
+
+def compute_variant_effect_scores_from_masked_logits(variants_df, tokenizer, protid, mut_pos, output_logits, model_aa_prefix):
+    preds = []
+    indices = variants_df[(variants_df["prot_acc_version"]==protid) & (variants_df["prot_pos"]==mut_pos)].index  # mut_pos is 1-indexed here
+    for idx in indices:
+        tuple = variants_df.loc[idx]
+        
+        wt_tok_idx = tokenizer.convert_tokens_to_ids(model_aa_prefix+tuple.wt)
+        mt_tok_idx = tokenizer.convert_tokens_to_ids(model_aa_prefix+tuple.mut)
+        pos = tuple.prot_pos-1 #ncbi prot variants are 1 indexed, outputs are 0-indexed, so -1. PMD mut_real col is 1-indexed
+
+        # print(output_logits.shape, pos)
+        # if pos>=output_logits.shape[0]: continue
         
         wt_logit = output_logits[pos][wt_tok_idx]
         mt_logit = output_logits[pos][mt_tok_idx]
@@ -115,8 +141,3 @@ def load_prottrans_lm_model(model_name:str):
         
     return model
 
-
-
-
-def compute_variant_effect_scores_from_masked_logits(variants_df, tokenizer, protid, mut_pos, output_logits):
-    pass

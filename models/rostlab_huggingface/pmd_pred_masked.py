@@ -3,16 +3,24 @@ sys.path.append("../variant_effect_analysis")
 home_dir = ""
 
 import time
-import  pandas as pd
+import pandas as pd
 
 from models.aa_common.data_loader import get_pmd_dbnsfp_dataset
-import models.bioembeddings_dallago.model_utils as model_utils
+import models.rostlab_huggingface.model_utils as model_utils
+
+
 
 task = "pmd"
 variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
 
+from transformers import T5Tokenizer
+from transformers import AutoModelForSeq2SeqLM
 model_name = "prottrans_t5_xl_u50" # prottrans_t5_xl_u50, prottrans_bert_bfd, plus_rnn
-model, tokenizer, model_name = model_utils.get_model_tokenizer(model_name)
+model = AutoModelForSeq2SeqLM.from_pretrained("Rostlab/prot_t5_xl_uniref50")
+tokenizer = T5Tokenizer.from_pretrained("Rostlab/prot_t5_xl_uniref50")
+model = model.to("cpu")
+model_aa_prefix="▁"
+
 model_task_out_dir, model_logits_out_dir = model_utils.create_output_directories(model_name, task)
 
 def execute(protid_mutpos_tuple_list):
@@ -21,7 +29,7 @@ def execute(protid_mutpos_tuple_list):
         # mut_pos is 1 indexed here
         seq = protid_seq_dict[protid]
         output_logits = model_utils.compute_model_logits_from_masked_sequences(model, tokenizer, protid, seq, mut_pos, model_logits_out_dir)
-        preds_related_to_aprot = model_utils.compute_variant_effect_scores_from_masked_logits(variants_df, tokenizer, protid, mut_pos, output_logits, model.aa_prefix)
+        preds_related_to_aprot = model_utils.compute_variant_effect_scores_from_masked_logits(variants_df, tokenizer, protid, mut_pos, output_logits, model_aa_prefix)
         preds += preds_related_to_aprot
     preds_df = pd.DataFrame(preds)   
     return preds_df

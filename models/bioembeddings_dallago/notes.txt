@@ -38,6 +38,8 @@ source /projects/ashehu/akabir4/venvs/hopper_bioembeddings_dallago_from_source/b
 mpirun -np 11 python -m mpi4py.futures models/bioembeddings_dallago/popu_freq_pred.py
 mpirun -np 11 python -m mpi4py.futures models/bioembeddings_dallago/pmd_pred.py
 
+mpirun -np 11 python -m mpi4py.futures models/bioembeddings_dallago/pmd_pred_masked.py
+
 # Multiprocessing-prottrans_bert_bfd: for 15962 proteins, 95324 variants, Time taken: ??? seconds ~ ??? mins
 # Multiprocessing-prottrans_albert_bfd: for 15962 proteins, 95324 variants, Time taken: 7835.752500295639 seconds ~ ??? mins
 # Multiprocessing-prottrans_xlnet_uniref100: for 15962 proteins, 95324 variants, Time taken: 7911.455941200256 seconds ~ ??? mins
@@ -45,3 +47,4 @@ mpirun -np 11 python -m mpi4py.futures models/bioembeddings_dallago/pmd_pred.py
 # Multiprocessing-prottrans_t5_uniref50: for 15962 proteins, 95324 variants, Time taken: 34463.274727106094 seconds ~ ??? mins
 # Multiprocessing-prottrans_t5_xl_u50: for 15962 proteins, 95324 variants, Time taken: 35054.415758132935 seconds ~ ??? mins
 # Multiprocessing-plus_rnn: for 15962 proteins, 95324 variants, Time taken: 553.9494614601135 seconds ~ ??? mins
+

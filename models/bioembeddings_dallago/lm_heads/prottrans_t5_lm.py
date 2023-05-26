@@ -155,6 +155,28 @@ class ProtTransT5LM(EmbedderWithFallback, abc.ABC):
     def embed(self, sequence: str) -> ndarray:
         [embedding] = self.embed_batch([sequence])
         return embedding
+    
+    def get_masked_logits(self, seq, zero_indexed_mutpos):
+        seq_len = len(seq)
+        seq = re.sub(r"[UZOB]", "X", seq) # replacing unknown amino acid with unknown token
+        seq = list(seq)
+        seq[zero_indexed_mutpos] = '<extra_id_0>' # mut_pos must be 0-indexed. replace AA by special mask token used by the model
+        seq = " ".join(list(seq)) # space separated amino acids
+
+        ids = self._tokenizer.batch_encode_plus(
+            [seq], add_special_tokens=True, padding="longest"
+        )
+        tokenized_sequences = torch.tensor(ids["input_ids"]).to(self._model.device)
+        attention_mask = torch.tensor(ids["attention_mask"]).to(self._model.device)
+
+        with torch.no_grad():
+            logits = self._model(input_ids=tokenized_sequences, attention_mask=attention_mask, decoder_input_ids=tokenized_sequences)
+        
+        logits = logits[0].squeeze().cpu().numpy()
+        logits = logits[:seq_len]
+        # print(logits.shape) # seq_len, vocab_size=128
+        return logits
+
 
 
 class ProtTransT5BFDLM(ProtTransT5LM):

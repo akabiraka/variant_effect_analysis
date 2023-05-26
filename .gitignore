@@ -171,3 +171,4 @@ models/dbnsfp/datasets/*
 argo_logs/*
 models/dbnsfp/postprocessed_outputs/*
 models/dbnsfp/dbnsfp_outputs/*
+models/rostlab_huggingface/outputs/*

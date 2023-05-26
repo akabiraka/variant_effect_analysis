@@ -7,6 +7,8 @@ from bio_embeddings.embed.prottrans_base_embedder import ProtTransBertBaseEmbedd
 
 logger = logging.getLogger(__name__)
 
+import re
+import torch
 
 class ProtTransBertBFDLM(ProtTransBertBaseEmbedder):
     """ProtTrans-Bert-BFD Embedder (ProtBert-BFD)
@@ -52,3 +54,24 @@ class ProtTransBertBFDLM(ProtTransBertBaseEmbedder):
                 self._model_directory
             ).eval()
         return self._model_fallback
+    
+    def get_masked_logits(self, seq, zero_indexed_mutpos):
+        seq_len = len(seq)
+        seq = re.sub(r"[UZOB]", "X", seq) # replacing unknown amino acid with unknown token
+        seq = list(seq)
+        seq[zero_indexed_mutpos] = self._tokenizer.mask_token # mut_pos must be 0-indexed. replace AA by special mask token used by the model
+        seq = " ".join(list(seq)) # space separated amino acids
+
+        ids = self._tokenizer.batch_encode_plus(
+            [seq], add_special_tokens=True, padding="longest"
+        )
+        tokenized_sequences = torch.tensor(ids["input_ids"]).to(self._model.device)
+        attention_mask = torch.tensor(ids["attention_mask"]).to(self._model.device)
+
+        with torch.no_grad():
+            logits = self._model(input_ids=tokenized_sequences, attention_mask=attention_mask)
+        
+        logits = logits[0].squeeze().cpu().numpy()
+        logits = logits[1:seq_len+1]
+        # print(logits.shape) # seq_len, vocab_size=30
+        return logits
