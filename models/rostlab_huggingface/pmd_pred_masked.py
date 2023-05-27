@@ -13,11 +13,12 @@ import models.rostlab_huggingface.model_utils as model_utils
 task = "pmd"
 variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
 
-from transformers import T5Tokenizer
-from transformers import AutoModelForSeq2SeqLM
+
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 model_name = "prottrans_t5_xl_u50" # prottrans_t5_xl_u50, prottrans_bert_bfd, plus_rnn
 model = AutoModelForSeq2SeqLM.from_pretrained("Rostlab/prot_t5_xl_uniref50")
-tokenizer = T5Tokenizer.from_pretrained("Rostlab/prot_t5_xl_uniref50")
+# tokenizer = T5Tokenizer.from_pretrained("Rostlab/prot_t5_xl_uniref50") # from transformers import T5Tokenizer
+tokenizer = AutoTokenizer.from_pretrained("Rostlab/prot_t5_xl_uniref50", use_fast=False)#, force_download=True)
 model = model.to("cpu")
 model_aa_prefix="▁"
 
@@ -42,7 +43,7 @@ if __name__ == "__main__":
 
     chunk_size = 1 # 32 if torch.cuda.is_available() else 1
     data_chunks = [data[x:x+chunk_size] for x in range(0, len(data), chunk_size)]
-    # data_chunks = data_chunks[:10] 
+    # data_chunks = data_chunks[:5] 
     print(f"#-of chunks: {len(data_chunks)}, 1st chunk size: {len(data_chunks[0])}")
 
     pred_dfs = []

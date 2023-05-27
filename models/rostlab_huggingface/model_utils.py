@@ -33,21 +33,23 @@ def compute_model_logits_from_masked_sequences(model, tokenizer, protid, seq, mu
         seq = re.sub(r"[UZOB]", "X", seq) # replacing unknown amino acid with unknown token
         seq = list(seq)
 
-        seq[zero_indexed_mutpos] = "[MASK]"# tokenizer.mask_token #'<extra_id_0>' # mut_pos must be 0-indexed. replace AA by special mask token used by the model
+        seq[zero_indexed_mutpos] = "<extra_id_0>" #"[MASK]"# tokenizer.mask_token #'<extra_id_0>' # mut_pos must be 0-indexed. replace AA by special mask token used by the model
 
         seq = " ".join(list(seq)) # space separated amino acids
         # print(seq)
 
         # <eos> token at the end
         # starts from 0-index
-        input_ids = tokenizer.batch_encode_plus([seq], add_special_tokens=True, padding="longest")
-        tokenized_sequences = torch.tensor(input_ids["input_ids"]).to("cpu")
-        attention_mask = torch.tensor(input_ids["attention_mask"]).to("cpu")
+        # input_ids = tokenizer.batch_encode_plus([seq], add_special_tokens=True, padding="longest")
+        # tokenized_sequences = torch.tensor(input_ids["input_ids"]).to("cpu")
+        # attention_mask = torch.tensor(input_ids["attention_mask"]).to("cpu")
+        input_ids = tokenizer(seq, return_tensors="pt").input_ids.to("cpu")
 
         with torch.no_grad():
-            logits = model(input_ids=tokenized_sequences, attention_mask=attention_mask, decoder_input_ids=tokenized_sequences).logits
+            # logits = model(input_ids=tokenized_sequences, attention_mask=attention_mask, decoder_input_ids=tokenized_sequences).logits
+            logits = model(input_ids, labels=input_ids).logits
 
-        logits = logits.squeeze().cpu().numpy()
+        logits = logits.squeeze().detach().numpy()
         logits = logits[:seq_len]
 
         pickle_utils.save_as_pickle(logits, filepath)
