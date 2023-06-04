@@ -6,24 +6,26 @@ import time
 import  pandas as pd
 
 from models.aa_common.data_loader import get_pmd_dbnsfp_dataset
-import models.vespa_marquet.model_utils as model_utils
+import models.esm_rives.model_utils as model_utils
 
 task = "pmd"
 variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
 
-model_name = "vespa"
-model, tokenizer = model_utils.get_model_tokenizer(model_name)
-model_task_out_dir, model_logits_out_dir = model_utils.create_output_directories(model_name, task)
+model_name="esm1v_t33_650M_UR90S" # esm1b_t33_650M_UR50S, esm1v_t33_650M_UR90S, esm2_t33_650M_UR50D
+model, alphabet, batch_converter = model_utils.get_model_tokenizer(model_name)
+model_task_out_dir, model_logits_out_dir = model_utils.create_output_directories(model_name=model_name, task=task, home_dir=home_dir)
+
 
 def execute(protid_mutpos_tuple_list):
     preds = []        
     for i, (protid, mut_pos) in enumerate(protid_mutpos_tuple_list):
         seq = protid_seq_dict[protid]
-        output_logits = model_utils.compute_model_logits_from_masked_sequences(model, tokenizer, protid, seq, mut_pos, model_logits_out_dir)
-        preds_related_to_aprot = model_utils.compute_variant_effect_scores_from_masked_logits(variants_df, tokenizer, protid, mut_pos, output_logits)
+        output_logits = model_utils.compute_model_logits_from_masked_sequences(model, batch_converter, protid, seq, mut_pos, model_logits_out_dir)
+        preds_related_to_aprot = model_utils.compute_variant_effect_scores_from_masked_logits(variants_df, alphabet, protid, mut_pos, output_logits)
         preds += preds_related_to_aprot
     preds_df = pd.DataFrame(preds)   
     return preds_df
+
 
 if __name__ == "__main__":
     start = time.time()
@@ -33,7 +35,7 @@ if __name__ == "__main__":
 
     chunk_size = 1 # 32 if torch.cuda.is_available() else 1
     data_chunks = [data[x:x+chunk_size] for x in range(0, len(data), chunk_size)]
-    # data_chunks = data_chunks[:10] 
+    # data_chunks = data_chunks[:15] 
     print(f"#-of chunks: {len(data_chunks)}, 1st chunk size: {len(data_chunks[0])}")
 
     pred_dfs = []
