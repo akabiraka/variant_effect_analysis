@@ -174,3 +174,4 @@ models/dbnsfp/dbnsfp_outputs/*
 models/rostlab_huggingface/outputs/*
 models/tape_rao/cache/*
 models/tape_tf_rao/*
+models/jax_unirep/outputs/*

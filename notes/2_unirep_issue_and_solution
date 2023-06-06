@@ -29,8 +29,8 @@ jaxlib                        0.4.1
 
 ------------------------------Installation of jax-unirep independently------------------------------
 module load python/3.8.6-generic-x86_64 
-python -m venv venv_jax_unirep
-source ~/venv_jax_unirep/bin/activate
+python -m venv hopper_jax_unirep
+source /projects/ashehu/akabir4/venvs/hopper_jax_unirep/bin/activate
 pip install --upgrade pip
 pip install jax-unirep
 

@@ -27,6 +27,7 @@ def execute(protid_mutpos_tuple_list):
     return preds_df
 
 
+
 if __name__ == "__main__":
     start = time.time()
 
