@@ -52,8 +52,8 @@ def compute_variant_effect_scores(variants_df, seq_record, pssm_df):
         # print(tuple.prot_pos, tuple.mut)
         if pssm_df[pssm_df["position"]==tuple.prot_pos].shape[0]==0: continue
         mut_score = pssm_df[pssm_df["position"]==tuple.prot_pos][tuple.mut].values[0]
-        # wt_score = pssm_df[pssm_df["position"]==tuple.prot_pos][tuple.wt].values[0]
-        var_effect_score = mut_score# - wt_score
+        wt_score = pssm_df[pssm_df["position"]==tuple.prot_pos][tuple.wt].values[0]
+        var_effect_score = mut_score - wt_score
         tuple = dict(tuple)
         tuple["pred"] = var_effect_score
         preds.append(tuple)

@@ -6,42 +6,23 @@ import pandas as pd
 from Bio import SeqIO
 # use only very common libraries here
 
-def get_protein_sequences(home_dir="", max_seq_len=1022, return_type=None, data_type=None):
-    """return_type: seq_record_list, protid_seq_tuple_list
-       data_type: pathogenic, likely_pathogenic, popu_freq, pmd
-    """
-    print("\nLog: Loading combined fasta iterator ...")
 
-    if data_type == "patho_and_likelypatho":
-        filepath = home_dir+"models/aa_common/datasets_pathogenicity/patho_and_likelypatho.fasta"
-    elif data_type == "pathogenic":
-        filepath = home_dir+"models/aa_common/datasets_pathogenicity/clinvar_HumanPathogenicMissenseVariants01012022To14022023.fasta"
-    elif data_type == "likely_pathogenic":
-        filepath = home_dir+"models/aa_common/datasets_pathogenicity/clinvar_HumanLikelyPathogenicMissenseVariants01012022To14022023.fasta"
-    elif data_type == "popu_freq":
-        filepath = home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq.fasta"
-    elif data_type == "pmd":
-        filepath = home_dir+"models/aa_common/datasets_pmd_analysis/pmd_sequences.fasta"
-    else:
-        raise NotImplementedError("'data_type' must be of pathogenic, likely_pathogenic, popu_freq, pmd")
-        
-        
+def get_protein_sequences(task, return_type=None, home_dir=""):
+    # task: pmd, popu_freq, 
+
+    if task=="pmd":
+        filepath = home_dir+f"models/aa_common/datasets_pmd_analysis/pmd_dbnsfp.fasta"
+
     fasta_iterator = SeqIO.parse(filepath, format="fasta")
-    
+
     if return_type == "seq_record_list":
-        data = [seq_record for seq_record in fasta_iterator if len(str(seq_record.seq))<=max_seq_len]
-    elif return_type == "protid_seq_tuple_list":
-        data = [(seq_record.id, str(seq_record.seq)) for seq_record in fasta_iterator if len(str(seq_record.seq))<=max_seq_len]
-    elif return_type == "protid_seq_dict":
-        data = {seq_record.id: str(seq_record.seq) for seq_record in fasta_iterator if len(str(seq_record.seq))<=max_seq_len}
-    else:
-        raise NotImplementedError("'return_type' must be of seq_record_list, protid_seq_tuple_list")
-    
-    print(f"#-protein sequences (seq-len<={max_seq_len}): {len(data)}")
+        data = [seq_record for seq_record in fasta_iterator]
+    else: # protid_seq_dict
+        data = {seq_record.id: str(seq_record.seq) for seq_record in fasta_iterator}
+
     return data
 # get_protein_sequences()
-# data = get_protein_sequences(home_dir="", max_seq_len=1022, return_type="protid_seq_tuple_list", data_type="pmd_analysis")
-# print(data[0])
+
 
 
 # ------------------------------the next 3 functions are for loading base 3 datasets-----------------------------
@@ -83,21 +64,56 @@ def get_patho_and_likelypatho_SNVs(home_dir=""):
 
 
 # the following 3 data-loader we are going to use for model running
-def get_pmd_dbnsfp_dataset(home_dir=""):
+def get_pmd_dbnsfp_dataset(home_dir="", seq_return_type=None):
     df = pd.read_csv(home_dir+f"models/aa_common/datasets_pmd_analysis/pmd_dbnsfp.tsv", sep="\t")
 
-    fasta_iterator = SeqIO.parse(home_dir+f"models/aa_common/datasets_pmd_analysis/pmd_dbnsfp.fasta", format="fasta")
-    protid_seq_dict = {seq_record.id: str(seq_record.seq) for seq_record in fasta_iterator}
+    
+    seq_data = get_protein_sequences(task="pmd", return_type=seq_return_type, home_dir=home_dir)
 
     print(df.columns)
     print(df.shape)
     print(df["class"].value_counts())
-    print("#-unique prots: ", len(protid_seq_dict))
-    return df, protid_seq_dict
-# get_pmd_dbnsfp_dataset()
+    print("#-unique prots: ", len(seq_data))
+    return df, seq_data
+# get_pmd_dbnsfp_dataset(seq_return_type="seq_record_list")
 
 def get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir=""):
     pass
 
 def get_popu_freq_dbnsfp_dataset(home_dir=""):
     pass
+
+
+# def get_protein_sequences(home_dir="", max_seq_len=1022, return_type=None, data_type=None):
+#     """return_type: seq_record_list, protid_seq_tuple_list
+#        data_type: pathogenic, likely_pathogenic, popu_freq, pmd
+#     """
+#     print("\nLog: Loading combined fasta iterator ...")
+
+#     if data_type == "patho_and_likelypatho":
+#         filepath = home_dir+"models/aa_common/datasets_pathogenicity/patho_and_likelypatho.fasta"
+#     elif data_type == "pathogenic":
+#         filepath = home_dir+"models/aa_common/datasets_pathogenicity/clinvar_HumanPathogenicMissenseVariants01012022To14022023.fasta"
+#     elif data_type == "likely_pathogenic":
+#         filepath = home_dir+"models/aa_common/datasets_pathogenicity/clinvar_HumanLikelyPathogenicMissenseVariants01012022To14022023.fasta"
+#     elif data_type == "popu_freq":
+#         filepath = home_dir+"models/aa_common/datasets_population_freq/SNVs_with_popu_freq.fasta"
+#     elif data_type == "pmd":
+#         filepath = home_dir+"models/aa_common/datasets_pmd_analysis/pmd_sequences.fasta"
+#     else:
+#         raise NotImplementedError("'data_type' must be of pathogenic, likely_pathogenic, popu_freq, pmd")
+        
+        
+#     fasta_iterator = SeqIO.parse(filepath, format="fasta")
+    
+#     if return_type == "seq_record_list":
+#         data = [seq_record for seq_record in fasta_iterator if len(str(seq_record.seq))<=max_seq_len]
+#     elif return_type == "protid_seq_tuple_list":
+#         data = [(seq_record.id, str(seq_record.seq)) for seq_record in fasta_iterator if len(str(seq_record.seq))<=max_seq_len]
+#     elif return_type == "protid_seq_dict":
+#         data = {seq_record.id: str(seq_record.seq) for seq_record in fasta_iterator if len(str(seq_record.seq))<=max_seq_len}
+#     else:
+#         raise NotImplementedError("'return_type' must be of seq_record_list, protid_seq_tuple_list")
+    
+#     print(f"#-protein sequences (seq-len<={max_seq_len}): {len(data)}")
+#     return data
