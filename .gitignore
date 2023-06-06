@@ -172,3 +172,5 @@ argo_logs/*
 models/dbnsfp/postprocessed_outputs/*
 models/dbnsfp/dbnsfp_outputs/*
 models/rostlab_huggingface/outputs/*
+models/tape_rao/cache/*
+models/tape_tf_rao/*

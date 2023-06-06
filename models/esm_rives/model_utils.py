@@ -66,7 +66,6 @@ def compute_model_logits_from_masked_sequences(model, batch_converter, protid, s
         print(f"Computing model logits: {protid}_{str(mut_pos)}")
         with torch.no_grad():
             seq = list(seq)
-            mut_pos_zero_idxd = 2
             seq[mut_pos_zero_idxd] = "<mask>"
             seq = " ".join(seq)
             _, _, batch_tokens = batch_converter([(protid, seq)])
