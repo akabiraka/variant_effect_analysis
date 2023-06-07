@@ -5,12 +5,11 @@ home_dir = ""
 import time
 import pandas as pd
 
-from models.aa_common.data_loader import get_population_freq_SNVs, get_protein_sequences
+from models.aa_common.data_loader import get_popu_freq_dbnsfp_dataset
 import models.sequnet_dunham.model_utils as model_utils
 
 task = "popu_freq"
-variants_df = get_population_freq_SNVs()
-seq_record_list = get_protein_sequences(home_dir="", max_seq_len=1022, return_type="seq_record_list", data_type=task)
+variants_df, seq_record_list = get_popu_freq_dbnsfp_dataset(home_dir, seq_return_type="seq_record_list")
 
 model_name = "sequnet"
 model = model_utils.get_model()
@@ -57,7 +56,7 @@ if __name__=="__main__":
 
     result_df = pd.concat(pred_dfs)
     print("Saving predictions ...")  
-    result_df.to_csv(f"{model_task_out_dir}/preds_{model_name}.tsv", sep="\t", index=False, header=True)
+    result_df.to_csv(f"{model_task_out_dir}/preds_{model_name}_masked.tsv", sep="\t", index=False, header=True)
     print(result_df.shape)
     print(result_df.head())
 

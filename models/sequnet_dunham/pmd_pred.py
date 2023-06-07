@@ -10,9 +10,6 @@ from models.aa_common.data_loader import get_pmd_dbnsfp_dataset
 import models.sequnet_dunham.model_utils as model_utils
 
 task = "pmd"
-# variants_df = get_pmd_dataset(home_dir=home_dir)
-# variants_df = variants_df.rename(columns={"pmd_nr_id": "prot_acc_version"})
-# seq_record_list = get_protein_sequences(home_dir="", max_seq_len=1022, return_type="seq_record_list", data_type=task)
 variants_df, seq_record_list = get_pmd_dbnsfp_dataset(home_dir, seq_return_type="seq_record_list")
 
 model_name = "sequnet"
