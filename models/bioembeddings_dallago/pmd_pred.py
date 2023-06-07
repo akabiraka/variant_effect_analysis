@@ -5,13 +5,11 @@ sys.path.append("../variant_effect_analysis")
 import time
 import pandas as pd
 
-from models.aa_common.data_loader import get_protein_sequences, get_pmd_dataset
+from models.aa_common.data_loader import get_pmd_dbnsfp_dataset
 import models.bioembeddings_dallago.model_utils as model_utils
 
 task = "pmd"
-variants_df = get_pmd_dataset(home_dir=home_dir)
-variants_df = variants_df.rename(columns={"pmd_nr_id": "prot_acc_version"})
-protid_seq_tuple_list = get_protein_sequences(home_dir=home_dir, max_seq_len=1022, return_type="protid_seq_tuple_list", data_type=task)
+variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
 
 model_name = "plus_rnn" #  plus_rnn, prottrans_bert_bfd, prottrans_albert_bfd, prottrans_xlnet_uniref100, prottrans_t5_bfd, prottrans_t5_uniref50, prottrans_t5_xl_u50
 model, tokenizer, model_name = model_utils.get_model_tokenizer(model_name) 
@@ -31,32 +29,32 @@ def execute(protid_seq_tuple_list):
 if __name__ == "__main__":
     start = time.time()
     
-    data = protid_seq_tuple_list
+    data = list(protid_seq_dict.items()) # protid-seq-tuple-list
 
     chunk_size = 1 # 32 if torch.cuda.is_available() else 1
     data_chunks = [data[x:x+chunk_size] for x in range(0, len(data), chunk_size)]
-    # data_chunks = data_chunks[:10] 
+    # data_chunks = data_chunks[:5] 
     print(f"#-of chunks: {len(data_chunks)}, 1st chunk size: {len(data_chunks[0])}")
     
     pred_dfs = []
     # sequential run and debugging
-    # for i, data_chunk in enumerate(data_chunks):
-    #     pred_df = execute(data_chunk)
-    #     print(f"Finished {i}/{len(data_chunks)}th chunk: {pred_df.shape}")
-    #     pred_dfs.append(pred_df)
-
-    # mpi run    
-    from mpi4py.futures import MPIPoolExecutor
-    executor = MPIPoolExecutor()
-    for i, pred_df in enumerate(executor.map(execute, data_chunks, unordered=True)):
+    for i, data_chunk in enumerate(data_chunks):
+        pred_df = execute(data_chunk)
         print(f"Finished {i}/{len(data_chunks)}th chunk: {pred_df.shape}")
         pred_dfs.append(pred_df)
-    executor.shutdown()
+
+    # mpi run    
+    # from mpi4py.futures import MPIPoolExecutor
+    # executor = MPIPoolExecutor()
+    # for i, pred_df in enumerate(executor.map(execute, data_chunks, unordered=True)):
+    #     print(f"Finished {i}/{len(data_chunks)}th chunk: {pred_df.shape}")
+    #     pred_dfs.append(pred_df)
+    # executor.shutdown()
     
     result_df = pd.concat(pred_dfs)  
     print("Saving predictions ...")
     result_df = result_df.rename(columns={"prot_acc_version": "pmd_nr_id"})
-    result_df.to_csv(f"{model_task_out_dir}/preds_{model_name}.tsv", sep="\t", index=False, header=True)
+    result_df.to_csv(f"{model_task_out_dir}/preds_{model_name}_masked.tsv", sep="\t", index=False, header=True)
     print(result_df.shape)
     print(result_df.head())
         
