@@ -44,18 +44,18 @@ if __name__ == "__main__":
     
     pred_dfs = []
     # sequential run and debugging
-    # for i, data_chunk in enumerate(data_chunks):
-    #     pred_df = execute(data_chunk)
-    #     print(f"Finished {i}/{len(data_chunks)}th chunk: {pred_df.shape}")
-    #     pred_dfs.append(pred_df)
-
-    # mpi run    
-    from mpi4py.futures import MPIPoolExecutor
-    executor = MPIPoolExecutor()
-    for i, pred_df in enumerate(executor.map(execute, data_chunks, unordered=True)):
+    for i, data_chunk in enumerate(data_chunks):
+        pred_df = execute(data_chunk)
         print(f"Finished {i}/{len(data_chunks)}th chunk: {pred_df.shape}")
         pred_dfs.append(pred_df)
-    executor.shutdown()
+
+    # mpi run    
+    # from mpi4py.futures import MPIPoolExecutor
+    # executor = MPIPoolExecutor()
+    # for i, pred_df in enumerate(executor.map(execute, data_chunks, unordered=True)):
+    #     print(f"Finished {i}/{len(data_chunks)}th chunk: {pred_df.shape}")
+    #     pred_dfs.append(pred_df)
+    # executor.shutdown()
     
     result_df = pd.concat(pred_dfs)  
     print("Saving predictions ...")
