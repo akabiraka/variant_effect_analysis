@@ -11,7 +11,7 @@ import models.bioembeddings_dallago.model_utils as model_utils
 task = "pmd"
 variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
 
-model_name = "prottrans_t5_xl_u50" # prottrans_t5_xl_u50, prottrans_bert_bfd, plus_rnn
+model_name = "prottrans_bert_bfd" 
 model, tokenizer, model_name = model_utils.get_model_tokenizer(model_name)
 model_task_out_dir, model_logits_out_dir = model_utils.create_output_directories(model_name, task)
 

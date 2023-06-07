@@ -53,7 +53,6 @@ if __name__ == "__main__":
     
     result_df = pd.concat(pred_dfs)  
     print("Saving predictions ...")
-    result_df = result_df.rename(columns={"prot_acc_version": "pmd_nr_id"})
     result_df.to_csv(f"{model_task_out_dir}/preds_{model_name}_masked.tsv", sep="\t", index=False, header=True)
     print(result_df.shape)
     print(result_df.head())
