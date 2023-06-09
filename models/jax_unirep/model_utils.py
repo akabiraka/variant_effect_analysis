@@ -4,9 +4,6 @@ sys.path.append("../variant_effect_analysis")
 import os
 
 def create_output_directories(model_name=None, task=None, home_dir=""):
-    """model_name: protbert, unirep
-       task: pathogenic, likely_pathogenic
-    """
     print("\nLog: Creating output directories ...") #-------------------------------------------
     model_out_dir = home_dir+f"models/jax_unirep/outputs/{model_name}/"
     model_logits_out_dir = f"{model_out_dir}lm_outputs/"

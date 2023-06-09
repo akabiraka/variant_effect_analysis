@@ -13,13 +13,12 @@ sequence = "ASDFGHJKL"
 h_avg, h_final, c_final = get_reps(sequence)
 print(h_avg.shape)
 
-source /projects/ashehu/akabir4/venvs/hopper_jax_unirep/bin/activate
+
 
 salloc --partition=normal --mem-per-cpu=16G --ntasks=11
 salloc --partition=contrib --mem-per-cpu=16G --ntasks=11 --time=0-02:00
 module load gnu10
 module load openmpi
-source /projects/ashehu/akabir4/venvs/hopper_tape_rao/bin/activate
-mpirun -np 11 python -m mpi4py.futures models/tape_rao/popu_freq_pred.py
-mpirun -np 11 python -m mpi4py.futures models/tape_rao/pathogenicity_pred.py
-mpirun -np 11 python -m mpi4py.futures models/tape_rao/pmd_pred.py
+source /projects/ashehu/akabir4/venvs/hopper_jax_unirep/bin/activate
+
+mpirun -np 11 python -m mpi4py.futures models/jax_unirep/pmd_pred_embeddings.py
