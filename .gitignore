@@ -177,3 +177,7 @@ models/tape_tf_rao/*
 models/jax_unirep/outputs/*
 models/proteinbert_brandes/outputs/*
 models/proteinbert_brandes/cache/*
+models/PLUS/
+models/plus_rnn/*
+models/tape_rao_1/cache/*
+models/tape_rao_1/outputs/*

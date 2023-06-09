@@ -1,0 +1,15 @@
+------------------------------Installation of TAPE (pytorch)------------------------------
+module load python/3.8.6-generic-x86_64
+python -m venv hopper_tape_rao_1
+source /projects/ashehu/akabir4/venvs/hopper_tape_rao_1/bin/activate
+pip install --upgrade pip
+
+pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
+pip install tape_proteins --no-cache-dir
+
+salloc --partition=normal --mem-per-cpu=16G --ntasks=11
+salloc --partition=contrib --mem-per-cpu=16G --ntasks=11 --time=0-02:00
+module load gnu10
+module load openmpi
+source /projects/ashehu/akabir4/venvs/hopper_tape_rao_1/bin/activate
+mpirun -np 11 python -m mpi4py.futures models/tape_rao_1/pred_embeddings.py
