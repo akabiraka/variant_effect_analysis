@@ -5,13 +5,15 @@ home_dir = ""
 import os
 import numpy as np
 import pandas as pd
-from models.aa_common.data_loader import get_pmd_dbnsfp_dataset
+from models.aa_common.data_loader import get_pmd_dbnsfp_dataset, get_popu_freq_dbnsfp_dataset, get_patho_likelypatho_neutral_dbnsfp_dataset
 import models.jax_unirep.model_utils as model_utils
 import utils.pickle_utils as pickle_utils
 from jax_unirep import get_reps
 
-task = "pmd"
-variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
+task = "patho" # pmd, popu_freq, patho
+# variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
+# variants_df, protid_seq_dict = get_popu_freq_dbnsfp_dataset(home_dir)
+variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
 
 model_name = "unirep"
 model_task_out_dir, model_logits_out_dir = model_utils.create_output_directories(model_name, task, home_dir)
