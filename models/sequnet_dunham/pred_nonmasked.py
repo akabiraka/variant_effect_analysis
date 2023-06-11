@@ -9,10 +9,10 @@ from models.aa_common.data_loader import get_pmd_dbnsfp_dataset, get_popu_freq_d
 import models.sequnet_dunham.model_utils as model_utils
 
 
-task = "patho" # pmd, popu_freq, patho
+task = "popu_freq" # pmd, popu_freq, patho
 # variants_df, seq_record_list = get_pmd_dbnsfp_dataset(home_dir, seq_return_type="seq_record_list")
-# variants_df, seq_record_list = get_popu_freq_dbnsfp_dataset(home_dir, seq_return_type="seq_record_list")
-variants_df, seq_record_list = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir, seq_return_type="seq_record_list")
+variants_df, seq_record_list = get_popu_freq_dbnsfp_dataset(home_dir, seq_return_type="seq_record_list")
+# variants_df, seq_record_list = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir, seq_return_type="seq_record_list")
 
 
 model_name = "sequnet"

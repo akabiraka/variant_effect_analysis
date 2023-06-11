@@ -134,6 +134,7 @@ outputs/*
 models/tape_rao/outputs/*
 models/sequnet_dunham/outputs/*
 models/sequnet_dunham/freq_classifier*
+models/sequnet_dunham/pssm_predictor*
 models/esm_rives/outputs/*
 
 models/dbnsfp/inputs/*

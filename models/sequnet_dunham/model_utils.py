@@ -26,7 +26,8 @@ def create_output_directories(model_name="seqnet", task=None, home_dir=""):
 
 def get_model():
     print("\nLog: Model loading ...")
-    model = load_trained_model(model="freq_classifier", download=True, root=os.path.abspath("models/sequnet_dunham"))
+    # model = load_trained_model(model="freq_classifier", download=True, root=os.path.abspath("models/sequnet_dunham"))
+    model = load_trained_model(model="pssm_predictor", download=True, root=os.path.abspath("models/sequnet_dunham"))
     return model
 
 
