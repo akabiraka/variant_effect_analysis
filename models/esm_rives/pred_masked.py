@@ -5,11 +5,13 @@ home_dir = ""
 import time
 import  pandas as pd
 
-from models.aa_common.data_loader import get_pmd_dbnsfp_dataset
+from models.aa_common.data_loader import get_pmd_dbnsfp_dataset, get_popu_freq_dbnsfp_dataset, get_patho_likelypatho_neutral_dbnsfp_dataset
 import models.esm_rives.model_utils as model_utils
 
-task = "pmd"
-variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
+task = "patho" # pmd, popu_freq, patho
+# variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
+# variants_df, protid_seq_dict = get_popu_freq_dbnsfp_dataset(home_dir)
+variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
 
 model_name="esm2_t33_650M_UR50D" # esm1b_t33_650M_UR50S, esm1v_t33_650M_UR90S, esm2_t33_650M_UR50D
 model, alphabet, batch_converter = model_utils.get_model_tokenizer(model_name)
@@ -35,7 +37,7 @@ if __name__ == "__main__":
 
     chunk_size = 1 # 32 if torch.cuda.is_available() else 1
     data_chunks = [data[x:x+chunk_size] for x in range(0, len(data), chunk_size)]
-    # data_chunks = data_chunks[:10] 
+    # data_chunks = data_chunks[:20] 
     print(f"#-of chunks: {len(data_chunks)}, 1st chunk size: {len(data_chunks[0])}")
 
     pred_dfs = []

@@ -37,8 +37,5 @@ salloc --partition=contrib --mem-per-cpu=32G --ntasks=11
 module load gnu10
 module load openmpi
 source /projects/ashehu/akabir4/venvs/hopper_vespa_marquet_from_source/bin/activate
-mpirun -np 11 python -m mpi4py.futures models/vespa_marquet/pmd_pred.py
-mpirun -np 11 python -m mpi4py.futures models/vespa_marquet/popu_freq_pred.py
-mpirun -np 11 python -m mpi4py.futures models/vespa_marquet/pathogenicity_pred.py
 
 mpirun -np 11 python -m mpi4py.futures models/vespa_marquet/pred_masked.py
