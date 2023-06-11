@@ -6,20 +6,11 @@ from Bio import SeqIO
 # use only very common libraries here
 
 
-def get_protein_sequences(task, return_type=None, home_dir=""):
+def get_protein_sequences(fasta_filepath, return_type=None):
     """
-    task: pmd, patho, popu_freq
     seq_return_type: protid_seq_dict, seq_record_list
     """
-
-    if task=="pmd":
-        filepath = home_dir+f"models/aa_common/datasets_pmd_analysis/pmd_dbnsfp.fasta"
-    if task=="patho":
-        filepath = home_dir+f"models/aa_common/datasets_pathogenicity/patho_likelypatho_neutral_dbnsfp.fasta"
-    elif task=="popu_freq":
-        filepath = home_dir+f"models/aa_common/datasets_population_freq/popu_freq_with_dbnsfp_sampled.fasta"
-
-    fasta_iterator = SeqIO.parse(filepath, format="fasta")
+    fasta_iterator = SeqIO.parse(fasta_filepath, format="fasta")
 
     if return_type == "seq_record_list":
         data = [seq_record for seq_record in fasta_iterator]
@@ -71,19 +62,21 @@ def get_patho_and_likelypatho_SNVs(home_dir=""):
 
 # ----------------------------------------the following 3 data-loader we are going to use for model running------------------------
 def get_pmd_dbnsfp_dataset(home_dir="", seq_return_type=None):
-    df = pd.read_csv(home_dir+f"models/aa_common/datasets_pmd_analysis/pmd_dbnsfp.tsv", sep="\t")
-    seq_data = get_protein_sequences(task="pmd", return_type=seq_return_type, home_dir=home_dir)
+    filepath = home_dir+f"models/aa_common/datasets_pmd_analysis/pmd_dbnsfp"
+    df = pd.read_csv(filepath+".tsv", sep="\t")
+    seq_data = get_protein_sequences(fasta_filepath=filepath+".fasta", return_type=seq_return_type)
 
     print(df.columns)
     print(df.shape)
     print(df["class"].value_counts())
     print("#-unique prots: ", len(seq_data))
     return df, seq_data
-# get_pmd_dbnsfp_dataset(seq_return_type="seq_record_list")
+get_pmd_dbnsfp_dataset()
 
 def get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir="", seq_return_type=None):
-    df = pd.read_csv(home_dir+f"models/aa_common/datasets_pathogenicity/patho_likelypatho_neutral_dbnsfp.tsv", sep="\t")
-    seq_data = get_protein_sequences(task="patho", return_type=seq_return_type, home_dir=home_dir)
+    filepath = home_dir+f"models/aa_common/datasets_pathogenicity/patho_likelypatho_neutral_dbnsfp"
+    df = pd.read_csv(filepath+".tsv", sep="\t")
+    seq_data = get_protein_sequences(fasta_filepath=filepath+".fasta", return_type=seq_return_type)
 
     print(df.columns)
     print(df.shape)
@@ -93,8 +86,9 @@ def get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir="", seq_return_type=No
 # get_patho_likelypatho_neutral_dbnsfp_dataset()
 
 def get_popu_freq_dbnsfp_dataset(home_dir="", seq_return_type=None):
-    df = pd.read_csv(home_dir+f"models/aa_common/datasets_population_freq/popu_freq_with_dbnsfp_sampled.tsv", sep="\t")
-    seq_data = get_protein_sequences(task="popu_freq", return_type=seq_return_type, home_dir=home_dir)
+    filepath = home_dir+f"models/aa_common/datasets_population_freq/popu_freq_with_dbnsfp_sampled"
+    df = pd.read_csv(filepath+".tsv", sep="\t")
+    seq_data = get_protein_sequences(fasta_filepath=filepath+".fasta", return_type=seq_return_type)
 
     print(df.columns)
     print(df.shape)
