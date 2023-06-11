@@ -11,10 +11,10 @@ from models.aa_common.data_loader import get_pmd_dbnsfp_dataset, get_popu_freq_d
 import models.tape_rao_1.model_utils as model_utils
 import utils.pickle_utils as pickle_utils
 
-task = "patho" # pmd, popu_freq, patho
+task = "popu_freq" # pmd, popu_freq, patho
 # variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
-# variants_df, protid_seq_dict = get_popu_freq_dbnsfp_dataset(home_dir)
-variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
+variants_df, protid_seq_dict = get_popu_freq_dbnsfp_dataset(home_dir)
+# variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
 
 
 model_name = "protbert"
