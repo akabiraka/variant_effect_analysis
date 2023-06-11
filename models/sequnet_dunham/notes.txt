@@ -29,7 +29,7 @@ source /projects/ashehu/akabir4/venvs/hopper_sequnet_dunham/bin/activate
 For 10*32 proteins, 2917 variants, Time taken: 41.43040180206299 seconds
 
 # MPI
-salloc --partition=normal --mem-per-cpu=16G --ntasks=11 --time=0-02:00
+salloc --partition=contrib --mem-per-cpu=16G --ntasks=11 --time=0-02:00
 module load gnu10
 module load openmpi
 source /projects/ashehu/akabir4/venvs/hopper_sequnet_dunham/bin/activate
@@ -40,6 +40,4 @@ For 10*32 proteins, 2917 variants, Time taken: 28.22511315345764 seconds
 mpirun -np 11 python -m mpi4py.futures models/sequnet_dunham/popu_freq_pred.py
 For 15962 proteins, 95211 (95324) variants, Time taken: 575.6858053207397 seconds ~ 9.5 mins
 
-
-mpirun -np 11 python -m mpi4py.futures models/sequnet_dunham/pathogenicity_pred.py
-mpirun -np 11 python -m mpi4py.futures models/sequnet_dunham/pmd_pred.py
+mpirun -np 11 python -m mpi4py.futures models/sequnet_dunham/pred_nonmasked.py
