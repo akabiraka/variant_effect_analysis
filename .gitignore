@@ -185,3 +185,5 @@ models/tape_rao_1/outputs/*
 models/aa_common/datasets_patho/*
 models/aa_common/datasets_pmd/*
 models/aa_common/datasets_popu_freq/*
+models/aa_common/plots_scores_distribution/*
+models/aa_common/plots_scores_violin/*

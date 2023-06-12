@@ -33,10 +33,11 @@ models/aa_common/SNVs_conversion_for_PMD.ipynb
 
 workflows:
 . merge popu_freq, Pathogenicity and PMD prediction scores.
-    merge_popu_freq_and_patho_scores.ipynb
-    merge_pmd_scores.ipynb
+    merge_pred_scores.ipynb
 
-. performance analysis
-    performance_analysis_for_popu_freq.ipynb
-    performance_analysis_for_pathogenicity.ipynb
-    performance_analysis_for_PMD.ipynb
+. performance analysis for popu_freq, Pathogenicity and PMD
+    performance_analysis.ipynb
+
+. plotting
+    plot_scores_distributions.ipynb
+    plot_scores_violin.ipynb
