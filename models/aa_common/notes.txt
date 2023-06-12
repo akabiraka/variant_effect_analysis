@@ -41,3 +41,4 @@ workflows:
 . plotting
     plot_scores_distributions.ipynb
     plot_scores_violin.ipynb
+    plot_mut_allele_freq_vs_prediction_scores.ipynb
