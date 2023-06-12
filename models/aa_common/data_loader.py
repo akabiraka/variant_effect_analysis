@@ -96,3 +96,11 @@ def get_popu_freq_dbnsfp_dataset(home_dir="", seq_return_type=None):
     print("#-unique prots: ", len(seq_data))
     return df, seq_data
 # get_popu_freq_dbnsfp_dataset()
+
+# ---------------------------- loading merged and result analysis things------------------------------
+def get_merged_scores_df(task, home_dir=""):
+    result_df = pd.read_csv(home_dir+f"models/aa_common/merged_predictions/{task}.tsv", sep="\t")
+    print(result_df.columns)
+    print(result_df.shape)
+    print(result_df["class"].value_counts())
+    return result_df
