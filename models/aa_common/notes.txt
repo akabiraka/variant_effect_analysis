@@ -43,3 +43,13 @@ workflows:
     plot_scores_violin.ipynb
     plot_mut_allele_freq_vs_scores_histogram.ipynb
     plot_conservation_vs_scores_histogram.ipynb
+
+
+matplotlib_venn was not installing in hopper_variant_effect_analysis_mine.
+From https://www.piwheels.org/project/matplotlib-venn/, matplotlib-venn was not compiled on python3.8.x, so reduce the python version as follows.
+from matplotlib_venn import venn3
+
+module load python/3.7.6-iu
+python -m venv hopper_py376
+source /projects/ashehu/akabir4/venvs/  hopper_py376/bin/activate
+pip install matplotlib-venn
