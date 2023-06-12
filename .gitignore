@@ -188,3 +188,4 @@ models/aa_common/datasets_popu_freq/*
 models/aa_common/plots_scores_distribution/*
 models/aa_common/plots_scores_violin/*
 models/aa_common/plots_mut_allele_freq_vs_scores_histogram*
+models/aa_common/plots_conservation_vs_scores_histogram*
