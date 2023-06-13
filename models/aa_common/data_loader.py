@@ -72,7 +72,7 @@ def get_pmd_dbnsfp_dataset(home_dir="", seq_return_type=None):
     print(df["class"].value_counts())
     print("#-unique prots: ", len(seq_data))
     return df, seq_data
-get_pmd_dbnsfp_dataset()
+# get_pmd_dbnsfp_dataset()
 
 def get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir="", seq_return_type=None):
     filepath = home_dir+f"models/aa_common/datasets_patho/patho_likelypatho_neutral_dbnsfp"
