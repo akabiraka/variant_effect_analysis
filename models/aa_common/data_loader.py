@@ -42,6 +42,7 @@ def get_population_freq_SNVs(home_dir=""):
     print(variants_df.columns)
     print(variants_df["class"].value_counts())
     print("total: ", variants_df.shape)
+    print("#-unique genes: ", variants_df["gene_symbol"].unique().shape[0])
 
     return variants_df
 # get_population_freq_SNVs()#force=True)
@@ -71,7 +72,7 @@ def get_pmd_dbnsfp_dataset(home_dir="", seq_return_type=None):
     print(df["class"].value_counts())
     print("#-unique prots: ", len(seq_data))
     return df, seq_data
-# get_pmd_dbnsfp_dataset()
+get_pmd_dbnsfp_dataset()
 
 def get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir="", seq_return_type=None):
     filepath = home_dir+f"models/aa_common/datasets_patho/patho_likelypatho_neutral_dbnsfp"
@@ -82,6 +83,7 @@ def get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir="", seq_return_type=No
     print(df.shape)
     print(df["class"].value_counts())
     print("#-unique prots: ", len(seq_data))
+    print("#-unique genes: ", df["gene_symbol"].unique().shape[0])
     return df, seq_data
 # get_patho_likelypatho_neutral_dbnsfp_dataset()
 
@@ -94,6 +96,7 @@ def get_popu_freq_dbnsfp_dataset(home_dir="", seq_return_type=None):
     print(df.shape)
     print(df["class"].value_counts())
     print("#-unique prots: ", len(seq_data))
+    print("#-unique genes: ", df["gene_symbol"].unique().shape[0])
     return df, seq_data
 # get_popu_freq_dbnsfp_dataset()
 
