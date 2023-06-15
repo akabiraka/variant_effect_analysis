@@ -83,7 +83,6 @@ def get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir="", seq_return_type=No
     print(df.shape)
     print(df["class"].value_counts())
     print("#-unique prots: ", len(seq_data))
-    print("#-unique genes: ", df["gene_symbol"].unique().shape[0])
     return df, seq_data
 # get_patho_likelypatho_neutral_dbnsfp_dataset()
 
@@ -96,7 +95,6 @@ def get_popu_freq_dbnsfp_dataset(home_dir="", seq_return_type=None):
     print(df.shape)
     print(df["class"].value_counts())
     print("#-unique prots: ", len(seq_data))
-    print("#-unique genes: ", df["gene_symbol"].unique().shape[0])
     return df, seq_data
 # get_popu_freq_dbnsfp_dataset()
 
