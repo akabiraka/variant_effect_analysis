@@ -191,3 +191,5 @@ models/aa_common/plots_mut_allele_freq_vs_scores_histogram/*
 models/aa_common/plots_conservation_vs_scores_histogram/*
 models/aa_common/plots_methods_correlation/*
 models/aa_common/plots_venn_diagram/*
+CPT1_score_no_EVE_set_1/*
+models/cpt1_jagota/*

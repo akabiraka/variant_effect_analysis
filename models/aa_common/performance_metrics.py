@@ -158,7 +158,7 @@ def get_KS_test_score(df:pd.DataFrame):
 
 # ------------------------ performance computation helper functions ------------------------------
 # by default, we consider larger means positive class (here Effect/Knock-out), but the following models have specific opposite meaning
-methods_smaller_means_damaging = ["sequnet", "sift"]
+from plots_helper import methods_smaller_means_damaging_from_paper
 metrics = ["AUC-ROC", "AUC-PR", "F1-max", "Th-max", "Precision", "Recall", "Accuracy", "Balanced-accuracy", "MCC"]
 
 def sample_positive_and_negative_data_points(df, method_name, positive_cls, negative_cls, n_samples=None):
@@ -181,7 +181,7 @@ def sample_positive_and_negative_data_points(df, method_name, positive_cls, nega
     return sampled_df
 
 def calibrate_prediction_scores_direction(df, method_name):
-    if method_name in methods_smaller_means_damaging:
+    if method_name in methods_smaller_means_damaging_from_paper:
         df['pred'] = df['pred'].multiply(-1)
     
     auc_roc_score, larger_means_positive_class = get_auc_roc_score(df)
