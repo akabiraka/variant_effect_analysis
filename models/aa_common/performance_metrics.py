@@ -208,6 +208,11 @@ def compute_performance_metrics(df, method_name, positive_cls, negative_cls, n_r
         sampled_df = sample_positive_and_negative_data_points(df, method_name, positive_cls, negative_cls, n_samples)
         sampled_df["pred"]=(sampled_df[method_name]-sampled_df[method_name].min())/(sampled_df[method_name].max()-sampled_df[method_name].min()) # scaling prediction scores between [0, 1]
         
+        if method_name in ['phyloP17way_primate', 'phastCons17way_primate']:
+            th_max = 0.5
+            sampled_df.loc[sampled_df["pred"]>=th_max, "pred"] = 1
+            sampled_df.loc[sampled_df["pred"]<th_max, "pred"] = 0
+
         sampled_df, auc_roc_score =  calibrate_prediction_scores_direction(sampled_df, method_name)
         
         # ks_statistic, ks_pvalue = get_KS_test_score(sampled_df)
@@ -215,6 +220,7 @@ def compute_performance_metrics(df, method_name, positive_cls, negative_cls, n_r
         f1_max, th_max, precisions, recalls, thresholds = get_f1max_and_th(precisions, recalls, thresholds)
 
         if positive_cls=="Likely-pathogenic": th_max =  get_pathogenic_analysis_threshold(method_name, home_dir)
+        if method_name in ['phyloP17way_primate', 'phastCons17way_primate']: th_max = 0.5
 
         precision = get_precision_score(sampled_df, th_max)
         recall = get_recall_score(sampled_df, th_max)
