@@ -2,16 +2,15 @@ import sys
 sys.path.append("../variant_effect_analysis")
 home_dir = ""
 
-import time
 import  pandas as pd
 
 from models.aa_common.data_loader import get_pmd_dbnsfp_dataset, get_popu_freq_dbnsfp_dataset, get_patho_likelypatho_neutral_dbnsfp_dataset
 import models.proteinbert_brandes.model_utils as model_utils
 
-task = "patho" # pmd, popu_freq, patho
-# variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
+task = "pmd" # pmd, popu_freq, patho
+variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
 # variants_df, protid_seq_dict = get_popu_freq_dbnsfp_dataset(home_dir)
-variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
+# variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
 
 model_name = "proteinbert"
 model, tokenizer = model_utils.get_model_tokenizer(model_name)
@@ -28,8 +27,6 @@ def execute(protid_seq_tuple_list):
 
 
 if __name__ == "__main__":
-    start = time.time()
-    
     data = list(protid_seq_dict.items()) # protid-seq-tuple-list
 
     chunk_size = 1 # 32 if torch.cuda.is_available() else 1
@@ -39,23 +36,21 @@ if __name__ == "__main__":
     
     pred_dfs = []
     # sequential run and debugging
-    # for i, data_chunk in enumerate(data_chunks):
-    #     pred_df = execute(data_chunk)
-    #     print(f"Finished {i}/{len(data_chunks)}th chunk: {pred_df.shape}")
-    #     pred_dfs.append(pred_df)
-
-    # mpi run    
-    from mpi4py.futures import MPIPoolExecutor
-    executor = MPIPoolExecutor()
-    for i, pred_df in enumerate(executor.map(execute, data_chunks, unordered=True)):
+    for i, data_chunk in enumerate(data_chunks):
+        pred_df = execute(data_chunk)
         print(f"Finished {i}/{len(data_chunks)}th chunk: {pred_df.shape}")
         pred_dfs.append(pred_df)
-    executor.shutdown()
+
+    # mpi run    
+    # from mpi4py.futures import MPIPoolExecutor
+    # executor = MPIPoolExecutor()
+    # for i, pred_df in enumerate(executor.map(execute, data_chunks, unordered=True)):
+    #     print(f"Finished {i}/{len(data_chunks)}th chunk: {pred_df.shape}")
+    #     pred_dfs.append(pred_df)
+    # executor.shutdown()
     
     result_df = pd.concat(pred_dfs)  
     print("Saving predictions ...")
     result_df.to_csv(f"{model_task_out_dir}/preds_{model_name}_masked.tsv", sep="\t", index=False, header=True)
     print(result_df.shape)
     print(result_df.head())
-        
-    print(f"Time taken: {time.time()-start} seconds")

@@ -36,10 +36,10 @@ def compute_model_logits(model, tokenizer, prot_acc_version, seq, logits_output_
     else: 
         print(f"Computing model logits: {prot_acc_version}")
         x = tokenizer.encode_X([seq], 1024)
-        logits, annotations = model(x) # shape=(n_seq=1, seq-len=1024, vocab_size=26), shape=(1, 8943)
+        logits, annotations = model(x) # shape=(n_seq=1, seq-len=1024, vocab_size=26), shape=(1, 8943). this returns a softmax scores
         logits = logits[0].numpy()
         pickle_utils.save_as_pickle(logits, filepath)
-    print(logits.shape)
+    # print(logits.shape)
     return logits
 
 def compute_variant_effect_scores(variants_df, tokenizer, prot_acc_version, output_logits):
@@ -52,8 +52,8 @@ def compute_variant_effect_scores(variants_df, tokenizer, prot_acc_version, outp
         mt_tok_idx = token_to_index[tuple.mut]
         pos = tuple.prot_pos #ncbi prot variants are 1 indexed, outputs are 1-indexed, so no change
         
-        wt_logit = output_logits[pos][wt_tok_idx]
-        mt_logit = output_logits[pos][mt_tok_idx]
+        wt_logit = np.log(output_logits[pos][wt_tok_idx])
+        mt_logit = np.log(output_logits[pos][mt_tok_idx])
         var_effect_score = mt_logit - wt_logit
         tuple = dict(tuple)
         tuple["pred"] = var_effect_score
