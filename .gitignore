@@ -155,6 +155,7 @@ models/aa_common/pred_scores_distribution_plots_popu_freq_analysis/*
 models/aa_common/pred_scores_distribution_plots_pathogenicity_analysis/*
 models/aa_common/conservation_vs_model_preds_plots/*
 models/vespa_marquet/outputs/*
+models/vespa_marquet/outputs_prev/*
 models/vespa_marquet/logodds*
 models/vespa_marquet/cache/*
 models/aa_common/datasets_pmd_analysis_prev/*
@@ -193,3 +194,4 @@ models/aa_common/plots_methods_correlation/*
 models/aa_common/plots_venn_diagram/*
 CPT1_score_no_EVE_set_1/*
 models/cpt1_jagota/*
+.vscode/*
