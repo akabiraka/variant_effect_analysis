@@ -1,0 +1,39 @@
+https://hgvs.readthedocs.io/en/stable/quick_start.html
+https://github.com/biocommons/hgvs
+
+sudo apt install gcc libpq-dev python3-dev
+create/activate venv
+pip install --upgrade setuptools
+pip install hgvs
+
+successfull in local machine, not in hopper
+
+
+
+import hgvs.parser
+import hgvs.dataproviders.uta
+import hgvs.assemblymapper
+
+hp = hgvs.parser.Parser()
+# initialize the mapper for GRCh37 with splign-based alignments
+hdp = hgvs.dataproviders.uta.connect()
+am = hgvs.assemblymapper.AssemblyMapper(hdp, assembly_name='GRCh38', alt_aln_method='splign', replace_reference=True)
+
+
+hgvs_g = "NW_003571061.2:g.275107T>C"
+hgvs_g = "NC_000005.10:g.141374104T>C"
+var_g = hp.parse_hgvs_variant(hgvs_g)
+var_g = hn.normalize(hp.parse_hgvs_variant(hgvs_g))
+
+
+transcripts = am.relevant_transcripts(var_g)
+
+for ac in sorted(transcripts):
+    var_t = am.g_to_t(var_g, ac)
+    var_p = am.t_to_p(var_t)
+    print("-> " + str(var_t) + " (" + str(var_p) + ") ")
+    
+    
+    
+NC_000005.10:g.141374104T>A
+C,A,G	 

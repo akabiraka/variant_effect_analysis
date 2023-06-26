@@ -1,0 +1,14 @@
+source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/activate
+
+The dataset is preprocessed in multiple steps in the data_processing directory. 
+    python data_preprocess/dbsnp_search_download_parse_save.py
+    dbsnp_data_cleanup.ipynb
+
+Then run SNVs_conversion_for_popu_freq.py.
+
+Then run dbNSFP data extraction.
+    models/dbnsfp/data_preprocess.ipynb (only popu-freq sec)
+    models/dbnsfp/hopper.sh (partial)
+    models/dbnsfp/outputs_postprocess_popu_freq.ipynb 
+
+run sample_popu_freq_data.ipynb
